@@ -147,3 +147,4 @@ C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\obj\Debug\ne
 C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\obj\Debug\net8.0\SawariSewa.pdb
 C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\obj\Debug\net8.0\SawariSewa.genruntimeconfig.cache
 C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\obj\Debug\net8.0\ref\SawariSewa.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\obj\Debug\net8.0\SawariSewa.sourcelink.json
