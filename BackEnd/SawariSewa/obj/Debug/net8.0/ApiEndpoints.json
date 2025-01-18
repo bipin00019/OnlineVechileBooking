@@ -79,6 +79,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Passenger.Controllers.AccountController",
+    "Method": "Register",
+    "RelativePath": "api/Passenger/Account/Register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "SawariSewa.Areas.Passenger.ViewModel.PassengerRegisterViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

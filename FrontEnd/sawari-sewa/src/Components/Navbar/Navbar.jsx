@@ -1,18 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Phone, Facebook, Instagram, Youtube, Mail, LogIn, UserPlus } from 'lucide-react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaUserCircle } from 'react-icons/fa';
+import { PATHS } from '../../constants/paths';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null); // Reference to the dropdown menu
+  const navbarRef = useRef(null); // Reference to the navbar area to detect outside click
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setUser(storedUser);
+
+    // Close dropdown if clicked outside
+    const handleClickOutside = (event) => {
+      if (navbarRef.current && !navbarRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    };
+
+    // Adding the event listener for clicks outside
+    document.addEventListener('click', handleClickOutside);
+
+    // Cleanup the event listener
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    // localSrorage.removeItem('token');
+    // localStorage.removeItem('refreshToken');
+    setUser(null);
+    window.location.reload(); // Reload the app to reset state
+    setDropdownVisible(false); // Hide dropdown after logout
+    navigate(PATHS.HOME);
+  };
+
+  const toggleDropdown = (event) => {
+    event.stopPropagation(); // Prevent click from propagating to the document
+    setDropdownVisible(!dropdownVisible);
+  };
 
   return (
-    <nav className='w-full'>
-      <div className="bg-[#17252A] text-white py-2">
+    <nav className='w-full' ref={navbarRef}>
+      <div className="bg-[#17252A] text-white py-4">
         <div className='px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center'>
             <div className='flex items-center space-x-2'>
-                <div className="w-20 h-20 flex items-center justify-center">
-                    <span className="c text-6xl">🚌</span>
+                <div className="w-20 h-20 flex items-center justify-center mr-8">
+                    <span className="c text-8xl">🚌</span>
                 </div>
                 <div>
                   <span className="text-3xl font-bold text-white">Sewari Sewa</span>
@@ -44,20 +84,52 @@ const Navbar = () => {
                 </a>
             </div>
             <div className='flex items-center space-x-4'>
-                <button onClick={() => navigate('/login')} className="flex items-center space-x-1 hover:text-blue-200">
+              {user ? (
+                <div className="relative">
+                  <div
+                    className="flex items-center space-x-2 cursor-pointer hover:text-blue-200"
+                    onClick={toggleDropdown} // Prevent outside click when opening dropdown
+                  >
+                    <FaUserCircle size={40} />
+                    <span className="text-s">{user.email}</span>
+                  </div>
+                  {dropdownVisible && (
+                    <div
+                      ref={dropdownRef} // Assign ref to dropdown menu
+                      className="absolute right-0 mt-2 w-48 bg-black text-white shadow-lg rounded-none"
+                    >
+                      <button
+                        onClick={() => navigate(PATHS.DRIVERREGISTRATION)}
+                        className="block px-4 py-2 hover:bg-gray-800 w-full text-left"
+                      >
+                        Be a Driver
+                      </button>
+                      <button
+                        onClick={handleLogout}
+                        className="block px-4 py-2 hover:bg-gray-800 w-full text-left"
+                      >
+                        Log Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <button onClick={() => navigate(PATHS.LOGIN)} className="flex items-center space-x-1 hover:text-blue-200">
                     <LogIn size={40} />
                     <span className="text-s">Log In</span>
-                </button>
-                <button onClick={() => navigate('/signup')} className="flex items-center space-x-1 hover:text-blue-200">
+                  </button>
+                  <button onClick={() => navigate('/signup')} className="flex items-center space-x-1 hover:text-blue-200">
                     <UserPlus size={40} />
                     <span className="text-s">Sign Up</span>
-                </button>
+                  </button>
+                </>
+              )}
             </div>
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
 export default Navbar;
-

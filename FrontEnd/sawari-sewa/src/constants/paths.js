@@ -1,6 +1,7 @@
 export const PATHS = {
     HOME: "/",
-    LOGIN: "/",
+    LOGIN: "/login",
+    DRIVERREGISTRATION: "/driver-registration"
 }
 
 export const DEFAULT_REDIRECT = PATHS.HOME;
