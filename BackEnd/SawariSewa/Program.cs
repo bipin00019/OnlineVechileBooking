@@ -79,6 +79,7 @@ var jwtConfig = builder.Configuration.GetSection("JWT").Get<JwtConfig>();
 builder.Services.AddSingleton(jwtConfig);
 builder.Services.AddScoped<IJwtService, JwtService>();
 
+builder.Services.AddScoped<EmailService>();
 // Add JWT Authentication middleware
 builder.Services.AddAuthentication(options =>
 {

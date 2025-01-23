@@ -68,10 +68,56 @@ export const AuthProvider = ({ children }) => {
       };
     }
   };
+
+  const register = async (userData) => {
+    try {
+      const response = await authService.register(userData);  // Pass the user data
+      if (response.success) {
+        const token = response.data.token;
+        console.log("User token",token);
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUser(response.data.user);
+        toast.success("Registration successful!");
+        return { success: true };
+      } else {
+        toast.error(response.message || "Registration failed ");
+        console.log("Validation errors:", error.response?.data?.errors);
+
+        return { success: false, message: errorMessage };
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      const errorMessage = error.message || "An error occurred during registration";
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
+    }
+  };
+
+  const refreshUserToken = async () => {
+    try {
+      const response = await authService.refreshToken();
+      if (response.success) {
+        const token = response.data.token;
+        const refreshToken = response.data.refreshToken;
+        localStorage.setItem("token", token);
+        localStorage.setItem("refreshToken", refreshToken);
+        return true;
+      } else {
+        console.error("Token refresh error:", response.message);
+        return false;
+      }
+    } catch (error) {
+      console.error("Token refresh error:", error);
+      return false;
+    }
+  };
   const value = {
     user,
     loading,
     login,
+    refreshUserToken,
+    register,
     isAuthenticated: !!user,
     hasRole: (role) => user?.roles?.includes(role) || false,
   };
@@ -81,6 +127,8 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) {

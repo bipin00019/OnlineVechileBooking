@@ -116,6 +116,74 @@ public class AccountController : ApiControllerBase
         }
     }
 
+    //[HttpPost("Register")]
+    //[AllowAnonymous]
+    //public async Task<IActionResult> Register(RegisterViewModel model)
+    //{
+    //    try
+    //    {
+    //        if (!ModelState.IsValid)
+    //            return ValidationError();
+
+    //        var user = new ApplicationUser
+    //        {
+    //            UserName = model.Email,
+    //            Email = model.Email,
+    //            EmailConfirmed = true,
+    //            // Auto-confirm since only SuperAdmin can create users
+    //        };
+
+    //        var result = await _userManager.CreateAsync(user, model.Password);
+
+    //        if (result.Succeeded)
+    //        {
+    //            _logger.LogInformation("User {Email} created a new account", model.Email);
+
+    //            // Assign roles based on the request
+    //            if (model.Role == "SuperAdmin")
+    //            {
+    //                await _userManager.AddToRoleAsync(user, "SuperAdmin");
+    //            }
+    //            else if (model.Role == "Admin")
+    //            {
+    //                await _userManager.AddToRoleAsync(user, "Admin");
+    //            }
+    //            else if (model.Role == "Driver")
+    //            {
+    //                await _userManager.AddToRoleAsync(user, "Driver");
+    //            }
+    //            else if (model.Role == "Passenger")
+    //            {
+    //                await _userManager.AddToRoleAsync(user, "Passenger");
+    //            }
+
+
+    //            var roles = await _userManager.GetRolesAsync(user);
+    //            //var token = _jwtService.GenerateToken(user, roles);
+
+    //            return ApiResponse(new
+    //            {
+    //                //token,
+    //                user = new
+    //                {
+    //                    id = user.Id,
+    //                    email = user.Email,
+    //                    roles,
+    //                    emailConfirmed = user.EmailConfirmed
+    //                }
+    //            }, "Registration successful");
+    //        }
+
+    //        var errors = result.Errors.Select(e => e.Description).ToList();
+    //        return ApiError("Registration failed", errors);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(ex, "Error during registration for {Email}", model.Email);
+    //        return ApiError("Internal server error", statusCode: 500);
+    //    }
+    //}
+
     [HttpPost("Register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register(RegisterViewModel model)
@@ -129,8 +197,7 @@ public class AccountController : ApiControllerBase
             {
                 UserName = model.Email,
                 Email = model.Email,
-                EmailConfirmed = true,
-                // Auto-confirm since only SuperAdmin can create users
+                EmailConfirmed = true, // Auto-confirm email during registration
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -139,31 +206,17 @@ public class AccountController : ApiControllerBase
             {
                 _logger.LogInformation("User {Email} created a new account", model.Email);
 
-                // Assign roles based on the request
-                if (model.Role == "SuperAdmin")
-                {
-                    await _userManager.AddToRoleAsync(user, "SuperAdmin");
-                }
-                else if (model.Role == "Admin")
-                {
-                    await _userManager.AddToRoleAsync(user, "Admin");
-                }
-                else if (model.Role == "Driver")
-                {
-                    await _userManager.AddToRoleAsync(user, "Driver");
-                }
-                else if (model.Role == "Passenger")
-                {
-                    await _userManager.AddToRoleAsync(user, "Passenger");
-                }
-
+                // Assign the default role "Passenger" to all new users
+                await _userManager.AddToRoleAsync(user, "Passenger");
 
                 var roles = await _userManager.GetRolesAsync(user);
-                //var token = _jwtService.GenerateToken(user, roles);
+
+                var (token, refreshToken) = await _jwtService.GenerateTokensAsync(user, roles);
 
                 return ApiResponse(new
                 {
-                    //token,
+                    token,
+                    refreshToken,
                     user = new
                     {
                         id = user.Id,
@@ -183,6 +236,7 @@ public class AccountController : ApiControllerBase
             return ApiError("Internal server error", statusCode: 500);
         }
     }
+
 
     [HttpPost("Logout")]
     public async Task<IActionResult> Logout()

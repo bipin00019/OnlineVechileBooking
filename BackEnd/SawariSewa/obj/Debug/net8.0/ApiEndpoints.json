@@ -79,7 +79,39 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "SawariSewa.Areas.Passenger.Controllers.AccountController",
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
+    "Method": "SendVerificationCode",
+    "RelativePath": "api/Otp/send-code",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
+    "Method": "VerifyCode",
+    "RelativePath": "api/Otp/verify-code",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SawariSewa.Areas.Admin.Controllers.VerifyCodeRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TeleMedicineApp.Areas.Passenger.Controllers.AccountController",
     "Method": "Register",
     "RelativePath": "api/Passenger/Account/Register",
     "HttpMethod": "POST",
@@ -88,7 +120,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "SawariSewa.Areas.Passenger.ViewModel.PassengerRegisterViewModel",
+        "Type": "SawariSewa.Areas.Passenger.ViewModel.PassengerRegistrationViewModel",
         "IsRequired": true
       }
     ],

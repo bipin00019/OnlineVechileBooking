@@ -119,7 +119,7 @@ const Navbar = () => {
                     <LogIn size={40} />
                     <span className="text-s">Log In</span>
                   </button>
-                  <button onClick={() => navigate('/signup')} className="flex items-center space-x-1 hover:text-blue-200">
+                  <button onClick={() => navigate(PATHS.REGISTER)} className="flex items-center space-x-1 hover:text-blue-200">
                     <UserPlus size={40} />
                     <span className="text-s">Sign Up</span>
                   </button>
