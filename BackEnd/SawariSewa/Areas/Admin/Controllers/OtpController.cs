@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace SawariSewa.Areas.Admin.Controllers
@@ -24,6 +25,7 @@ namespace SawariSewa.Areas.Admin.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         [HttpPost("send-code")]
         public async Task<IActionResult> SendVerificationCode([FromBody] string email)
         {
@@ -50,6 +52,7 @@ namespace SawariSewa.Areas.Admin.Controllers
         }
 
         [HttpPost("verify-code")]
+        [AllowAnonymous]
         public IActionResult VerifyCode([FromBody] VerifyCodeRequest request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Code))

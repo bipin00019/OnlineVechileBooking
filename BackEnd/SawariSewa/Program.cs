@@ -127,9 +127,11 @@ builder.Services.AddAuthorization(options =>
         policy.RequireRole("SuperAdmin", "Admin", "Driver", "Passenger"));
 
     // Fallback policy to require authentication by default
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-        .RequireAuthenticatedUser()
-        .Build();
+    //options.FallbackPolicy = new AuthorizationPolicyBuilder()
+    //    .RequireAuthenticatedUser()
+    //    .Build();
+    options.FallbackPolicy = null; // Allows [AllowAnonymous] endpoints to bypass authentication
+
 });
 
 // Add default identity configuration with roles
