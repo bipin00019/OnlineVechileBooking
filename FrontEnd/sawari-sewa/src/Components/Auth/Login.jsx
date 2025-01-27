@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContexts';
 import { useState } from 'react';
 import LoginPhoto from '../../Static/Image/loginPhoto.jpeg';
+import { PATHS } from '../../constants/paths';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -124,7 +125,10 @@ const Login = () => {
         </div>
         <div className="mt-2 text-center text-lg">
           Don’t have an account?{' '}
-          <a href="/register" className="text-blue-600 text-lg hover:underline">
+          <a 
+          className="text-blue-600 text-lg hover:underline cursor-pointer"
+          onClick={() => navigate(PATHS.REGISTER)} 
+          >
             Register
           </a>
         </div>

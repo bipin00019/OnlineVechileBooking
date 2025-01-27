@@ -1,8 +1,23 @@
 import axios from "axios"
 import { API_URL } from "../config"
 
+
+const sendCodeForRegistration = async (email) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/Otp/send-code-for-register`,
+      email,{
+        headers : {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
 const sendVerificationCode = async (email) => {
-  console.log("sendVerificationCode called with email:", email);
     try {
         const response = await axios.post(
             `${API_URL}/Otp/send-code`,
@@ -31,4 +46,4 @@ const verifyCode = async (email, code) => {
     }
   };
   
-  export { sendVerificationCode, verifyCode };
+  export { sendVerificationCode, verifyCode, sendCodeForRegistration };

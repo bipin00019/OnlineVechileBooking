@@ -70,6 +70,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
+    console.log("React component register called with:", userData); // This should show all fields
+    console.log("La hai Register function invoked with userData:", userData); // Log the input data
     try {
       const response = await authService.register(userData);  // Pass the user data
       if (response.success) {

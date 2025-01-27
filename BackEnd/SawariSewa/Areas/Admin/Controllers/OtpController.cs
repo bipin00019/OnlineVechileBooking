@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using SawariSewa.Data;
 
 
 namespace SawariSewa.Areas.Admin.Controllers
@@ -18,12 +20,95 @@ namespace SawariSewa.Areas.Admin.Controllers
         public static string _globalEmail; // Global variable for email
         public static DateTime _codeGeneratedTime; // Global variable for code timestamp
         public readonly TimeSpan _codeExpiryTime = TimeSpan.FromMinutes(5);
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public OtpController(EmailService emailService, ILogger<OtpController> logger)
+        public OtpController(EmailService emailService, ILogger<OtpController> logger, UserManager<ApplicationUser> userManager)
         {
             _emailService = emailService;
             _logger = logger;
+            _userManager = userManager; // Inject UserManager for checking user existence
         }
+
+        //public OtpController(EmailService emailService, ILogger<OtpController> logger)
+        //{
+        //    _emailService = emailService;
+        //    _logger = logger;
+        //}
+
+        [AllowAnonymous]
+        //[HttpPost("send-code-for-register")]
+        //public async Task<IActionResult> SendVerificationCodeRegister([FromBody] string email)
+        //{
+        //    if (string.IsNullOrEmpty(email))
+        //    {
+        //        return BadRequest(new { success = false, message = "Email is required." });
+        //    }
+
+        //    email = email.ToLower(); // Normalize email
+
+        //    // Check if the email is already registered
+        //    var user = await _userManager.FindByEmailAsync(email);
+        //    if (user != null)
+        //    {
+        //        // Return a message if the email is already registered
+        //        return BadRequest(new { success = false, message = "This email is already registered. Cannot send verification code." });
+        //    }
+
+        //    // Check if the verification code was recently sent (optional)
+        //    //if (_globalEmail == email && _codeGeneratedTime.AddMinutes(5) > DateTime.UtcNow)
+        //    //{
+        //    //    // Prevent sending the code if it was recently sent (within 5 minutes)
+        //    //    return BadRequest("A verification code was already sent. Please wait before requesting a new one.");
+        //    //}
+
+        //    // Generate a random 6-digit code
+        //    _globalVerificationCode = new Random().Next(100000, 999999).ToString();
+        //    _globalEmail = email;
+        //    _codeGeneratedTime = DateTime.UtcNow;
+
+        //    _logger.LogInformation($"Generated code: {_globalVerificationCode} for email: {email}");
+
+        //    // Send email
+        //    var subject = "Your Email Verification Code";
+        //    var message = $"Your verification code is: {_globalVerificationCode}";
+        //    await _emailService.SendEmailAsync(email, subject, message);
+
+        //    return Ok(new { success = true, message = "Verification code sent." });
+        //}
+        [HttpPost("send-code-for-register")]
+        public async Task<IActionResult> SendVerificationCodeRegister([FromBody] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { success = false, message = "Email is required." });
+            }
+
+            email = email.ToLower(); // Normalize email
+
+            // Check if the email is already registered
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                // Return a message if the email is already registered
+                return BadRequest(new { success = false, message = "This email is already registered. Cannot send verification code." });
+            }
+
+            // Generate a random 6-digit code
+            _globalVerificationCode = new Random().Next(100000, 999999).ToString();
+            _globalEmail = email;
+            _codeGeneratedTime = DateTime.UtcNow;
+
+            _logger.LogInformation($"Generated code: {_globalVerificationCode} for email: {email}");
+
+            // Send email
+            var subject = "Your Email Verification Code";
+            var message = $"Your verification code is: {_globalVerificationCode}";
+            await _emailService.SendEmailAsync(email, subject, message);
+
+            return Ok(new { success = true, message = "Verification code sent." });
+        }
+
+
 
         [AllowAnonymous]
         [HttpPost("send-code")]

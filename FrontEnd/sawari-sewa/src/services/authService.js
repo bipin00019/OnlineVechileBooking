@@ -22,8 +22,12 @@ const login = async (credentials) => {
     try {
         const completeUserData = {
             email: userData.email,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            phoneNumber: userData.phoneNumber,
             password: userData.password,
-            confirmPassword: userData.password
+            confirmPassword: userData.password,
+
         };
 
         const response = await axios.post(

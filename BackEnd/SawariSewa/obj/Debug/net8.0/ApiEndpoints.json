@@ -96,6 +96,22 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
+    "Method": "SendVerificationCodeRegister",
+    "RelativePath": "api/Otp/send-code-for-register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
     "Method": "VerifyCode",
     "RelativePath": "api/Otp/verify-code",
     "HttpMethod": "POST",

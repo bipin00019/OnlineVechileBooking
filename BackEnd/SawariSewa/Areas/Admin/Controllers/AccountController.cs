@@ -196,8 +196,14 @@ public class AccountController : ApiControllerBase
             var user = new ApplicationUser
             {
                 UserName = model.Email,
-                Email = model.Email,
-                EmailConfirmed = true, // Auto-confirm email during registration
+                PhoneNumber = model.PhoneNumber,
+                Email = model.Email,// Auto-confirm email during registration
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                EmailConfirmed = true, 
+                
+                
+                
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -222,7 +228,10 @@ public class AccountController : ApiControllerBase
                         id = user.Id,
                         email = user.Email,
                         roles,
-                        emailConfirmed = user.EmailConfirmed
+                        emailConfirmed = user.EmailConfirmed,
+                        user.PhoneNumber,
+                        user.FirstName,
+                        user.LastName,
                     }
                 }, "Registration successful");
             }

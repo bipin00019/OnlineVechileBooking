@@ -25,4 +25,10 @@
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Areas\Driver\Controller\" />
+      <Folder Include="Areas\Driver\Models\" />
+      <Folder Include="Areas\Driver\ViewModel\" />
+    </ItemGroup>
+
 </Project>

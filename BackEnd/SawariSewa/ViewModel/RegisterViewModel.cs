@@ -9,6 +9,17 @@ public class RegisterViewModel
     public string Email { get; set; }
 
     [Required]
+    [StringLength(50, ErrorMessage = "The full name must not exceed 50 characters.")]
+    public string FirstName { get; set; }
+
+    [Required]
+    [StringLength(50, ErrorMessage = "The full name must not exceed 50 characters.")]
+    public string LastName { get; set; }
+
+    [Required]
+    public string PhoneNumber { get; set; } // Phone Number property with 10-digit constraint
+    
+    [Required]
     [StringLength(100, MinimumLength = 6)]
     [DataType(DataType.Password)]
     public string Password { get; set; }
