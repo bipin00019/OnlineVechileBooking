@@ -11,6 +11,9 @@ const login = async (credentials) => {
         localStorage.setItem("token", response.data.data.token);
         localStorage.setItem("refreshToken", response.data.data.refreshToken);
         localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      } else {
+        // Handle failure based on response.data.message
+        setError(response.data.message || 'Login failed');
       }
       return response.data;
     } catch (error) {

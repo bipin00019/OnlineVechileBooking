@@ -6,6 +6,7 @@ import Login from "../Components/Auth/Login";
 import DriverRegistration from "../Components/Pages/DriverRegistration";
 import Register from "../Components/Pages/Register";
 import VerifyEmail from "../Components/Pages/verifyEmail";
+import ForgotPassword from "../Components/Pages/ForgotPassword";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -14,6 +15,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.DRIVERREGISTRATION} element = {<DriverRegistration/>}/>
             <Route path = {PATHS.REGISTER} element = {<Register/>} />
             <Route path = {PATHS.VERIFYEMAIL} element = {<VerifyEmail/>} />
+            <Route path = {PATHS.FORGOTPASSWORD} element = {<ForgotPassword/>} />
         </Routes> 
     )
 }

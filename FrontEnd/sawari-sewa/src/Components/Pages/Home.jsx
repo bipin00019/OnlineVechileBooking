@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../Navbar/Navbar'
 import HomeBody from './HomeBody'
+
 const Home = () => {
   return (
     <div>

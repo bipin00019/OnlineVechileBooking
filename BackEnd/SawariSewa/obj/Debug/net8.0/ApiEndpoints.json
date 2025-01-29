@@ -143,6 +143,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Controllers.ResetPasswordController",
+    "Method": "ForgotPassword",
+    "RelativePath": "api/ResetPassword/forgot-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "SawariSewa.Controllers.ForgotPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

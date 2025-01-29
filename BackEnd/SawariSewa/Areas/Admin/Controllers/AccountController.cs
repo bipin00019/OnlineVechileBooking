@@ -39,6 +39,7 @@ public class AccountController : ApiControllerBase
         _jwtService = jwtService;
     }
 
+
     [HttpPost("Login")]
     [AllowAnonymous]  // Override the controller-level authorization for login
     public async Task<IActionResult> Login(LoginViewModel model)
@@ -48,11 +49,19 @@ public class AccountController : ApiControllerBase
             if (!ModelState.IsValid)
                 return ValidationError();
 
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            // Check if the email is registered
+            if (user == null)
+            {
+                _logger.LogWarning("Unregistered email attempted login: {Email}", model.Email);
+                return UnauthorizedError("Unregistered email");
+            }
+
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
                 var roles = await _userManager.GetRolesAsync(user);
                 var (token, refreshToken) = await _jwtService.GenerateTokensAsync(user, roles);
 
@@ -82,6 +91,7 @@ public class AccountController : ApiControllerBase
                 return ApiError("Account locked out", statusCode: 423);
             }
 
+            _logger.LogWarning("Invalid credentials for {Email}", model.Email);
             return UnauthorizedError("Invalid credentials");
         }
         catch (Exception ex)
@@ -90,6 +100,7 @@ public class AccountController : ApiControllerBase
             return ApiError("Internal server error", statusCode: 500);
         }
     }
+
 
     [HttpPost("RefreshToken")]
     [AllowAnonymous]
