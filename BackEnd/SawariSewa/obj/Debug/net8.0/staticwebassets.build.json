@@ -1,12 +1,20 @@
 {
   "Version": 1,
-  "Hash": "BVxPuZD4TUGRdY1qVjnR5qnn7lkegUvQtjYIt0RfCpI=",
+  "Hash": "nhqDgBwHb7aW6LxRMXID+E5er9U0yQWgfaS7sLcEh+Y=",
   "Source": "SawariSewa",
   "BasePath": "_content/SawariSewa",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "SawariSewa\\wwwroot",
+      "Source": "SawariSewa",
+      "ContentRoot": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\",
+      "BasePath": "_content/SawariSewa",
+      "Pattern": "**"
+    }
+  ],
   "Assets": [
     {
       "Identity": "C:\\Users\\bipin\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\8.0.4\\staticwebassets\\V5\\css\\site.css",
