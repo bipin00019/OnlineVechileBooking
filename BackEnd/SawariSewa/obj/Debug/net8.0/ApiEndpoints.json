@@ -79,6 +79,102 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "ApplyForDriver",
+    "RelativePath": "api/Driver/apply-for-driver",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "LicenseNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "VehicleType",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "VehicleNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "LicensePhoto",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "DriverPhoto",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "BillbookPhoto",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "CitizenshipFront",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "CitizenshipBack",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "SelfieWithID",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
+        "Name": "StartingPoint",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DestinationLocation",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Status",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "CreatedAt",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "ApprovedBy",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "ApprovedAt",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SawariSewa.Areas.Driver.Model.DriverApplications",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
     "Method": "SendVerificationCode",
     "RelativePath": "api/Otp/send-code",
