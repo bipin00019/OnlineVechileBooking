@@ -2,6 +2,7 @@
 {
     public class DriverApplicationDTO
     {
+       
         public string LicenseNumber { get; set; }
         public string VehicleType { get; set; }
         public string VehicleNumber { get; set; }
@@ -13,9 +14,8 @@
         public IFormFile SelfieWithID { get; set; }
         public string StartingPoint { get; set; }
         public string DestinationLocation { get; set; }
-        public string Status { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public string ApprovedBy { get; set; }
-        public DateTime? ApprovedAt { get; set; }
+        //public DateTime CreatedAt { get; set; }
+        //public string ApprovedBy { get; set; }
+        //public DateTime? ApprovedAt { get; set; }
     }
 }

@@ -75,7 +75,8 @@ public class AccountController : ApiControllerBase
                     {
                         id = user.Id,
                         email = user.Email,
-                        roles
+                        roles,
+
                     }
                 }, "Login successful");
             }
@@ -141,6 +142,11 @@ public class AccountController : ApiControllerBase
     //            UserName = model.Email,
     //            Email = model.Email,
     //            EmailConfirmed = true,
+    //            FirstName = model.FirstName,
+    //            LastName = model.LastName,
+    //            PhoneNumber = model.PhoneNumber,
+
+
     //            // Auto-confirm since only SuperAdmin can create users
     //        };
 
@@ -171,16 +177,21 @@ public class AccountController : ApiControllerBase
 
     //            var roles = await _userManager.GetRolesAsync(user);
     //            //var token = _jwtService.GenerateToken(user, roles);
+    //            var (token, refreshToken) = await _jwtService.GenerateTokensAsync(user, roles);
 
     //            return ApiResponse(new
     //            {
-    //                //token,
+    //                token,
+    //                refreshToken,
     //                user = new
     //                {
     //                    id = user.Id,
     //                    email = user.Email,
     //                    roles,
-    //                    emailConfirmed = user.EmailConfirmed
+    //                    emailConfirmed = user.EmailConfirmed,
+    //                    user.PhoneNumber,
+    //                    user.FirstName,
+    //                    user.LastName,
     //                }
     //            }, "Registration successful");
     //        }
@@ -211,10 +222,10 @@ public class AccountController : ApiControllerBase
                 Email = model.Email,// Auto-confirm email during registration
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                EmailConfirmed = true, 
-                
-                
-                
+                EmailConfirmed = true,
+
+
+
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

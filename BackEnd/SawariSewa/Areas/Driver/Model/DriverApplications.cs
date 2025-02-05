@@ -19,7 +19,6 @@ namespace SawariSewa.Areas.Driver.Model
         public string DestinationLocation { get; set; }
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string ApprovedBy { get; set; }
         public DateTime? ApprovedAt { get; set; }
 
         // Navigation property to link with AspNetUsers table

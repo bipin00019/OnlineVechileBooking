@@ -37,6 +37,7 @@ export default function HomeBody() {
 
   const isSuperAdmin = userRoles.includes('SuperAdmin');
   const isAdmin = userRoles.includes('Admin');
+  const isDriver = userRoles.includes('Driver');
 
   console.log('Current User Roles:', userRoles);
 
@@ -60,7 +61,13 @@ export default function HomeBody() {
               <h2 className="text-3xl font-bold text-center">Admin Logged In</h2>
               <p className="text-center text-lg">Welcome, Admin. You can manage content here.</p>
             </div>
-          ) : (
+          ) : isDriver ? (
+            <div className="bg-white rounded-lg shadow-lg p-4 space-y-4 mt-36">
+              <h2 className="text-3xl font-bold text-center">Driver Logged In</h2>
+              <p className="text-center text-lg">Welcome, Driver. </p>
+            </div>
+          ) :
+          (
             // Remaining code for regular users
             <div className="bg-white rounded-lg shadow-lg p-4 space-y-4 mt-36">
               <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr,auto] gap-4 items-center">

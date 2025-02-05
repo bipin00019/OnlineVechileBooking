@@ -80,6 +80,26 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetDriverApplications",
+    "RelativePath": "api/Driver/all-driver-applications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[SawariSewa.Areas.Driver.DTO.DriverApplicationSummartDTO, SawariSewa, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "ApplyForDriver",
     "RelativePath": "api/Driver/apply-for-driver",
     "HttpMethod": "POST",
@@ -140,26 +160,6 @@
         "Name": "DestinationLocation",
         "Type": "System.String",
         "IsRequired": false
-      },
-      {
-        "Name": "Status",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "CreatedAt",
-        "Type": "System.DateTime",
-        "IsRequired": false
-      },
-      {
-        "Name": "ApprovedBy",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "ApprovedAt",
-        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -173,6 +173,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "ApproveDriverApplication",
+    "RelativePath": "api/Driver/approve-driver/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
