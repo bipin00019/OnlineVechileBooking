@@ -1,131 +1,19 @@
-﻿//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using SawariSewa.Data;
-//using System;
-//using System.IO;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Hosting;
-//using System.Security.Claims;
-//using SawariSewa.Areas.Driver.Model;
-//using SawariSewa.Areas.Driver.DTO;
-
-//namespace SawariSewa.Areas.Driver.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class DriverController : ControllerBase
-//    {
-//        private readonly ApplicationDbContext _context;
-//        private readonly IWebHostEnvironment _env;
-
-//        public DriverController(ApplicationDbContext context, IWebHostEnvironment env)
-//        {
-//            _context = context;
-//            _env = env;
-//        }
-
-//        // POST: api/Driver/apply-for-driver
-//        [HttpPost("apply-for-driver")]
-//        public async Task<ActionResult<DriverApplications>> ApplyForDriver([FromForm] DriverApplicationDTO driverApplicationDto)
-//        {
-//            // Get the UserId from the logged-in user (from the claims)
-//            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-//            if (userId == null)
-//            {
-//                return Unauthorized("User not authenticated.");
-//            }
-
-//            // Check if the user exists in the database
-//            var user = await _context.Users.FindAsync(userId); // Use the userId from the claims
-//            if (user == null)
-//            {
-//                return NotFound("User not found");
-//            }
-
-//            // Generate file paths for images
-//            string licensePhotoPath = await SaveFileAsync(driverApplicationDto.LicensePhoto, "licenses");
-//            string driverPhotoPath = await SaveFileAsync(driverApplicationDto.DriverPhoto, "drivers");
-//            string billbookPhotoPath = await SaveFileAsync(driverApplicationDto.BillbookPhoto, "billbooks");
-//            string citizenshipFrontPath = await SaveFileAsync(driverApplicationDto.CitizenshipFront, "citizenships");
-//            string citizenshipBackPath = await SaveFileAsync(driverApplicationDto.CitizenshipBack, "citizenships");
-//            string selfieWithIDPath = await SaveFileAsync(driverApplicationDto.SelfieWithID, "selfies");
-
-//            // Map DTO to entity
-//            var driverApplication = new DriverApplications
-//            {
-//                UserId = userId, // Use the userId from the claims
-//                LicenseNumber = driverApplicationDto.LicenseNumber,
-//                VehicleType = driverApplicationDto.VehicleType,
-//                VehicleNumber = driverApplicationDto.VehicleNumber,
-//                LicensePhotoPath = licensePhotoPath,
-//                DriverPhotoPath = driverPhotoPath,
-//                BillbookPhotoPath = billbookPhotoPath,
-//                CitizenshipFrontPath = citizenshipFrontPath,
-//                CitizenshipBackPath = citizenshipBackPath,
-//                SelfieWithIDPath = selfieWithIDPath,
-//                StartingPoint = driverApplicationDto.StartingPoint,
-//                DestinationLocation = driverApplicationDto.DestinationLocation,
-//                Status = "Pending",  // You can set it to "Pending" or modify as per business logic
-//                CreatedAt = DateTime.UtcNow
-//            };
-
-//            // Save to the database
-//            _context.DriverApplications.Add(driverApplication);
-//            await _context.SaveChangesAsync();
-
-//            // Return the created driver application with proper route
-//            return CreatedAtAction(nameof(ApplyForDriver), new { id = driverApplication.Id }, driverApplication);
-//        }
-
-//        // Method to save file to the server
-//        private async Task<string> SaveFileAsync(IFormFile file, string folderName)
-//        {
-//            if (file == null || file.Length == 0)
-//            {
-//                return null;
-//            }
-
-//            string folderPath = Path.Combine(_env.WebRootPath, "uploads", folderName);
-//            Directory.CreateDirectory(folderPath);
-
-//            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-//            string filePath = Path.Combine(folderPath, fileName);
-
-//            // Save the file to the server
-//            try
-//            {
-//                using (var stream = new FileStream(filePath, FileMode.Create))
-//                {
-//                    await file.CopyToAsync(stream);
-//                }
-//                return Path.Combine("uploads", folderName, fileName);
-//            }
-//            catch (Exception ex)
-//            {
-//                // Handle file save errors and log
-//                throw new Exception("File saving failed: " + ex.Message);
-//            }
-//        }
-
-
-//    }
-//}
-
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SawariSewa.Areas.Driver.DTO;
+using SawariSewa.Areas.Driver.Model;
 using SawariSewa.Data;
+using SawariSewa.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using System.Security.Claims;
-using SawariSewa.Areas.Driver.Model;
-using SawariSewa.Areas.Driver.DTO;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace SawariSewa.Areas.Driver.Controllers
 {
@@ -163,25 +51,20 @@ namespace SawariSewa.Areas.Driver.Controllers
                 }
 
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
                 if (string.IsNullOrEmpty(userId))
                 {
                     return Unauthorized(new { message = "User not authenticated. Please log in." });
                 }
 
                 // Check if user exists in database
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Id == userId);
-
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
                 if (user == null)
                 {
                     return NotFound(new { message = "User account not found. Please register first." });
                 }
 
                 // Check if user is already a registered driver
-                var existingDriver = await _context.DriverApplications
-                    .FirstOrDefaultAsync(d => d.UserId == userId);
-
+                var existingDriver = await _context.DriverApplications.FirstOrDefaultAsync(d => d.UserId == userId);
                 if (existingDriver != null)
                 {
                     return BadRequest(new { message = "You are already registered as a driver." });
@@ -189,10 +72,8 @@ namespace SawariSewa.Areas.Driver.Controllers
 
                 // Check for existing pending or in-progress applications
                 var existingApplication = await _context.DriverApplications
-                    .Where(d => d.UserId == userId &&
-                           (d.Status == "Pending" || d.Status == "In Progress"))
+                    .Where(d => d.UserId == userId && (d.Status == "Pending" || d.Status == "In Progress"))
                     .FirstOrDefaultAsync();
-
                 if (existingApplication != null)
                 {
                     return BadRequest(new
@@ -253,7 +134,6 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception details here
                 return StatusCode(500, new
                 {
                     message = "An error occurred while processing your application.",
@@ -262,7 +142,7 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
         }
 
-        // Existing SaveFileAsync method remains the same
+        // Helper method to save uploaded files.
         private async Task<string> SaveFileAsync(IFormFile file, string folderName)
         {
             if (file == null || file.Length == 0)
@@ -282,6 +162,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                 {
                     await file.CopyToAsync(stream);
                 }
+                // Return relative path for storage in the database.
                 return Path.Combine("uploads", folderName, fileName);
             }
             catch (Exception ex)
@@ -290,22 +171,33 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
         }
 
-        // Existing GetDriverApplications method remains the same
+        // UPDATED: Endpoint for admin/superadmin to review all driver applications
+        // with all the uploaded file paths and details.
         [HttpGet("all-driver-applications")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<ActionResult<IEnumerable<DriverApplicationSummartDTO>>> GetDriverApplications()
+        public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications()
         {
             var driverApplications = await _context.DriverApplications
                 .Join(_context.Users,
                       d => d.UserId,
                       u => u.Id,
-                      (d, u) => new DriverApplicationSummartDTO
+                      (d, u) => new DriverApplicationReviewDTO
                       {
                           Id = d.Id,
                           LicenseNumber = d.LicenseNumber,
+                          VehicleType = d.VehicleType,
                           VehicleNumber = d.VehicleNumber,
+                          LicensePhotoPath = d.LicensePhotoPath,
+                          DriverPhotoPath = d.DriverPhotoPath,
+                          BillbookPhotoPath = d.BillbookPhotoPath,
+                          CitizenshipFrontPath = d.CitizenshipFrontPath,
+                          CitizenshipBackPath = d.CitizenshipBackPath,
+                          SelfieWithIDPath = d.SelfieWithIDPath,
                           StartingPoint = d.StartingPoint,
                           DestinationLocation = d.DestinationLocation,
+                          Status = d.Status,
+                          CreatedAt = d.CreatedAt,
+                          ApprovedAt = d.ApprovedAt,
                           FirstName = u.FirstName,
                           LastName = u.LastName
                       })
@@ -319,32 +211,6 @@ namespace SawariSewa.Areas.Driver.Controllers
             return Ok(driverApplications);
         }
 
-        //[HttpGet("license/{id}")]
-        //public async Task<ActionResult<string>> GetDriverLicense(int id)
-        //{
-        //    try
-        //    {
-        //        var driverApplication = await _context.DriverApplications
-        //            .Where(d => d.Id == id)
-        //            .Select(d => new { d.LicenseNumber })
-        //            .FirstOrDefaultAsync();
-
-        //        if (driverApplication == null)
-        //        {
-        //            return NotFound(new { message = "No driver application found with the specified ID." });
-        //        }
-
-        //        return Ok(new { licenseNumber = driverApplication.LicenseNumber });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new
-        //        {
-        //            message = "An error occurred while retrieving the license number.",
-        //            error = ex.Message
-        //        });
-        //    }
-        //}
         [HttpPost("approve-driver/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> ApproveDriverApplication(int id)
@@ -360,19 +226,18 @@ namespace SawariSewa.Areas.Driver.Controllers
                     return NotFound(new { message = "Application not found." });
 
                 if (application.Status != "Pending")
-                    return BadRequest(new { message = "Application is not in pending state." });
-
-                // Update application status
-                application.Status = "Approved";
-                application.ApprovedAt = DateTime.UtcNow;
+                    return BadRequest(new { message = "Application is not in a pending state." });
 
                 // Add user to Driver role
                 await _userManager.AddToRoleAsync(application.User, "Driver");
 
+                // Remove the application from the DriverApplications table after approval
+                _context.DriverApplications.Remove(application);
+
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return Ok(new { message = "Driver application approved successfully." });
+                return Ok(new { message = "Driver application approved and removed from applications list." });
             }
             catch (Exception ex)
             {
@@ -383,5 +248,3 @@ namespace SawariSewa.Areas.Driver.Controllers
 
     }
 }
-
-

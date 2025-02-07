@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SawariSewa.Areas.Driver.Model;
-using SawariSewa.Areas.Passenger.Models;
 using SawariSewa.Models;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -16,11 +15,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
     public DbSet<DriverApplications> DriverApplications { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
-    public DbSet<PassengerDetails> PassengerDetails { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelbuilder)
     {
         base.OnModelCreating(modelbuilder);
-        modelbuilder.Entity<PassengerDetails>().ToTable("PassengerDetails");
+       // modelbuilder.Entity<PassengerDetails>().ToTable("PassengerDetails");
     }
 }

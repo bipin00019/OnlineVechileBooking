@@ -1,6 +1,6 @@
 ﻿namespace SawariSewa.Areas.Driver.DTO
 {
-    public class DriverApplicationSummartDTO
+    public class DriverApplicationSummaryDTO
     {
         public int Id { get; set; }  // Add the Id property
         public string FirstName { get; set; }

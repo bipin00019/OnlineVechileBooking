@@ -25,4 +25,11 @@
       <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Areas\User\" />
+      <Folder Include="Areas\Passenger\Controllers\" />
+      <Folder Include="Areas\Passenger\Models\" />
+      <Folder Include="Areas\Passenger\ViewModel\" />
+    </ItemGroup>
+
 </Project>
