@@ -85,7 +85,18 @@
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.IEnumerable\u00601[[SawariSewa.Areas.Driver.DTO.DriverApplicationReviewDTO, SawariSewa, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
@@ -188,6 +199,26 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetDestinationPoints",
+    "RelativePath": "api/Driver/get-destination-location",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetStartingPoints",
+    "RelativePath": "api/Driver/get-starting-points",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

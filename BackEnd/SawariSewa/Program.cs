@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using SawariSewa.Data;
 using SawariSewa.Models;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,14 +19,15 @@ builder.Services.AddControllers();
 // Add Swagger support to explore the APIs
 builder.Services.AddEndpointsApiExplorer();
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", builder =>
+    options.AddPolicy(MyAllowSpecificOrigins, builder =>
     {
         // Allow React app from http://localhost:5173 (Vite default port)
         builder
-            .WithOrigins("http://localhost:5173") // React app origin
+            .WithOrigins("http://localhost:5173", "http://localhost:7291") // React app origin and backend url
             .AllowAnyMethod() // Allow all HTTP methods (GET, POST, etc.)
             .AllowAnyHeader() // Allow all headers
             .AllowCredentials(); // Allow cookies/credentials if needed
@@ -149,6 +151,12 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 
 var app = builder.Build();
 
+
+
+
+// Use the CORS policy before other middlewares
+app.UseCors(MyAllowSpecificOrigins);
+
 // Create roles if they don't exist
 using (var scope = app.Services.CreateScope())
 {
@@ -178,6 +186,18 @@ if (app.Environment.IsDevelopment())
         // c.RoutePrefix = string.Empty;  
     });
 }
+// Enable static file serving
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","uploads")),
+    RequestPath = "/uploads",
+    ServeUnknownFileTypes = true // Allow all file types
+});
+
+
+
+
 
 // Use CORS policy (Make sure to call this before Authentication/Authorization)
 app.UseCors("AllowReactApp");  // Apply the CORS policy for the React app

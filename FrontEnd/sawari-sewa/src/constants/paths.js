@@ -5,6 +5,8 @@ export const PATHS = {
     REGISTER: "/signup",
     VERIFYEMAIL: "/verify-email",
     FORGOTPASSWORD: "/forgot-password",
+    DRIVERAPPLICATIONS: "/driver-applications",
+
 }
 
 export const DEFAULT_REDIRECT = PATHS.HOME;

@@ -64,11 +64,11 @@ namespace SawariSewa.Areas.Driver.Controllers
                 }
 
                 // Check if user is already a registered driver
-                var existingDriver = await _context.DriverApplications.FirstOrDefaultAsync(d => d.UserId == userId);
-                if (existingDriver != null)
-                {
-                    return BadRequest(new { message = "You are already registered as a driver." });
-                }
+                //var existingDriver = await _context.DriverApplications.FirstOrDefaultAsync(d => d.UserId == userId);
+                //if (existingDriver != null)
+                //{
+                //    return BadRequest(new { message = "You are already registered as a driver." });
+                //}
 
                 // Check for existing pending or in-progress applications
                 var existingApplication = await _context.DriverApplications
@@ -173,43 +173,101 @@ namespace SawariSewa.Areas.Driver.Controllers
 
         // UPDATED: Endpoint for admin/superadmin to review all driver applications
         // with all the uploaded file paths and details.
+        //[HttpGet("all-driver-applications")]
+        //[Authorize(Roles = "Admin,SuperAdmin")]
+        //public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications()
+        //{
+        //    var driverApplications = await _context.DriverApplications
+        //        .Join(_context.Users,
+        //              d => d.UserId,
+        //              u => u.Id,
+        //              (d, u) => new DriverApplicationReviewDTO
+        //              {
+        //                  Id = d.Id,
+        //                  LicenseNumber = d.LicenseNumber,
+        //                  VehicleType = d.VehicleType,
+        //                  VehicleNumber = d.VehicleNumber,
+        //                  LicensePhotoPath = d.LicensePhotoPath,
+        //                  DriverPhotoPath = d.DriverPhotoPath,
+        //                  BillbookPhotoPath = d.BillbookPhotoPath,
+        //                  CitizenshipFrontPath = d.CitizenshipFrontPath,
+        //                  CitizenshipBackPath = d.CitizenshipBackPath,
+        //                  SelfieWithIDPath = d.SelfieWithIDPath,
+        //                  StartingPoint = d.StartingPoint,
+        //                  DestinationLocation = d.DestinationLocation,
+        //                  Status = d.Status,
+        //                  CreatedAt = d.CreatedAt,
+        //                  ApprovedAt = d.ApprovedAt,
+        //                  FirstName = u.FirstName,
+        //                  LastName = u.LastName
+        //              })
+        //        .ToListAsync();
+
+        //    if (driverApplications == null || driverApplications.Count == 0)
+        //    {
+        //        return NotFound(new { message = "No driver applications found." });
+        //    }
+
+        //    return Ok(driverApplications);
+        //}
+
         [HttpGet("all-driver-applications")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications()
+        public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications(
+        int page = 1,
+        int pageSize = 5)
         {
-            var driverApplications = await _context.DriverApplications
+            // Validate page and pageSize
+            page = page > 0 ? page : 1;
+            pageSize = pageSize > 0 ? pageSize : 5;
+
+            var driverApplicationsQuery = _context.DriverApplications
                 .Join(_context.Users,
-                      d => d.UserId,
-                      u => u.Id,
-                      (d, u) => new DriverApplicationReviewDTO
-                      {
-                          Id = d.Id,
-                          LicenseNumber = d.LicenseNumber,
-                          VehicleType = d.VehicleType,
-                          VehicleNumber = d.VehicleNumber,
-                          LicensePhotoPath = d.LicensePhotoPath,
-                          DriverPhotoPath = d.DriverPhotoPath,
-                          BillbookPhotoPath = d.BillbookPhotoPath,
-                          CitizenshipFrontPath = d.CitizenshipFrontPath,
-                          CitizenshipBackPath = d.CitizenshipBackPath,
-                          SelfieWithIDPath = d.SelfieWithIDPath,
-                          StartingPoint = d.StartingPoint,
-                          DestinationLocation = d.DestinationLocation,
-                          Status = d.Status,
-                          CreatedAt = d.CreatedAt,
-                          ApprovedAt = d.ApprovedAt,
-                          FirstName = u.FirstName,
-                          LastName = u.LastName
-                      })
+                    d => d.UserId,
+                    u => u.Id,
+                    (d, u) => new DriverApplicationReviewDTO
+                    {
+                        Id = d.Id,
+                        LicenseNumber = d.LicenseNumber,
+                        VehicleType = d.VehicleType,
+                        VehicleNumber = d.VehicleNumber,
+                        LicensePhotoPath = d.LicensePhotoPath,
+                        DriverPhotoPath = d.DriverPhotoPath,
+                        BillbookPhotoPath = d.BillbookPhotoPath,
+                        CitizenshipFrontPath = d.CitizenshipFrontPath,
+                        CitizenshipBackPath = d.CitizenshipBackPath,
+                        SelfieWithIDPath = d.SelfieWithIDPath,
+                        StartingPoint = d.StartingPoint,
+                        DestinationLocation = d.DestinationLocation,
+                        Status = d.Status,
+                        CreatedAt = d.CreatedAt,
+                        ApprovedAt = d.ApprovedAt,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName
+                    });
+
+            // Apply pagination (skip and take)
+            var pagedApplications = await driverApplicationsQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            if (driverApplications == null || driverApplications.Count == 0)
+            // Get total count for pagination metadata
+            var totalCount = await driverApplicationsQuery.CountAsync();
+
+            if (pagedApplications == null || pagedApplications.Count == 0)
             {
                 return NotFound(new { message = "No driver applications found." });
             }
 
-            return Ok(driverApplications);
+            // Return paginated data along with total count for pagination UI
+            return Ok(new
+            {
+                data = pagedApplications,
+                totalCount = totalCount
+            });
         }
+
 
         [HttpPost("approve-driver/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
@@ -231,19 +289,59 @@ namespace SawariSewa.Areas.Driver.Controllers
                 // Add user to Driver role
                 await _userManager.AddToRoleAsync(application.User, "Driver");
 
-                // Remove the application from the DriverApplications table after approval
+                // Create an ApprovedDriver record
+                var approvedDriver = new ApprovedDrivers
+                {
+                    UserId = application.UserId,
+                    LicenseNumber = application.LicenseNumber,
+                    VehicleNumber = application.VehicleNumber,
+                    VehicleType = application.VehicleType,
+                    LicensePhotoPath = application.LicensePhotoPath,
+                    DriverPhotoPath = application.DriverPhotoPath,
+                    BillbookPhotoPath = application.BillbookPhotoPath,
+                    CitizenshipFrontPath = application.CitizenshipFrontPath,
+                    CitizenshipBackPath = application.CitizenshipBackPath,
+                    SelfieWithIDPath = application.SelfieWithIDPath,
+                    StartingPoint = application.StartingPoint,
+                    DestinationLocation = application.DestinationLocation,
+                    PhoneNumber = application.User.PhoneNumber,  // Get phone number from the User table
+                    FirstName = application.User.FirstName,     // Get first name from the User table
+                    LastName = application.User.LastName,       // Get last name from the User table
+                    Email = application.User.Email,             // Get email from the User table
+                    ApprovedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                // Add the approved driver to the ApprovedDrivers table
+                _context.ApprovedDrivers.Add(approvedDriver);
+
+                // Remove the driver application after approval
                 _context.DriverApplications.Remove(application);
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return Ok(new { message = "Driver application approved and removed from applications list." });
+                return Ok(new { message = "Driver application approved and added to ApprovedDrivers table." });
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 return StatusCode(500, new { message = "Error approving application.", error = ex.Message });
             }
+        }
+
+        // In your ApprovedDriversController
+        [HttpGet("get-starting-points")]
+        public IActionResult GetStartingPoints()
+        {
+            var startingPoints = _context.ApprovedDrivers.Select(d => d.StartingPoint).Distinct().ToList();
+            return Ok(startingPoints);
+        }
+        [HttpGet("get-destination-location")]
+        public IActionResult GetDestinationPoints()
+        {
+            var destinationLocations = _context.ApprovedDrivers.Select(d => d.DestinationLocation).Distinct().ToList();
+            return Ok(destinationLocations);
         }
 
     }

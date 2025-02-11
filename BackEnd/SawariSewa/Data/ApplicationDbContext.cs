@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     }
     public DbSet<DriverApplications> DriverApplications { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<ApprovedDrivers> ApprovedDrivers { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelbuilder)

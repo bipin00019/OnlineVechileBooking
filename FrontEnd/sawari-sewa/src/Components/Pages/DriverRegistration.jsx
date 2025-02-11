@@ -1,227 +1,217 @@
 import React, { useState } from 'react';
-import bg from '../../Static/Image/bg.jpeg';
+import { applyForDriver } from '../../services/DriverService';
+import { useNavigate } from 'react-router-dom';
 
 const DriverRegistration = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
-    phoneNumber: '',
-    email: '',
-    licenseNumber: '',
-    licensePhoto: null,
-    vehicleNumber: '',
-    blueBookPhoto: null,
-    driverSelfie: null,
+    LicenseNumber: '',
+    VehicleNumber: '',
+    VehicleType: '',
+    StartingPoint: '',
+    DestinationLocation: '',
   });
 
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [files, setFiles] = useState({
+    LicensePhoto: null,
+    DriverPhoto: null,
+    BillbookPhoto: null,
+    CitizenshipFront: null,
+    CitizenshipBack: null,
+    SelfieWithID: null,
+  });
 
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  // Handle text input changes
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      setFormData((prev) => ({
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle file input changes
+  const handleFileChange = (e) => {
+    const { name, files: [file] } = e.target;
+    if (file) {
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        setMessage(`File ${file.name} is too large. Maximum size is 5MB`);
+        return;
+      }
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+      if (!allowedTypes.includes(file.type)) {
+        setMessage(`File ${file.name} is not a valid image type. Please use JPG, JPEG or PNG`);
+        return;
+      }
+
+      console.log(`File selected for ${name}:`, file.name);
+      setFiles(prev => ({
         ...prev,
-        [name]: files[0],
+        [name]: file,
       }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setMessage(''); // Clear any error messages
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setMessage('');
     setLoading(true);
+    setSuccess(false);
 
-    if (
-      !formData.fullName ||
-      !formData.phoneNumber ||
-      !formData.email ||
-      !formData.licenseNumber ||
-      !formData.licensePhoto ||
-      !formData.vehicleNumber ||
-      !formData.blueBookPhoto ||
-      !formData.driverSelfie
-    ) {
-      setError('All fields are required.');
+    // First, verify we have all required files
+    const requiredFiles = ['LicensePhoto', 'DriverPhoto', 'BillbookPhoto', 'CitizenshipFront', 'CitizenshipBack', 'SelfieWithID'];
+    const missingFiles = requiredFiles.filter(fileKey => !files[fileKey]);
+    
+    if (missingFiles.length > 0) {
+      setMessage(`Please upload all required files: ${missingFiles.join(', ')}`);
       setLoading(false);
       return;
     }
 
+    const formDataToSend = new FormData();
+
+    // Append form fields to FormData
+    Object.entries(formData).forEach(([key, value]) => {
+      if (value.trim()) { // Only append if value is not empty
+        formDataToSend.append(key, value);
+        console.log(`Appending form field ${key}:`, value);
+      }
+    });
+
+    // Append files to FormData with explicit file names
+    Object.entries(files).forEach(([key, file]) => {
+      if (file) {
+        formDataToSend.append(key, file, file.name);
+        console.log(`Appending file ${key}:`, file.name);
+      }
+    });
+
     try {
-      console.log('Form Submitted:', formData);
-      alert('Driver registration successful!');
-    } catch (err) {
-      console.error('Error:', err);
-      setError('Failed to register driver. Please try again.');
+      const response = await applyForDriver(formDataToSend);
+      setMessage(response.message || 'Registration successful!');
+      setSuccess(true);
+      console.log('Registration successful:', response);
+    } catch (error) {
+      console.error('Registration error:', error);
+      setMessage(error.message || 'Driver registration failed.');
     } finally {
       setLoading(false);
     }
   };
 
+  // Render file input field
+  const renderFileInput = (name, label) => (
+    <div className="mb-4 w-full">
+      <label className="block text-lg font-medium mb-1 text-white">
+        {label} <span className="text-red-500">*</span>
+      </label>
+      <input
+        type="file"
+        name={name}
+        onChange={handleFileChange}
+        required
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:ring-2 focus:ring-blue-500 text-white"
+        accept="image/jpeg,image/png,image/jpg"
+      />
+      {files[name] && (
+        <p className="mt-1 text-sm text-green-400">
+          Selected: {files[name].name}
+        </p>
+      )}
+    </div>
+  );
+
+  // Render text input field
+  const renderTextInput = (name, label) => (
+    <div className="mb-4 w-full">
+      <label className="block text-lg font-medium mb-1 text-white">
+        {label} <span className="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        required
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:ring-2 focus:ring-blue-500 text-black"
+        placeholder={`Enter ${label.toLowerCase()}`}
+      />
+    </div>
+  );
+
   return (
-    <div className="min-h-screen flex">
-      {/* Left Section */}
-      <div className="bg-[#17252A] text-white w-full md:w-[800px] p-8 flex flex-col justify-center">
-        <div className="flex justify-center space-x-4">
-          <div className="w-20 h-20 flex items-center justify-center mr-8">
-            <span className="text-9xl">🚗</span>
-          </div>
-          <div>
-            <span className="text-6xl font-bold text-white">Sewari Sewa</span>
-            <div className="text-2xl">Trusted Ticketing Platform</div>
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <div className="bg-[#17252A] text-white w-full md:w-1/3 p-8 flex flex-col justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="text-6xl">🚗</div>
+          <div className="text-center">
+            <h1 className="text-4xl font-bold">Sewari Sewa</h1>
+            <p className="text-xl">Trusted Ticketing Platform</p>
           </div>
         </div>
-        <div className="mt-8">
-          <h1 className="text-4xl font-bold">Join Our Driver Community</h1>
-          <p className="text-lg opacity-90 mt-4">
-            Register today to become a part of a trusted network of drivers and provide exceptional service to our customers.
+        <div className="mt-8 text-center">
+          <h2 className="text-3xl font-bold">Join Our Driver Community</h2>
+          <p className="text-lg mt-4 opacity-90">
+            Register today to become a part of a trusted network of drivers and provide
+            exceptional service to our customers.
           </p>
         </div>
       </div>
-
-      {/* Right Section */}
-      <div
-        className="flex-1 flex items-center justify-center p-8"
-        style={{
-          backgroundImage: `url(${bg})`,
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="bg-[#00000099] text-white w-full max-w-2xl p-8 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-semibold text-center mb-6">Driver Registration</h2>
-          {error && <div className="bg-red-100 px-4 py-2 rounded-lg mb-4">{error}</div>}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="fullName" className="block text-lg font-medium mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="phoneNumber" className="block text-lg font-medium mb-1">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-lg font-medium mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="licenseNumber" className="block text-lg font-medium mb-1">
-                License Number
-              </label>
-              <input
-                type="text"
-                id="licenseNumber"
-                name="licenseNumber"
-                value={formData.licenseNumber}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="licensePhoto" className="block text-lg font-medium mb-1">
-                License Photo
-              </label>
-              <input
-                type="file"
-                id="licensePhoto"
-                name="licensePhoto"
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="vehicleNumber" className="block text-lg font-medium mb-1">
-                Vehicle Number
-              </label>
-              <input
-                type="text"
-                id="vehicleNumber"
-                name="vehicleNumber"
-                value={formData.vehicleNumber}
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="blueBookPhoto" className="block text-lg font-medium mb-1">
-                Bluebook Photo
-              </label>
-              <input
-                type="file"
-                id="blueBookPhoto"
-                name="blueBookPhoto"
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="driverSelfie" className="block text-lg font-medium mb-1">
-                Driver Selfie
-              </label>
-              <input
-                type="file"
-                id="driverSelfie"
-                name="driverSelfie"
-                onChange={handleChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+      <div className="flex-1 bg-[#17252A] p-4 md:p-8 bg-opacity-90">
+        <div className="max-w-3xl mx-auto bg-[#00000099] rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-semibold text-center mb-6 text-white">Driver Registration</h2>
+          {message && (
+            <div 
+              className={`px-4 py-2 rounded-lg mb-4 ${
+                success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              }`}
             >
-              {loading ? 'Registering...' : 'Register as Driver'}
-            </button>
-          </form>
+              {message}
+            </div>
+          )}
+          {success ? (
+            <div className="text-center">
+              <p className="text-green-500 text-lg font-semibold mb-4">
+                Registration Form Applied Successfully!
+              </p>
+              <button
+                onClick={() => navigate('/')}
+                className="bg-blue-600 text-white py-3 px-6 rounded-lg font-medium text-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+              >
+                Go to Home Page
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {renderTextInput('LicenseNumber', 'License Number')}
+              {renderTextInput('VehicleNumber', 'Vehicle Number')}
+              {renderTextInput('VehicleType', 'Vehicle Type')}
+              {renderTextInput('StartingPoint', 'Starting Point')}
+              {renderTextInput('DestinationLocation', 'Destination Location')}
+              {renderFileInput('LicensePhoto', 'License Photo')}
+              {renderFileInput('DriverPhoto', 'Driver Photo')}
+              {renderFileInput('BillbookPhoto', 'Vehicle Billbook Photo')}
+              {renderFileInput('CitizenshipFront', 'Citizenship Front')}
+              {renderFileInput('CitizenshipBack', 'Citizenship Back')}
+              {renderFileInput('SelfieWithID', 'Selfie with ID')}
+              <div className="col-span-1 md:col-span-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium text-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-50"
+                >
+                  {loading ? 'Registering...' : 'Register as Driver'}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     </div>
