@@ -20,7 +20,7 @@ namespace SawariSewa.Areas.Driver.Model
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ApprovedAt { get; set; }
-
+        public string VehiclePhotoPath { get; set; }
         // Navigation property to link with AspNetUsers table
         public virtual ApplicationUser User { get; set; }
     }

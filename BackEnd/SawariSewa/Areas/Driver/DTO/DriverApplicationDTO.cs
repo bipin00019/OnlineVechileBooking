@@ -12,6 +12,7 @@
         public IFormFile CitizenshipFront { get; set; }
         public IFormFile CitizenshipBack { get; set; }
         public IFormFile SelfieWithID { get; set; }
+        public IFormFile VehiclePhoto { get; set; }
         public string StartingPoint { get; set; }
         public string DestinationLocation { get; set; }
         //public DateTime CreatedAt { get; set; }

@@ -91,6 +91,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                 string citizenshipFrontPath = await SaveFileAsync(driverApplicationDto.CitizenshipFront, "citizenships");
                 string citizenshipBackPath = await SaveFileAsync(driverApplicationDto.CitizenshipBack, "citizenships");
                 string selfieWithIDPath = await SaveFileAsync(driverApplicationDto.SelfieWithID, "selfies");
+                string vehiclePhotoPath = await SaveFileAsync(driverApplicationDto.VehiclePhoto, "vehicles");
 
                 // Validate all required documents are uploaded
                 if (string.IsNullOrEmpty(licensePhotoPath) ||
@@ -98,7 +99,9 @@ namespace SawariSewa.Areas.Driver.Controllers
                     string.IsNullOrEmpty(billbookPhotoPath) ||
                     string.IsNullOrEmpty(citizenshipFrontPath) ||
                     string.IsNullOrEmpty(citizenshipBackPath) ||
-                    string.IsNullOrEmpty(selfieWithIDPath))
+                    string.IsNullOrEmpty(selfieWithIDPath)||
+                    string.IsNullOrEmpty(vehiclePhotoPath))
+
                 {
                     return BadRequest(new { message = "All required documents must be uploaded." });
                 }
@@ -118,7 +121,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     StartingPoint = driverApplicationDto.StartingPoint,
                     DestinationLocation = driverApplicationDto.DestinationLocation,
                     Status = "Pending",
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    VehiclePhotoPath = vehiclePhotoPath
                 };
 
                 _context.DriverApplications.Add(driverApplication);
@@ -212,7 +216,7 @@ namespace SawariSewa.Areas.Driver.Controllers
         //}
 
         [HttpGet("all-driver-applications")]
-        [Authorize(Roles = "Admin,SuperAdmin")]
+        //[Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications(
         int page = 1,
         int pageSize = 5)
@@ -237,6 +241,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                         CitizenshipFrontPath = d.CitizenshipFrontPath,
                         CitizenshipBackPath = d.CitizenshipBackPath,
                         SelfieWithIDPath = d.SelfieWithIDPath,
+                        VehiclePhotoPath = d.VehiclePhotoPath,
                         StartingPoint = d.StartingPoint,
                         DestinationLocation = d.DestinationLocation,
                         Status = d.Status,
@@ -270,7 +275,7 @@ namespace SawariSewa.Areas.Driver.Controllers
 
 
         [HttpPost("approve-driver/{id}")]
-        [Authorize(Roles = "Admin,SuperAdmin")]
+        
         public async Task<ActionResult> ApproveDriverApplication(int id)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -302,6 +307,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                     CitizenshipFrontPath = application.CitizenshipFrontPath,
                     CitizenshipBackPath = application.CitizenshipBackPath,
                     SelfieWithIDPath = application.SelfieWithIDPath,
+                    VehiclePhotoPath = application.VehiclePhotoPath,
                     StartingPoint = application.StartingPoint,
                     DestinationLocation = application.DestinationLocation,
                     PhoneNumber = application.User.PhoneNumber,  // Get phone number from the User table

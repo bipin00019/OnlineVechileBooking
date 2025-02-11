@@ -19,6 +19,7 @@ const DriverRegistration = () => {
     CitizenshipFront: null,
     CitizenshipBack: null,
     SelfieWithID: null,
+    VehiclePhoto: null,
   });
 
   const [message, setMessage] = useState('');
@@ -66,7 +67,7 @@ const DriverRegistration = () => {
     setSuccess(false);
 
     // First, verify we have all required files
-    const requiredFiles = ['LicensePhoto', 'DriverPhoto', 'BillbookPhoto', 'CitizenshipFront', 'CitizenshipBack', 'SelfieWithID'];
+    const requiredFiles = ['LicensePhoto', 'DriverPhoto', 'BillbookPhoto', 'CitizenshipFront', 'CitizenshipBack', 'SelfieWithID', 'VehiclePhoto'];
     const missingFiles = requiredFiles.filter(fileKey => !files[fileKey]);
     
     if (missingFiles.length > 0) {
@@ -201,6 +202,7 @@ const DriverRegistration = () => {
               {renderFileInput('CitizenshipFront', 'Citizenship Front')}
               {renderFileInput('CitizenshipBack', 'Citizenship Back')}
               {renderFileInput('SelfieWithID', 'Selfie with ID')}
+              {renderFileInput('VehiclePhoto', 'Vehicle Photo')}
               <div className="col-span-1 md:col-span-2">
                 <button
                   type="submit"

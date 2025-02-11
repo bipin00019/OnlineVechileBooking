@@ -167,6 +167,7 @@
 // };
 
 // export default ViewDriverApplications;
+
 import React, { useState, useEffect } from "react";
 import { allDriverApplications } from "../../services/DriverService";
 import { API_BASE_URL } from "../../config";
@@ -180,18 +181,17 @@ const ViewDriverApplications = () => {
   const [imageLoadErrors, setImageLoadErrors] = useState({});
 
   const pageSize = 10;
-  
 
   useEffect(() => {
     const fetchDriverApplications = async () => {
       try {
         const data = await allDriverApplications(currentPage, pageSize);
-        console.log('Fetched data:', data); // Debug log
+        console.log("Fetched data:", data); // Debug log
         setDriverApplications(data.data);
         setTotalPages(Math.ceil(data.totalCount / pageSize));
       } catch (err) {
         setError("Failed to load driver applications");
-        console.error('Fetch error:', err);
+        console.error("Fetch error:", err);
       } finally {
         setLoading(false);
       }
@@ -202,14 +202,13 @@ const ViewDriverApplications = () => {
 
   const handleImageError = (id, type) => {
     console.log(`Image load error for ${id}-${type}`); // Debug log
-    setImageLoadErrors(prev => ({
+    setImageLoadErrors((prev) => ({
       ...prev,
-      [`${id}-${type}`]: true
+      [`${id}-${type}`]: true,
     }));
   };
 
   const renderImage = (path, alt, id, type) => {
-    //console.log('Original path:', path); // Add this log
     if (imageLoadErrors[`${id}-${type}`] || !path) {
       return (
         <div className="w-12 h-12 bg-gray-200 flex items-center justify-center text-sm text-gray-500 rounded">
@@ -218,13 +217,10 @@ const ViewDriverApplications = () => {
       );
     }
 
-    // Clean up the path - remove wwwroot if it's in the path
-    const cleanPath = path.replace(/^wwwroot[\/\\]?/, '')
-                         .replace(/^uploads[\/\\]?/, '')
-                         .replace(/\\/g, '/');
-    
-    const fullImageUrl = `${API_BASE_URL}/uploads/${cleanPath}`;
-    console.log('Image URL:', fullImageUrl); // Debug log
+    // Ensure correct path handling
+    const cleanPath = path.replace(/^wwwroot[\\/]+/, "").replace(/\\/g, "/");
+    const fullImageUrl = `${API_BASE_URL}/${cleanPath}`;
+    console.log("Image URL:", fullImageUrl); // Debug log
 
     return (
       <div className="relative group">
@@ -234,10 +230,6 @@ const ViewDriverApplications = () => {
           className="w-12 h-12 object-cover rounded shadow group-hover:scale-150 transition-transform duration-200 cursor-pointer"
           onError={() => handleImageError(id, type)}
         />
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" 
-             style={{ display: 'none' }}>
-          Loading...
-        </div>
       </div>
     );
   };
@@ -291,11 +283,15 @@ const ViewDriverApplications = () => {
                     </div>
                   </td>
                   <td className="px-4 py-2 border-b">
-                    <span className={`px-2 py-1 rounded-full text-sm ${
-                      application.status === 'Approved' ? 'bg-green-100 text-green-800' :
-                      application.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-sm ${
+                        application.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : application.status === "Pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
                       {application.status}
                     </span>
                   </td>
@@ -306,6 +302,7 @@ const ViewDriverApplications = () => {
                     {renderImage(application.citizenshipFrontPath, "Citizenship Front", application.id, "citizenshipFront")}
                     {renderImage(application.citizenshipBackPath, "Citizenship Back", application.id, "citizenshipBack")}
                     {renderImage(application.selfieWithIDPath, "Selfie", application.id, "selfie")}
+                    {renderImage(application.vehiclePhotoPath,"Vehicle",application.id,"vehicle")}
                   </td>
                 </tr>
               ))}
@@ -316,7 +313,7 @@ const ViewDriverApplications = () => {
 
       <div className="flex justify-between items-center mt-6">
         <button
-          onClick={() => setCurrentPage(prev => prev - 1)}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
           disabled={currentPage === 1}
           className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
         >
@@ -326,8 +323,8 @@ const ViewDriverApplications = () => {
           Page {currentPage} of {totalPages}
         </span>
         <button
-          onClick={() => setCurrentPage(prev => prev + 1)}
-          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          disabled={currentPage >= totalPages}
           className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
         >
           Next

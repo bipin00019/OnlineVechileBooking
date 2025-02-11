@@ -13,8 +13,10 @@
         public string CitizenshipFrontPath { get; set; }
         public string CitizenshipBackPath { get; set; }
         public string SelfieWithIDPath { get; set; }
+        public string VehiclePhotoPath { get; set; }
         public string StartingPoint { get; set; }
         public string DestinationLocation { get; set; }
+
 
         // New fields
         public string PhoneNumber { get; set; }

@@ -14,6 +14,7 @@
         public string SelfieWithIDPath { get; set; }
         public string StartingPoint { get; set; }
         public string DestinationLocation { get; set; }
+        public string VehiclePhotoPath { get; set; }
         public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ApprovedAt { get; set; }

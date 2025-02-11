@@ -163,6 +163,11 @@
         "IsRequired": false
       },
       {
+        "Name": "VehiclePhoto",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      },
+      {
         "Name": "StartingPoint",
         "Type": "System.String",
         "IsRequired": false
