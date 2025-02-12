@@ -227,6 +227,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetSingleDriverApplication",
+    "RelativePath": "api/Driver/single-driver-application/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SawariSewa.Areas.Driver.DTO.DriverApplicationReviewDTO",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
     "Method": "SendVerificationCode",
     "RelativePath": "api/Otp/send-code",

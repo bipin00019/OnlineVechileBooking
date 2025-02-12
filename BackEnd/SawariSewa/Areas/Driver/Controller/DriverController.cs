@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using System.Security.Cryptography.Xml;
 
 namespace SawariSewa.Areas.Driver.Controllers
 {
@@ -273,9 +274,47 @@ namespace SawariSewa.Areas.Driver.Controllers
             });
         }
 
+        [HttpGet("single-driver-application/{id}")]
+        public async Task<ActionResult<DriverApplicationReviewDTO>> GetSingleDriverApplication(int id)
+        {
+            var driverApplication = await _context.DriverApplications
+                .Where(d => d.Id == id)
+                .Join(_context.Users,
+                d => d.UserId,
+                u => u.Id,
+                (d, u) => new DriverApplicationReviewDTO
+                {
+                    Id = d.Id,
+                    LicenseNumber = d.LicenseNumber,
+                    VehicleType = d.VehicleType,
+                    VehicleNumber = d.VehicleNumber,
+                    LicensePhotoPath = d.LicensePhotoPath,
+                    DriverPhotoPath = d.DriverPhotoPath,
+                    BillbookPhotoPath = d.BillbookPhotoPath,
+                    CitizenshipFrontPath = d.CitizenshipFrontPath,
+                    CitizenshipBackPath = d.CitizenshipBackPath,
+                    SelfieWithIDPath = d.SelfieWithIDPath,
+                    VehiclePhotoPath = d.VehiclePhotoPath,
+                    StartingPoint = d.StartingPoint,
+                    DestinationLocation = d.DestinationLocation,
+                    Status = d.Status,
+                    CreatedAt = d.CreatedAt,
+                    ApprovedAt = d.ApprovedAt,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber
+                })
+                .FirstOrDefaultAsync();
+            if (driverApplication == null)
+            {
+                return NotFound(new {message = "Driver application not found."});
+            }
+            return Ok(driverApplication);
+        }
 
-        [HttpPost("approve-driver/{id}")]
-        
+
+        [HttpPost("approve-driver/{id}")]        
         public async Task<ActionResult> ApproveDriverApplication(int id)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

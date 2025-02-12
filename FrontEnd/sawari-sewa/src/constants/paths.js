@@ -6,6 +6,7 @@ export const PATHS = {
     VERIFYEMAIL: "/verify-email",
     FORGOTPASSWORD: "/forgot-password",
     DRIVERAPPLICATIONS: "/driver-applications",
+    REVIEWDRIVERAPPLICATION: "/review-driver-application/:id",
 
 }
 

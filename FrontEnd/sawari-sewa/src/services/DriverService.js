@@ -99,3 +99,14 @@ export const allDriverApplications = async (page = 1, pageSize = 5) => {
     throw error; // Rethrow the error so it can be handled later if needed
   }
 };
+
+export const singleDriverApplication = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/Driver/single-driver-application/${id}`);
+    console.log ("Response",response);
+    return response.data;
+  } catch (error) {
+    console.error("Error while fetching single driver application", error);
+    throw error;
+  }
+};
