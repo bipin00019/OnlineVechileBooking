@@ -120,3 +120,53 @@ export const totalApplicationCount = async() => {
     throw error;
   }
 };
+
+export const approveDriverApplication = async(id) => {
+  try{
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.log("No token found. User is not authorized");
+      alert("Session expired. Please log in again");
+      return;
+    }
+    const response = await axios.post(
+      `${API_URL}/Driver/approve-driver/${id}`,
+      {},
+      {
+        headers: {
+          Authorization:`Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to approve the driver application", error);
+    let errorMessage = error.response?.data?.message || error.response?.data || error.message || "An unknown error occurred";
+    alert("Approval failed: ",errorMessage);
+    throw errorMessage;
+  }
+}
+
+export const rejectDriverApplication = async(id) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Session expired. Please log in");
+      return;
+    }
+    const response = await axios.post(`${API_URL}/Driver/reject-driver/${id}`,
+      {},
+      {
+        headers: {
+          Authorization:`Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to reject the driver application", error);
+    let errorMessage = error.response?.data?.message || error.response?.data || error.message || "An unknown error occurred";
+    //alert("Approval failed: ",errorMessage);
+    throw errorMessage;
+  }
+}

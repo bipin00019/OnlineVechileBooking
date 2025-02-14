@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { API_BASE_URL } from "../../config";
 import Navbar from "../Navbar/Navbar";
-import { singleDriverApplication } from "../../services/DriverService";
+import { singleDriverApplication, approveDriverApplication, rejectDriverApplication} from "../../services/DriverService";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ReviewDriverApplication = () => {
   const { id } = useParams();
@@ -11,6 +13,8 @@ const ReviewDriverApplication = () => {
   const [error, setError] = useState(null);
   const [imageLoadErrors, setImageLoadErrors] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isApproving, setIsApproving] = useState(false);
+  const [ isRejecting, setIsRejecting] = useState(false);
 
   useEffect(() => {
     const fetchSingleDriverApplication = async () => {
@@ -26,6 +30,32 @@ const ReviewDriverApplication = () => {
     };
     fetchSingleDriverApplication();
   }, [id]);
+
+  const handleApprove = async() => {
+    setIsApproving(true);
+    try{
+      await approveDriverApplication(id);
+      setApplication((prev) => ({...prev, status: "Approved"}));
+      toast.success("Application approved successfully.");
+    } catch (error) {
+      toast.error("Failed to approve the application");
+    } finally {
+      setIsApproving(false);
+    }
+  };
+
+  const handleReject = async() => {
+    setIsRejecting(true);
+    try {
+      await rejectDriverApplication(id);
+      setApplication((prev) => ({...prev, status: "Rejected"}));
+      toast.success("Application rejected successfully");
+    } catch (error) {
+      toast.error("Failed to reject the application");
+    } finally {
+      setIsRejecting(false);
+    }
+  };
 
   const handleImageError = (type) => {
     setImageLoadErrors((prev) => ({
@@ -137,16 +167,16 @@ const ReviewDriverApplication = () => {
           {application.status === "Pending" && (
           <div className="mt-4 flex gap-4">
             <button
-            //onClick={handleApprove}
+            onClick={handleApprove}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
             >
-              Approve
+              {isApproving? "Approving" : "Approve"}
           </button>
           <button
-          //onClick={handleReject}
+          onClick={handleReject}
           className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
           >
-            Reject
+            {isRejecting? "Rejecting":"Reject"}
           </button>
           </div>
   )}

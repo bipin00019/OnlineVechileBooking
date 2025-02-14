@@ -181,7 +181,7 @@ namespace SawariSewa.Areas.Driver.Controllers
 
       
         [HttpGet("all-driver-applications")]
-        //[Authorize(Roles = "Admin,SuperAdmin")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications(
         int page = 1,
         int pageSize = 5)
@@ -239,6 +239,7 @@ namespace SawariSewa.Areas.Driver.Controllers
         }
 
         [HttpGet("single-driver-application/{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<DriverApplicationReviewDTO>> GetSingleDriverApplication(int id)
         {
             var driverApplication = await _context.DriverApplications
@@ -370,6 +371,7 @@ namespace SawariSewa.Areas.Driver.Controllers
         //}
 
         [HttpPost("approve-driver/{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> ApproveDriverApplication(int id)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -439,6 +441,7 @@ namespace SawariSewa.Areas.Driver.Controllers
         }
 
         [HttpPost("reject-driver/{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> RejectDriverApplication(int id)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -479,6 +482,7 @@ namespace SawariSewa.Areas.Driver.Controllers
 
 
         [HttpGet ("driver-application-count")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task <ActionResult> GetDriverCounts()
         {
             var totalApplications = await _context.DriverApplications.CountAsync(); 
@@ -494,12 +498,14 @@ namespace SawariSewa.Areas.Driver.Controllers
 
         // In your ApprovedDriversController
         [HttpGet("get-starting-points")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult GetStartingPoints()
         {
             var startingPoints = _context.ApprovedDrivers.Select(d => d.StartingPoint).Distinct().ToList();
             return Ok(startingPoints);
         }
         [HttpGet("get-destination-location")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult GetDestinationPoints()
         {
             var destinationLocations = _context.ApprovedDrivers.Select(d => d.DestinationLocation).Distinct().ToList();
