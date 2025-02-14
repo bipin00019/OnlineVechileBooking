@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace SawariSewa.Services
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
 
@@ -15,16 +15,16 @@ namespace SawariSewa.Services
             _configuration = configuration;
         }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string message)
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress("Sawari Sewa", _configuration["EmailSettings:FromEmail"]));
             email.To.Add(new MailboxAddress("", toEmail));
             email.Subject = subject;
 
-            email.Body = new TextPart("plain")
+            email.Body = new TextPart("html")
             {
-                Text = message
+                Text = body
             };
 
             using var smtp = new SmtpClient();

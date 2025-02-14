@@ -162,7 +162,8 @@ import CarBackground from '../../Static/Image/road.jpeg';
 import { fetchStartingPoints, fetchDestinationLocations } from '../../services/DriverService';
 
 export default function HomeBody() {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDateFrom, setSelectedDateFrom] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDateTo, setSelectedDateTo] = useState(new Date().toISOString().split('T')[0]);
   const [userRoles, setUserRoles] = useState([]);
   const [startingPoints, setStartingPoints] = useState([]);
   const [destinationLocations, setDestinationLocations] = useState([]);
@@ -196,6 +197,27 @@ export default function HomeBody() {
 
     getDestinationLocations();
   }, []);
+
+  // Helper to generate dates dynamically for the date navigation
+  const generateDates = (startDate, daysCount) => {
+    const dates = [];
+    const options = { weekday: 'short' }; // Weekday format (e.g., Mon, Tue)
+
+    for (let i = 0; i < daysCount; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+
+      const day = String(date.getDate()).padStart(2, '0');
+      const weekday = new Intl.DateTimeFormat('en-US', options).format(date);
+      const dateString = date.toISOString().split('T')[0];
+
+      dates.push({ day, weekday, dateString, selected: i === 0 });
+    }
+    return dates;
+  };
+
+  const datesFrom = generateDates(new Date(), 5); // Generate 5 days for "From" date picker
+  const datesTo = generateDates(new Date(), 5); // Generate 5 days for "To" date picker
 
   return (
     <div className="h-screen w-screen bg-gradient-to-b from-sky-100 to-white">
@@ -265,14 +287,39 @@ export default function HomeBody() {
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* Date Navigation For From */}
+            <div className="flex justify-center space-x-4 mb-4">
+              {datesFrom.map((date) => (
+                <button
+                  key={date.dateString}
+                  onClick={() => setSelectedDateFrom(date.dateString)}
+                  className={`flex flex-col items-center p-2 rounded-lg min-w-[60px] ${
+                    date.dateString === selectedDateFrom
+                      ? 'bg-blue-500 text-white'
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="text-lg font-semibold">{date.day}</span>
+                  <span className="text-sm">{date.weekday}</span>
+                </button>
+              ))}
+            </div>
+
+           
+
+            {/* Calendar input, allowing user to select the date from calendar */}
+            <div className="flex justify-center">
               <input
                 type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="p-3 border rounded-lg hover:border-blue-500 outline-none"
+                value={selectedDateFrom}
+                onChange={(e) => setSelectedDateFrom(e.target.value)}
+                className="border px-4 py-2 rounded-lg"
               />
             </div>
-            <div className="flex justify-end">
+
+            <div className="flex justify-end mt-6">
               <button className="bg-blue-600 text-white px-8 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Search
               </button>

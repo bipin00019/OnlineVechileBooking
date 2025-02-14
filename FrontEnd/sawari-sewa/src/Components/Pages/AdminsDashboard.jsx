@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Users, 
   Car, 
@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '../../constants/paths';
+import { totalApplicationCount } from '../../services/DriverService';
 
 const AdminDashboard = () => {
   // Sample state data - In real app, this would come from your backend
@@ -18,8 +19,8 @@ const AdminDashboard = () => {
     activeBookings: 145,
     totalVehicles: 89,
     activeDrivers: 67,
-    totalRevenue: 158900,
-    pendingApprovals: 12
+    totalRevenue: 158900
+    
   });
 
   const [realtimeAlerts] = useState([
@@ -36,6 +37,21 @@ const AdminDashboard = () => {
   ]);
 
   const navigate = useNavigate();
+
+  const [totalApplications, setTotalApplications] = useState(0);
+
+  //Fetch the total application
+  useEffect(() => {
+    const fetchTotalApplications = async () => {
+      try {
+        const total = await totalApplicationCount();
+        setTotalApplications(total);
+      } catch (error) {
+        console.error("Failed to fetch total applications count", error);
+      }
+    };
+    fetchTotalApplications();
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -56,7 +72,7 @@ const AdminDashboard = () => {
               <h3 className="text-sm font-medium text-gray-600">Driver Applications</h3>
               <Dock className="h-4 w-4 text-gray-500" />
             </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.pendingApprovals}</p>
+            <p className="text-2xl font-bold text-gray-900">{totalApplications}</p>
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow">

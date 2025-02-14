@@ -14,11 +14,11 @@ const ReviewDriverApplication = () => {
 
   useEffect(() => {
     const fetchSingleDriverApplication = async () => {
-      try{
+      try {
         const data = await singleDriverApplication(id);
         setApplication(data);
       } catch {
-        setError("Failed to load driver application detals");
+        setError("Failed to load driver application details");
         console.log("Error while fetching driver application");
       } finally {
         setLoading(false);
@@ -37,7 +37,7 @@ const ReviewDriverApplication = () => {
   const renderDocument = (path, type, title, description) => {
     if (imageLoadErrors[type] || !path) {
       return (
-        <div className="w-full h-96 bg-gray-200 flex items-center justify-center text-gray-500 rounded">
+        <div className="w-full h-64 bg-gray-200 flex items-center justify-center text-gray-500 rounded">
           No Image Available
         </div>
       );
@@ -47,19 +47,19 @@ const ReviewDriverApplication = () => {
     const fullImageUrl = `${API_BASE_URL}/${cleanPath}`;
 
     return (
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h3 className="text-xl font-semibold mb-4">{title}</h3>
-        <p className="text-gray-600 mb-4">{description}</p>
-        <div className="relative group cursor-pointer" onClick={() => setSelectedImage(fullImageUrl)}>
+      <div className="bg-white p-4 rounded-lg shadow h-full">
+        <h3 className="text-lg font-semibold mb-2">{title}</h3>
+        <p className="text-gray-600 mb-3 text-sm">{description}</p>
+        <div className="relative group cursor-pointer h-64" onClick={() => setSelectedImage(fullImageUrl)}>
           <img
             src={fullImageUrl}
             alt={title}
-            className="w-full h-96 object-cover rounded shadow transition-transform duration-200 hover:scale-105"
+            className="w-full h-full object-cover rounded shadow transition-transform duration-200 hover:scale-105"
             onError={() => handleImageError(type)}
           />
           <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-200 rounded"></div>
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span className="bg-black bg-opacity-75 text-white px-4 py-2 rounded">Click to enlarge</span>
+            <span className="bg-black bg-opacity-75 text-white px-4 py-2 rounded text-sm">Click to enlarge</span>
           </div>
         </div>
       </div>
@@ -132,60 +132,79 @@ const ReviewDriverApplication = () => {
               <p><span className="font-medium">Approved At:</span> {new Date(application.approvedAt).toLocaleDateString()}</p>
             )}
           </div>
+
+          {/* Show buttons only if the status is Pending */}
+          {application.status === "Pending" && (
+          <div className="mt-4 flex gap-4">
+            <button
+            //onClick={handleApprove}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Approve
+          </button>
+          <button
+          //onClick={handleReject}
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Reject
+          </button>
+          </div>
+  )}
         </div>
 
         {/* Documents Section */}
-        <div className="space-y-8">
-          <h2 className="text-2xl font-semibold">Documents</h2>
-          
-          {renderDocument(
-            application.licensePhotoPath,
-            "license",
-            "Driver's License",
-            "Official driving license issued by the government"
-          )}
-          
-          {renderDocument(
-            application.driverPhotoPath,
-            "driver",
-            "Driver Photo",
-            "Recent photograph of the driver"
-          )}
-          
-          {renderDocument(
-            application.billbookPhotoPath,
-            "billbook",
-            "Vehicle Billbook",
-            "Official vehicle registration document"
-          )}
-          
-          {renderDocument(
-            application.citizenshipFrontPath,
-            "citizenshipFront",
-            "Citizenship Card (Front)",
-            "Front side of the citizenship identification card"
-          )}
-          
-          {renderDocument(
-            application.citizenshipBackPath,
-            "citizenshipBack",
-            "Citizenship Card (Back)",
-            "Back side of the citizenship identification card"
-          )}
-          
-          {renderDocument(
-            application.selfieWithIDPath,
-            "selfie",
-            "Selfie with ID",
-            "Self-portrait photograph with identification document"
-          )}
-          
-          {renderDocument(
-            application.vehiclePhotoPath,
-            "vehicle",
-            "Vehicle Photo",
-            "Current photograph of the vehicle to be used"
-          )}
+        <div>
+          <h2 className="text-2xl font-semibold mb-6">Documents</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {renderDocument(
+              application.licensePhotoPath,
+              "license",
+              "Driver's License",
+              "Official driving license issued by the government"
+            )}
+            
+            {renderDocument(
+              application.driverPhotoPath,
+              "driver",
+              "Driver Photo",
+              "Recent photograph of the driver"
+            )}
+            
+            {renderDocument(
+              application.billbookPhotoPath,
+              "billbook",
+              "Vehicle Billbook",
+              "Official vehicle registration document"
+            )}
+            
+            {renderDocument(
+              application.citizenshipFrontPath,
+              "citizenshipFront",
+              "Citizenship Card (Front)",
+              "Front side of the citizenship identification card"
+            )}
+            
+            {renderDocument(
+              application.citizenshipBackPath,
+              "citizenshipBack",
+              "Citizenship Card (Back)",
+              "Back side of the citizenship identification card"
+            )}
+            
+            {renderDocument(
+              application.selfieWithIDPath,
+              "selfie",
+              "Selfie with ID",
+              "Self-portrait photograph with identification document"
+            )}
+            
+            {renderDocument(
+              application.vehiclePhotoPath,
+              "vehicle",
+              "Vehicle Photo",
+              "Current photograph of the vehicle to be used"
+            )}
+          </div>
         </div>
       </div>
 
@@ -195,13 +214,40 @@ const ReviewDriverApplication = () => {
           className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="max-w-4xl w-full max-h-screen">
-            <img
-              src={selectedImage}
-              alt="Enlarged view"
-              className="w-full h-auto object-contain"
+          <div className="relative w-full h-full flex items-center justify-center">
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 transition-all"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Image container */}
+            <div 
+              className="max-w-[90vw] max-h-[90vh] overflow-hidden rounded-lg"
               onClick={(e) => e.stopPropagation()}
-            />
+            >
+              <img
+                src={selectedImage}
+                alt="Enlarged view"
+                className="w-full h-full object-contain"
+                style={{ maxHeight: '90vh' }}
+              />
+            </div>
           </div>
         </div>
       )}

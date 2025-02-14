@@ -110,3 +110,13 @@ export const singleDriverApplication = async (id) => {
     throw error;
   }
 };
+
+export const totalApplicationCount = async() => {
+  try {
+    const response = await axios.get(`${API_URL}/Driver/driver-application-count`);
+    return response.data.totalApplications;
+  } catch (error) {
+    console.error("Error while fetching total count of driver applications", error);
+    throw error;
+  }
+};
