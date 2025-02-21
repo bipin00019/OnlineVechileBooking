@@ -95,9 +95,13 @@ const Login = () => {
       const result = await login(formData);
 
       if (result.success) {
+
+        //const roles = result.data.user.roles || []; //Added
         // Redirect to the previous page or the homepage
         const redirectPath = location.state?.from?.pathname || '/';
         navigate(redirectPath, { replace: true });
+
+
       } else {
         // If login fails (invalid email/password), show general invalid credentials message
         setErrors((prev) => ({ ...prev, general: 'Invalid credentials. Please check your email and password.' }));
@@ -121,6 +125,9 @@ const Login = () => {
     }
   };
 
+
+  
+  
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left Section */}

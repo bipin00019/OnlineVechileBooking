@@ -241,17 +241,19 @@ export default function HomeBody() {
                 </div>
                 {isStartDropdownOpen && (
                   <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {startingPoints.map((point, index) => (
-                      <div
-                        key={index}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => {
-                          setSelectedStartingPoint(point);
-                          setIsStartDropdownOpen(false);
-                        }}
-                      >
-                        {point}
-                      </div>
+                    {startingPoints
+                      .filter(point => point !== selectedDestinationPoint) // Exclude selected destination
+                      .map((point, index) => (
+                        <div
+                          key={index}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            setSelectedStartingPoint(point);
+                            setIsStartDropdownOpen(false);
+                          }}
+                        >
+                          {point}
+                        </div>
                     ))}
                   </div>
                 )}
@@ -272,18 +274,20 @@ export default function HomeBody() {
                 </div>
                 {isDestinationDropdownOpen && (
                   <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                    {destinationLocations.map((point, index) => (
-                      <div
-                        key={index}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => {
-                          setSelectedDestinationPoint(point);
-                          setIsDestinationDropdownOpen(false);
-                        }}
-                      >
-                        {point}
-                      </div>
-                    ))}
+                    {destinationLocations
+                      .filter(point => point !== selectedStartingPoint) // Exclude selected starting point
+                      .map((point, index) => (
+                        <div
+                          key={index}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            setSelectedDestinationPoint(point);
+                            setIsDestinationDropdownOpen(false);
+                          }}
+                        >
+                          {point}
+                        </div>
+                      ))}
                   </div>
                 )}
               </div>
@@ -307,8 +311,6 @@ export default function HomeBody() {
               ))}
             </div>
 
-           
-
             {/* Calendar input, allowing user to select the date from calendar */}
             <div className="flex justify-center">
               <input
@@ -316,6 +318,7 @@ export default function HomeBody() {
                 value={selectedDateFrom}
                 onChange={(e) => setSelectedDateFrom(e.target.value)}
                 className="border px-4 py-2 rounded-lg"
+                min={new Date().toISOString().split('T')[0]}
               />
             </div>
 

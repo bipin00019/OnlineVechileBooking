@@ -343,6 +343,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Controllers.RoleManagementController",
+    "Method": "GetUserProfile",
+    "RelativePath": "api/RoleManagement/profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Controllers.RoleManagementController",
+    "Method": "SwitchRole",
+    "RelativePath": "api/RoleManagement/switch-role/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",

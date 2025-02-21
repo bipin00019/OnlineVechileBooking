@@ -498,14 +498,14 @@ namespace SawariSewa.Areas.Driver.Controllers
 
         // In your ApprovedDriversController
         [HttpGet("get-starting-points")]
-        [Authorize(Roles = "Admin,SuperAdmin")]
+       
         public IActionResult GetStartingPoints()
         {
             var startingPoints = _context.ApprovedDrivers.Select(d => d.StartingPoint).Distinct().ToList();
             return Ok(startingPoints);
         }
         [HttpGet("get-destination-location")]
-        [Authorize(Roles = "Admin,SuperAdmin")]
+      
         public IActionResult GetDestinationPoints()
         {
             var destinationLocations = _context.ApprovedDrivers.Select(d => d.DestinationLocation).Distinct().ToList();

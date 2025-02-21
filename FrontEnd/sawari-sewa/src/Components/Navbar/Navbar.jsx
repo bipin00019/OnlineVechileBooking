@@ -3,18 +3,42 @@ import { useNavigate } from 'react-router-dom';
 import { Phone, Facebook, Instagram, Youtube, Mail, LogIn, UserPlus } from 'lucide-react';
 import { FaWhatsapp, FaUserCircle } from 'react-icons/fa';
 import { PATHS } from '../../constants/paths';
+import { fetchUserProfile, switchRole } from '../../services/roleManagement'; 
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [userRoles, setUserRoles] = useState([]);
+  const [isApprovedDriver, setIsApprovedDriver] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef(null); // Reference to the dropdown menu
   const navbarRef = useRef(null); // Reference to the navbar area to detect outside click
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    setUser(storedUser);
+    const loadUserProfile = async () => {
+      const token = localStorage.getItem("token"); // Check if user is logged in
+      if (!token) {
+        setUser(null); // Ensure the user state is reset
+        return;
+      }
+      try {
+        const profile = await fetchUserProfile();
+        console.log("Fetched User Profile:", profile);
+        setUser(profile.user);
+        setUserRoles(profile.roles || []);
+        console.log("Current Roles: ",profile.roles);
+        setIsApprovedDriver(profile.isApprovedDriver || false);
 
+        // Store the current role state in localStorage
+      //localStorage.setItem("userRole", JSON.stringify(profile.roles || []));
+
+      } catch (error) {
+        console.error("Failed to fetch user profile", error);
+      }
+    };
+    loadUserProfile();
+
+    
     // Close dropdown if clicked outside
     const handleClickOutside = (event) => {
       if (navbarRef.current && !navbarRef.current.contains(event.target)) {
@@ -31,14 +55,16 @@ const Navbar = () => {
     };
   }, []);
 
+  
+
   const handleLogout = () => {
     localStorage.removeItem('user');
-    // localSrorage.removeItem('token');
-    // localStorage.removeItem('refreshToken');
     setUser(null);
-    window.location.reload(); // Reload the app to reset state
+    setUserRoles([]);
+    setIsApprovedDriver(false);
     setDropdownVisible(false); // Hide dropdown after logout
     navigate(PATHS.HOME);
+    window.location.reload(); // Force refresh
   };
 
   const toggleDropdown = (event) => {
@@ -46,6 +72,52 @@ const Navbar = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  const isSuperAdmin = userRoles.includes("SuperAdmin");
+  const isAdmin = userRoles.includes("Admin");
+  const isDriver = userRoles.includes("Driver");
+  const isPassenger = userRoles.includes("Passenger");
+  
+
+  const handleSwitchRole = async () => {
+    if (!user) return;
+  
+    try {
+      await switchRole(user.id); // Call the API to switch role
+  
+      // Refetch user profile to get updated roles
+      const updatedProfile = await fetchUserProfile();
+      console.log("Updated User Profile:", updatedProfile);
+  
+      const updatedRoles = updatedProfile.roles || [];
+      
+      // Update the state
+      setUserRoles(updatedRoles);
+  
+      // Store updated user data in localStorage (just like during login)
+      const updatedUser = { ...user, roles: updatedRoles }; 
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+  
+      console.log("Updated roles saved in localStorage:", updatedRoles);
+  
+      // Determine the new role and navigate accordingly
+      if (updatedRoles.includes("Driver")) {
+        console.log("Navigating to DRIVER DASHBOARD...");
+        navigate(PATHS.DRIVERDASHBOARD);
+      } else {
+        console.log("Navigating to PASSENGER DASHBOARD...");
+        navigate(PATHS.PASSENGERDASHBOARD);
+      }
+  
+      // Force re-render to apply changes immediately
+      window.location.reload(); 
+  
+    } catch (error) {
+      console.error("Role switch failed:", error);
+    }
+  };
+  
+  
+  
   return (
     <nav className='w-full' ref={navbarRef}>
       <div className="bg-[#17252A] text-white py-4">
@@ -91,25 +163,30 @@ const Navbar = () => {
                     onClick={toggleDropdown} // Prevent outside click when opening dropdown
                   >
                     <FaUserCircle size={40} />
-                    <span className="text-s">{user.email}</span>
+                    <span className="text-s">{user.email || "No email found"}</span>
                   </div>
                   {dropdownVisible && (
                     <div
                       ref={dropdownRef} // Assign ref to dropdown menu
                       className="absolute right-0 mt-2 w-48 bg-black text-white shadow-lg rounded-none"
                     >
-                      <button
-                        onClick={() => navigate(PATHS.DRIVERREGISTRATION)}
-                        className="block px-4 py-2 hover:bg-gray-800 w-full text-left"
-                      >
-                        Be a Driver
-                      </button>
-                      <button
-                        onClick={handleLogout}
-                        className="block px-4 py-2 hover:bg-gray-800 w-full text-left"
-                      >
-                        Log Out
-                      </button>
+                      {isSuperAdmin || isAdmin ? (
+                        <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Log Out</button>
+                      ) : isApprovedDriver ? (
+                        <>
+                          <button 
+                          onClick={handleSwitchRole}
+                          className="block px-4 py-2 hover:bg-gray-800 w-full text-left">
+                            {isDriver ? "Passenger Mode" : "Driver Mode"}
+                          </button>
+                          <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Log Out</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => navigate(PATHS.DRIVERREGISTRATION)} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Be a Driver</button>
+                          <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Log Out</button>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -133,3 +210,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

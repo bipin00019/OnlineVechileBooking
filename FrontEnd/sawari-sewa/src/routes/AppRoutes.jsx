@@ -9,6 +9,7 @@ import VerifyEmail from "../Components/Pages/verifyEmail";
 import ForgotPassword from "../Components/Pages/ForgotPassword";
 import ViewDriverApplications from "../Components/Pages/ViewDriverApplications";
 import ReviewDriverApplication from "../Components/Pages/ReviewDriverApplication";
+import DriverDashboard from "../Components/Pages/DriverDashboard";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -20,6 +21,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.FORGOTPASSWORD} element = {<ForgotPassword/>} />
             <Route path = {PATHS.DRIVERAPPLICATIONS} element = {<ViewDriverApplications/>} />
             <Route path = {PATHS.REVIEWDRIVERAPPLICATION} element = {<ReviewDriverApplication/>} />
+            <Route path = {PATHS.DRIVERDASHBOARD} element = {<DriverDashboard/>} />
         </Routes> 
     )
 }
