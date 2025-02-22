@@ -10,6 +10,8 @@ import ForgotPassword from "../Components/Pages/ForgotPassword";
 import ViewDriverApplications from "../Components/Pages/ViewDriverApplications";
 import ReviewDriverApplication from "../Components/Pages/ReviewDriverApplication";
 import DriverDashboard from "../Components/Pages/DriverDashboard";
+import ApprovedDriversList from "../Components/Pages/ApprovedDriversList";
+import ViewApprovedDriver from "../Components/Pages/ViewApprovedDriver";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -22,6 +24,8 @@ const AppRoutes = () => {
             <Route path = {PATHS.DRIVERAPPLICATIONS} element = {<ViewDriverApplications/>} />
             <Route path = {PATHS.REVIEWDRIVERAPPLICATION} element = {<ReviewDriverApplication/>} />
             <Route path = {PATHS.DRIVERDASHBOARD} element = {<DriverDashboard/>} />
+            <Route path = {PATHS.APPROVEDDRIVERSLIST} element = {<ApprovedDriversList/>} />
+            <Route path = {PATHS.VIEWAPPROVEDDRIVER} element = {<ViewApprovedDriver/>} />
         </Routes> 
     )
 }

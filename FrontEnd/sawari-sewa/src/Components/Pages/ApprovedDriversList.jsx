@@ -1,15 +1,13 @@
-//Single driver application
-
 import React, { useState, useEffect } from "react";
-import { allDriverApplications } from "../../services/DriverService";
+import {approvedDriversList } from "../../services/DriverService";
 import { API_BASE_URL } from "../../config";
 import Navbar from "../Navbar/Navbar"; // Import Navbar component
 import { PATHS } from "../../constants/paths";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
-const ViewDriverApplications = () => {
+const ApprovedDriversList = () => {
   const navigate = useNavigate();
-  const [driverApplications, setDriverApplications] = useState([]);
+  const [approvedDrivers, setApprovedDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,11 +17,11 @@ const ViewDriverApplications = () => {
   const pageSize = 10;
 
   useEffect(() => {
-    const fetchDriverApplications = async () => {
+    const fetchApprovedDriversList = async () => {
       try {
-        const data = await allDriverApplications(currentPage, pageSize);
+        const data = await approvedDriversList(currentPage, pageSize);
         console.log("Fetched data:", data); // Debug log
-        setDriverApplications(data.data);
+        setApprovedDrivers(data.data);
         setTotalPages(Math.ceil(data.totalCount / pageSize));
       } catch (err) {
         setError("Failed to load driver applications");
@@ -33,7 +31,7 @@ const ViewDriverApplications = () => {
       }
     };
 
-    fetchDriverApplications();
+    fetchApprovedDriversList();
   }, [currentPage]);
 
   const handleImageError = (id, type) => {
@@ -94,10 +92,10 @@ const ViewDriverApplications = () => {
     <div>
       <Navbar /> {/* Include Navbar component */}
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">Driver Applications</h1>
-        {driverApplications.length === 0 ? (
+        <h1 className="text-2xl font-bold mb-6">Approved Drivers List</h1>
+        {approvedDrivers.length === 0 ? (
           <p className="text-gray-500 text-center py-4">
-            No driver applications found.
+            No approved Drivers found.
           </p>
         ) : (
           <div className="overflow-x-auto">
@@ -107,15 +105,14 @@ const ViewDriverApplications = () => {
                   <th className="px-4 py-2 border-b text-left">Name</th>
                   <th className="px-4 py-2 border-b text-left">License</th>
                   <th className="px-4 py-2 border-b text-left">Vehicle Details</th>
-                  <th className="px-4 py-2 border-b text-left">Status</th>
                   <th className="px-4 py-2 border-b text-left">Documents</th>
                 </tr>
               </thead>
               <tbody>
-                {driverApplications.map((application) => (
+                {approvedDrivers.map((application) => (
                   <tr key={application.id} 
                   onClick={() => {
-                    navigate(`/review-driver-application/${application.id}`);
+                    navigate(`/view-approved-driver/${application.id}`);
                   }}
                   className="hover:bg-gray-50 cursor-pointer">
                     <td className="px-4 py-2 border-b">
@@ -127,19 +124,6 @@ const ViewDriverApplications = () => {
                         <div className="font-medium">{application.vehicleType}</div>
                         <div className="text-sm text-gray-600">{application.vehicleNumber}</div>
                       </div>
-                    </td>
-                    <td className="px-4 py-2 border-b">
-                      <span
-                        className={`px-2 py-1 rounded-full text-sm ${
-                          application.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : application.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {application.status}
-                      </span>
                     </td>
                     <td className="px-4 py-2 border-b flex gap-2">
                       {renderImage(application.licensePhotoPath, "License", application.id, "license")}
@@ -183,4 +167,4 @@ const ViewDriverApplications = () => {
   );
 };
 
-export default ViewDriverApplications;
+export default ApprovedDriversList;

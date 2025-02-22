@@ -7,6 +7,9 @@ export const PATHS = {
     FORGOTPASSWORD: "/forgot-password",
     DRIVERAPPLICATIONS: "/driver-applications",
     REVIEWDRIVERAPPLICATION: "/review-driver-application/:id",
+    DRIVERDASHBOARD: "/driver-dashboard",
+    APPROVEDDRIVERSLIST: "/approved-drivers-list",
+    VIEWAPPROVEDDRIVER: "/view-approved-driver/:id",
 
 }
 

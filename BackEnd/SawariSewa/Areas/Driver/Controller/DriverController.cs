@@ -179,7 +179,9 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
         }
 
-      
+
+        
+
         [HttpGet("all-driver-applications")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<DriverApplicationReviewDTO>>> GetDriverApplications(
@@ -238,6 +240,9 @@ namespace SawariSewa.Areas.Driver.Controllers
             });
         }
 
+        
+
+
         [HttpGet("single-driver-application/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<DriverApplicationReviewDTO>> GetSingleDriverApplication(int id)
@@ -278,97 +283,6 @@ namespace SawariSewa.Areas.Driver.Controllers
             return Ok(driverApplication);
         }
 
-
-        //[HttpPost("approve-driver/{id}")]        
-        //public async Task<ActionResult> ApproveDriverApplication(int id)
-        //{
-        //    using var transaction = await _context.Database.BeginTransactionAsync();
-        //    try
-        //    {
-        //        var application = await _context.DriverApplications
-        //            .Include(d => d.User)
-        //            .FirstOrDefaultAsync(d => d.Id == id);
-
-        //        if (application == null)
-        //            return NotFound(new { message = "Application not found." });
-
-        //        if (application.Status != "Pending")
-        //            return BadRequest(new { message = "Application is not in a pending state." });
-
-        //        // Add user to Driver role
-        //        await _userManager.AddToRoleAsync(application.User, "Driver");
-
-        //        // Create an ApprovedDriver record
-        //        var approvedDriver = new ApprovedDrivers
-        //        {
-        //            UserId = application.UserId,
-        //            LicenseNumber = application.LicenseNumber,
-        //            VehicleNumber = application.VehicleNumber,
-        //            VehicleType = application.VehicleType,
-        //            LicensePhotoPath = application.LicensePhotoPath,
-        //            DriverPhotoPath = application.DriverPhotoPath,
-        //            BillbookPhotoPath = application.BillbookPhotoPath,
-        //            CitizenshipFrontPath = application.CitizenshipFrontPath,
-        //            CitizenshipBackPath = application.CitizenshipBackPath,
-        //            SelfieWithIDPath = application.SelfieWithIDPath,
-        //            VehiclePhotoPath = application.VehiclePhotoPath,
-        //            StartingPoint = application.StartingPoint,
-        //            DestinationLocation = application.DestinationLocation,
-        //            PhoneNumber = application.User.PhoneNumber,  // Get phone number from the User table
-        //            FirstName = application.User.FirstName,     // Get first name from the User table
-        //            LastName = application.User.LastName,       // Get last name from the User table
-        //            Email = application.User.Email,             // Get email from the User table
-        //            ApprovedAt = DateTime.UtcNow,
-        //            CreatedAt = DateTime.UtcNow
-        //        };
-
-        //        // Add the approved driver to the ApprovedDrivers table
-        //        _context.ApprovedDrivers.Add(approvedDriver);
-
-        //        // Remove the driver application after approval
-        //        _context.DriverApplications.Remove(application);
-
-        //        await _context.SaveChangesAsync();
-        //        await transaction.CommitAsync();
-
-
-
-        //        return Ok(new { message = "Driver application approved and added to ApprovedDrivers table." });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        return StatusCode(500, new { message = "Error approving application.", error = ex.Message });
-        //    }
-        //}
-
-        //[HttpPost("reject-driver/{id}")]
-        //public async Task<ActionResult> RejectDriverApplication (int id)
-        //{
-        //    using var transaction = await _context.Database.BeginTransactionAsync(); try
-        //    {
-        //        var application = await _context.DriverApplications.FirstOrDefaultAsync();
-        //        if (application == null)
-        //            return NotFound(new { message = "Application not found" });
-        //        if (application.Status != "Pending")
-        //            return BadRequest(new { message = "Application is not in a pending state" });
-
-        //        //Remove the application after rejection from the DriverApplications table
-
-        //        _context.DriverApplications.Remove(application);
-        //        await _context.SaveChangesAsync();
-        //        await transaction.CommitAsync();
-
-
-
-        //        return Ok(new { message = "Driver application rejected" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        return StatusCode(500, new { message = "Error rejecting application", error = ex.Message });
-        //    }
-        //}
 
         [HttpPost("approve-driver/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
@@ -481,7 +395,7 @@ namespace SawariSewa.Areas.Driver.Controllers
 
 
 
-        [HttpGet ("driver-application-count")]
+        [HttpGet ("driver-count")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task <ActionResult> GetDriverCounts()
         {
@@ -495,7 +409,101 @@ namespace SawariSewa.Areas.Driver.Controllers
             });
         }
 
+        [HttpGet("all-approved-drivers")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<IEnumerable<ApprovedDrivers>>> GetApprovedDriver(
+            int page = 1,
+            int pageSize = 5
+            )
+        {
+            page = page > 0 ? page : 1;
+            pageSize = pageSize > 0 ? pageSize : 5;
 
+            var approvedDriversQuery = _context.ApprovedDrivers
+                .Join(_context.Users,
+                d => d.UserId,
+                u => u.Id,
+                (d, u) => new ApprovedDrivers
+                {
+                    Id = d.Id,
+                    LicenseNumber = d.LicenseNumber,
+                    VehicleType = d.VehicleType,
+                    VehicleNumber = d.VehicleNumber,
+                    LicensePhotoPath = d.LicensePhotoPath,
+                    DriverPhotoPath = d.DriverPhotoPath,
+                    BillbookPhotoPath = d.BillbookPhotoPath,
+                    CitizenshipFrontPath = d.CitizenshipFrontPath,
+                    CitizenshipBackPath = d.CitizenshipBackPath,
+                    SelfieWithIDPath = d.SelfieWithIDPath,
+                    VehiclePhotoPath = d.VehiclePhotoPath,
+                    StartingPoint = d.StartingPoint,
+                    DestinationLocation = d.DestinationLocation,
+                    CreatedAt = d.CreatedAt,
+                    ApprovedAt = d.ApprovedAt,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName
+                });
+            var pagedApplications = await approvedDriversQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            var totalCount = await approvedDriversQuery.CountAsync();
+
+            if (!pagedApplications.Any())
+            {
+                return Ok(new { data = new List<DriverApplicationReviewDTO>(), totalCount = 0 });
+            }
+
+            // Return paginated data along with total count for pagination UI
+            return Ok(new
+            {
+                totalCount = totalCount,
+                data = pagedApplications
+
+            });
+
+        }
+
+        [HttpGet("single-approved-driver/{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<DriverApplicationReviewDTO>> GetSingleApprovedDriver(int id)
+        {
+            var driverApplication = await _context.ApprovedDrivers
+                .Where(d => d.Id == id)
+                .Join(_context.Users,
+                d => d.UserId,
+                u => u.Id,
+                (d, u) => new ApprovedDrivers
+                {
+                    Id = d.Id,
+                    LicenseNumber = d.LicenseNumber,
+                    VehicleType = d.VehicleType,
+                    VehicleNumber = d.VehicleNumber,
+                    LicensePhotoPath = d.LicensePhotoPath,
+                    DriverPhotoPath = d.DriverPhotoPath,
+                    BillbookPhotoPath = d.BillbookPhotoPath,
+                    CitizenshipFrontPath = d.CitizenshipFrontPath,
+                    CitizenshipBackPath = d.CitizenshipBackPath,
+                    SelfieWithIDPath = d.SelfieWithIDPath,
+                    VehiclePhotoPath = d.VehiclePhotoPath,
+                    StartingPoint = d.StartingPoint,
+                    DestinationLocation = d.DestinationLocation,
+                    CreatedAt = d.CreatedAt,
+                    ApprovedAt = d.ApprovedAt,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber
+                })
+                .FirstOrDefaultAsync();
+            if (driverApplication == null)
+            {
+                return NotFound(new { message = "Driver application not found." });
+            }
+            return Ok(driverApplication);
+        }
+
+        
         // In your ApprovedDriversController
         [HttpGet("get-starting-points")]
        

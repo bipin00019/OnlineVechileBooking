@@ -100,6 +100,21 @@ export const allDriverApplications = async (page = 1, pageSize = 5) => {
   }
 };
 
+export const approvedDriversList = async (page = 1, pageSize =5) => {
+  try {
+    const response = await axios.get(`${API_URL}/Driver/all-approved-drivers`, {
+      params: {
+        page : page,
+        pageSize : pageSize
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error while fetching approved drivers list", error);
+    throw error;
+  }
+}
+
 export const singleDriverApplication = async (id) => {
   try {
     const response = await axios.get(`${API_URL}/Driver/single-driver-application/${id}`);
@@ -111,12 +126,32 @@ export const singleDriverApplication = async (id) => {
   }
 };
 
+export const viewApprovedDriver = async (id) => {
+  try {
+    const response = await axios.get(`${API_URL}/Driver/single-approved-driver/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error while view approved driver ", error);
+    throw error;
+  }
+};
+
 export const totalApplicationCount = async() => {
   try {
-    const response = await axios.get(`${API_URL}/Driver/driver-application-count`);
+    const response = await axios.get(`${API_URL}/Driver/driver-count`);
     return response.data.totalApplications;
   } catch (error) {
     console.error("Error while fetching total count of driver applications", error);
+    throw error;
+  }
+};
+
+export const totalApprovedDriversCount = async() => {
+  try {
+  const response = await axios.get(`${API_URL}/Driver/driver-count`);
+  return response.data.approvedDrivers;
+  } catch (error) {
+    console.error("Error while fetching the approved drivers ", error);
     throw error;
   }
 };

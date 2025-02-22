@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '../../constants/paths';
-import { totalApplicationCount } from '../../services/DriverService';
+import { totalApplicationCount, totalApprovedDriversCount } from '../../services/DriverService';
 
 const AdminDashboard = () => {
   // Sample state data - In real app, this would come from your backend
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   const [totalApplications, setTotalApplications] = useState(0);
-
+  const [totalApprovedDrivers, setTotalApprovedDrivers] = useState(0);
   //Fetch the total application
   useEffect(() => {
     const fetchTotalApplications = async () => {
@@ -51,6 +51,16 @@ const AdminDashboard = () => {
       }
     };
     fetchTotalApplications();
+
+    const fetchTotalApprovedDriverCount = async () => {
+      try {
+        const total = await totalApprovedDriversCount();
+        setTotalApprovedDrivers(total);
+      } catch (error) {
+        console.log("Error fetching total approved drivers count ", error);
+      }
+    };
+    fetchTotalApprovedDriverCount();
   }, [])
 
   return (
@@ -74,7 +84,16 @@ const AdminDashboard = () => {
             </div>
             <p className="text-2xl font-bold text-gray-900">{totalApplications}</p>
           </div>
-
+          <div 
+          className="bg-white p-6 rounded-lg shadow"
+          onClick={() => navigate(PATHS.APPROVEDDRIVERSLIST)}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-600">Approved Drivers</h3>
+              <Users className="h-4 w-4 text-gray-500" />
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{totalApprovedDrivers}</p>
+          </div>
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-medium text-gray-600">Active Bookings</h3>
@@ -91,13 +110,7 @@ const AdminDashboard = () => {
             <p className="text-2xl font-bold text-gray-900">NPR {stats.totalRevenue}</p>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-600">Active Drivers</h3>
-              <Users className="h-4 w-4 text-gray-500" />
-            </div>
-            <p className="text-2xl font-bold text-gray-900">{stats.activeDrivers}</p>
-          </div>
+          
         </div>
 
         {/* Main Content Grid */}
