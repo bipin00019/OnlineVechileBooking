@@ -164,6 +164,7 @@ import { fetchStartingPoints, fetchDestinationLocations } from '../../services/D
 export default function HomeBody() {
   const [selectedDateFrom, setSelectedDateFrom] = useState(new Date().toISOString().split('T')[0]);
   const [selectedDateTo, setSelectedDateTo] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedVehicle, setSelectedVehicle] = useState("");
   const [userRoles, setUserRoles] = useState([]);
   const [startingPoints, setStartingPoints] = useState([]);
   const [destinationLocations, setDestinationLocations] = useState([]);
@@ -171,6 +172,9 @@ export default function HomeBody() {
   const [selectedDestinationPoint, setSelectedDestinationPoint] = useState("");
   const [isStartDropdownOpen, setIsStartDropdownOpen] = useState(false);
   const [isDestinationDropdownOpen, setIsDestinationDropdownOpen] = useState(false);
+  const [isVehicleDropdownOpen,setIsVehicleDropdownOpen] = useState(false);
+  
+  const vehicleTypes = ["Bike", "Van", "Bus", "Jeep"];
 
   useEffect(() => {
     const getStartingPoints = async () => {
@@ -288,6 +292,23 @@ export default function HomeBody() {
                           {point}
                         </div>
                       ))}
+                  </div>
+                )}
+              </div>
+              <div className='relative'>
+                <div className='flex items-center border rounded-lg p-3 hover:border-blue-500 cursor-pointer'
+                 onClick={() => setIsVehicleDropdownOpen(!isVehicleDropdownOpen)}
+                 >
+                  <div className='flex-1'>{selectedVehicle || "Select Vehicle Type"}</div>
+                  <ChevronDown className={`text-gray-400 transition-transform ${isVehicleDropdownOpen ? 'rotate-180' : ''}`} />
+                </div>
+                {isVehicleDropdownOpen && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {vehicleTypes.map((vehicle, index) => (
+                      <div key={index} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => { setSelectedVehicle(vehicle); setIsVehicleDropdownOpen(false); }}>
+                      {vehicle}
+                    </div>
+                    ))}
                   </div>
                 )}
               </div>

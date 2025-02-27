@@ -105,6 +105,7 @@ const ApprovedDriversList = () => {
                   <th className="px-4 py-2 border-b text-left">Name</th>
                   <th className="px-4 py-2 border-b text-left">License</th>
                   <th className="px-4 py-2 border-b text-left">Vehicle Details</th>
+                  <th className="px-4 py-2 border-b text-left">Departure Time</th>
                   <th className="px-4 py-2 border-b text-left">Documents</th>
                 </tr>
               </thead>
@@ -124,6 +125,9 @@ const ApprovedDriversList = () => {
                         <div className="font-medium">{application.vehicleType}</div>
                         <div className="text-sm text-gray-600">{application.vehicleNumber}</div>
                       </div>
+                    </td>
+                    <td className="px-4 py-2 border-b">
+                      {application.departureTime}
                     </td>
                     <td className="px-4 py-2 border-b flex gap-2">
                       {renderImage(application.licensePhotoPath, "License", application.id, "license")}

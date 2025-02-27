@@ -10,6 +10,7 @@ const DriverRegistration = () => {
     VehicleType: '',
     StartingPoint: '',
     DestinationLocation: '',
+    DepartureTime: '',
   });
 
   const [files, setFiles] = useState({
@@ -196,6 +197,7 @@ const DriverRegistration = () => {
               {renderTextInput('VehicleType', 'Vehicle Type')}
               {renderTextInput('StartingPoint', 'Starting Point')}
               {renderTextInput('DestinationLocation', 'Destination Location')}
+              {renderTextInput('DepartureTime', 'Departure Time')}
               {renderFileInput('LicensePhoto', 'License Photo')}
               {renderFileInput('DriverPhoto', 'Driver Photo')}
               {renderFileInput('BillbookPhoto', 'Vehicle Billbook Photo')}

@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\uploads\\billbooks\\7391bde0-29e1-49e7-b248-9f68687805f4.jpeg"
     },
     {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\billbooks\\7a0c1869-0386-4497-82e5-0dc71510b8db.jpg",
+      "PackagePath": "staticwebassets\\uploads\\billbooks\\7a0c1869-0386-4497-82e5-0dc71510b8db.jpg"
+    },
+    {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\billbooks\\7cb0fed0-e86c-4596-b93e-5eb9b00bd245.jpeg",
       "PackagePath": "staticwebassets\\uploads\\billbooks\\7cb0fed0-e86c-4596-b93e-5eb9b00bd245.jpeg"
     },
@@ -113,6 +117,10 @@
       "PackagePath": "staticwebassets\\uploads\\citizenships\\58984c78-fa57-452f-a237-f3c58b8ae644.jpg"
     },
     {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\citizenships\\5dbec772-4803-46c6-a54b-4ea3b98dfc07.jpg",
+      "PackagePath": "staticwebassets\\uploads\\citizenships\\5dbec772-4803-46c6-a54b-4ea3b98dfc07.jpg"
+    },
+    {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\citizenships\\61c0d097-6ddf-41c3-b001-6342ffe2a2db.jpeg",
       "PackagePath": "staticwebassets\\uploads\\citizenships\\61c0d097-6ddf-41c3-b001-6342ffe2a2db.jpeg"
     },
@@ -123,6 +131,10 @@
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\citizenships\\679162f9-4843-47ff-8e10-1dd39399b1e2.jpg",
       "PackagePath": "staticwebassets\\uploads\\citizenships\\679162f9-4843-47ff-8e10-1dd39399b1e2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\citizenships\\725f5a9a-ddae-4fb8-a660-7c16e8188959.jpg",
+      "PackagePath": "staticwebassets\\uploads\\citizenships\\725f5a9a-ddae-4fb8-a660-7c16e8188959.jpg"
     },
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\citizenships\\72a1fdad-641d-4663-b161-64d9ac925502.jpg",
@@ -249,6 +261,10 @@
       "PackagePath": "staticwebassets\\uploads\\drivers\\ced2ce99-2ced-48e9-8ea4-a927e9a0f94c.jpg"
     },
     {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\drivers\\dc87ff59-f1e6-4ec2-a8b6-9ae0cabf78c4.jpg",
+      "PackagePath": "staticwebassets\\uploads\\drivers\\dc87ff59-f1e6-4ec2-a8b6-9ae0cabf78c4.jpg"
+    },
+    {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\drivers\\e1166101-3080-469e-97a5-7acd50b71317.jpeg",
       "PackagePath": "staticwebassets\\uploads\\drivers\\e1166101-3080-469e-97a5-7acd50b71317.jpeg"
     },
@@ -259,6 +275,10 @@
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\licenses\\1add0c35-d9a3-4714-8399-cd352770f169.jpeg",
       "PackagePath": "staticwebassets\\uploads\\licenses\\1add0c35-d9a3-4714-8399-cd352770f169.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\licenses\\1f14d87e-c31e-40e9-8e15-efd9b0e55e15.jpg",
+      "PackagePath": "staticwebassets\\uploads\\licenses\\1f14d87e-c31e-40e9-8e15-efd9b0e55e15.jpg"
     },
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\licenses\\4739d7e7-7b2b-4946-a511-a8237e5273a4.jpeg",
@@ -351,6 +371,10 @@
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\selfies\\61945e18-88ed-4540-95da-b08e9c4ba975.jpeg",
       "PackagePath": "staticwebassets\\uploads\\selfies\\61945e18-88ed-4540-95da-b08e9c4ba975.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\selfies\\6e68cc93-e12c-432b-986d-98b507276c2d.jpg",
+      "PackagePath": "staticwebassets\\uploads\\selfies\\6e68cc93-e12c-432b-986d-98b507276c2d.jpg"
     },
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\selfies\\832a087f-8ae5-44e8-9b13-9b9194688ff5.jpg",
@@ -447,6 +471,10 @@
     {
       "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\vehicles\\f2f24164-86dc-4c52-b2cf-e1e4a85699bd.jpeg",
       "PackagePath": "staticwebassets\\uploads\\vehicles\\f2f24164-86dc-4c52-b2cf-e1e4a85699bd.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\bipin\\OneDrive\\Desktop\\FYP Project\\Code\\BackEnd\\SawariSewa\\wwwroot\\uploads\\vehicles\\fdb072ef-50cd-482c-9393-f149f1940cb6.jpg",
+      "PackagePath": "staticwebassets\\uploads\\vehicles\\fdb072ef-50cd-482c-9393-f149f1940cb6.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.SawariSewa.Microsoft.AspNetCore.StaticWebAssets.props",

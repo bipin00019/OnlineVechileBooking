@@ -1,4 +1,4 @@
-//Single driver application
+//all driver applications
 
 import React, { useState, useEffect } from "react";
 import { allDriverApplications } from "../../services/DriverService";
@@ -108,6 +108,7 @@ const ViewDriverApplications = () => {
                   <th className="px-4 py-2 border-b text-left">License</th>
                   <th className="px-4 py-2 border-b text-left">Vehicle Details</th>
                   <th className="px-4 py-2 border-b text-left">Status</th>
+                  <th className="px-4 py-2 border-b text-left">Departure Time</th>
                   <th className="px-4 py-2 border-b text-left">Documents</th>
                 </tr>
               </thead>
@@ -140,6 +141,9 @@ const ViewDriverApplications = () => {
                       >
                         {application.status}
                       </span>
+                    </td>
+                    <td className="px-4 py-2 border-b">
+                      {application.departureTime}
                     </td>
                     <td className="px-4 py-2 border-b flex gap-2">
                       {renderImage(application.licensePhotoPath, "License", application.id, "license")}

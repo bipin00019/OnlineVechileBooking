@@ -126,7 +126,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     DestinationLocation = driverApplicationDto.DestinationLocation,
                     Status = "Pending",
                     CreatedAt = DateTime.UtcNow,
-                    VehiclePhotoPath = vehiclePhotoPath
+                    VehiclePhotoPath = vehiclePhotoPath,
+                    DepartureTime = driverApplicationDto.DepartureTime,
                 };
 
                 _context.DriverApplications.Add(driverApplication);
@@ -215,7 +216,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                         CreatedAt = d.CreatedAt,
                         ApprovedAt = d.ApprovedAt,
                         FirstName = u.FirstName,
-                        LastName = u.LastName
+                        LastName = u.LastName,
+                        DepartureTime = d.DepartureTime,
                     });
 
             // Apply pagination (skip and take)
@@ -273,7 +275,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
-                    PhoneNumber = u.PhoneNumber
+                    PhoneNumber = u.PhoneNumber,
+                    DepartureTime = d.DepartureTime,
                 })
                 .FirstOrDefaultAsync();
             if (driverApplication == null)
@@ -325,7 +328,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     LastName = application.User.LastName,
                     Email = application.User.Email,
                     ApprovedAt = DateTime.UtcNow,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    DepartureTime = application.DepartureTime,
                 };
 
                 // Add the approved driver to the ApprovedDrivers table
@@ -441,7 +445,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     CreatedAt = d.CreatedAt,
                     ApprovedAt = d.ApprovedAt,
                     FirstName = u.FirstName,
-                    LastName = u.LastName
+                    LastName = u.LastName,
+                    DepartureTime = d.DepartureTime,
                 });
             var pagedApplications = await approvedDriversQuery
                 .Skip((page - 1) * pageSize)
@@ -493,7 +498,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
-                    PhoneNumber = u.PhoneNumber
+                    PhoneNumber = u.PhoneNumber,
+                    DepartureTime = d.DepartureTime,
                 })
                 .FirstOrDefaultAsync();
             if (driverApplication == null)

@@ -21,6 +21,8 @@ namespace SawariSewa.Areas.Driver.Model
         public DateTime CreatedAt { get; set; }
         public DateTime? ApprovedAt { get; set; }
         public string VehiclePhotoPath { get; set; }
+        public string DepartureTime { get; set; }
+
         // Navigation property to link with AspNetUsers table
         public virtual ApplicationUser User { get; set; }
     }

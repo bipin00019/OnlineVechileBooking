@@ -207,6 +207,11 @@
         "Name": "DestinationLocation",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "DepartureTime",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [

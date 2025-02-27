@@ -23,10 +23,10 @@ const Navbar = () => {
       }
       try {
         const profile = await fetchUserProfile();
-        console.log("Fetched User Profile:", profile);
+        //console.log("Fetched User Profile:", profile);
         setUser(profile.user);
         setUserRoles(profile.roles || []);
-        console.log("Current Roles: ",profile.roles);
+        //console.log("Current Roles: ",profile.roles);
         setIsApprovedDriver(profile.isApprovedDriver || false);
 
         // Store the current role state in localStorage
@@ -86,7 +86,7 @@ const Navbar = () => {
   
       // Refetch user profile to get updated roles
       const updatedProfile = await fetchUserProfile();
-      console.log("Updated User Profile:", updatedProfile);
+      //console.log("Updated User Profile:", updatedProfile);
   
       const updatedRoles = updatedProfile.roles || [];
       
@@ -97,14 +97,14 @@ const Navbar = () => {
       const updatedUser = { ...user, roles: updatedRoles }; 
       localStorage.setItem("user", JSON.stringify(updatedUser));
   
-      console.log("Updated roles saved in localStorage:", updatedRoles);
+      //console.log("Updated roles saved in localStorage:", updatedRoles);
   
       // Determine the new role and navigate accordingly
       if (updatedRoles.includes("Driver")) {
-        console.log("Navigating to DRIVER DASHBOARD...");
+        //console.log("Navigating to DRIVER DASHBOARD...");
         navigate(PATHS.DRIVERDASHBOARD);
       } else {
-        console.log("Navigating to PASSENGER DASHBOARD...");
+        //console.log("Navigating to PASSENGER DASHBOARD...");
         navigate(PATHS.PASSENGERDASHBOARD);
       }
   
