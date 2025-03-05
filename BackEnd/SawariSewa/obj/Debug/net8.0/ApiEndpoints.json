@@ -254,6 +254,22 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetDriverStatus",
+    "RelativePath": "api/Driver/driver-status/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "GetDestinationPoints",
     "RelativePath": "api/Driver/get-destination-location",
     "HttpMethod": "GET",
@@ -274,6 +290,26 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetVehicleTypeByDriver",
+    "RelativePath": "api/Driver/get-vehicle-type",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "RejectDriverApplication",
     "RelativePath": "api/Driver/reject-driver/{id}",
     "HttpMethod": "POST",
@@ -284,6 +320,22 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "SetOnlineStatus",
+    "RelativePath": "api/Driver/set-online-status",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "isOnline",
+        "Type": "System.Boolean",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -339,6 +391,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.FareController",
+    "Method": "SetFare",
+    "RelativePath": "api/Fare/set-fare",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SawariSewa.Areas.Vehicle.DTO.SetFareRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.OtpController",
@@ -426,6 +494,32 @@
         "Name": "userId",
         "Type": "System.String",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "GetAvailableVehicles",
+    "RelativePath": "api/Vehicle/available-vehicles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "startingPoint",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "destination",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "vehicleType",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

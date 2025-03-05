@@ -12,6 +12,7 @@ import ReviewDriverApplication from "../Components/Pages/ReviewDriverApplication
 import DriverDashboard from "../Components/Pages/DriverDashboard";
 import ApprovedDriversList from "../Components/Pages/ApprovedDriversList";
 import ViewApprovedDriver from "../Components/Pages/ViewApprovedDriver";
+import AvailableVehcile from "../Components/Pages/AvailableVehcile";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -26,6 +27,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.DRIVERDASHBOARD} element = {<DriverDashboard/>} />
             <Route path = {PATHS.APPROVEDDRIVERSLIST} element = {<ApprovedDriversList/>} />
             <Route path = {PATHS.VIEWAPPROVEDDRIVER} element = {<ViewApprovedDriver/>} />
+            <Route path = {PATHS.AVAILABLEVEHICLE} element = {<AvailableVehcile/>} />
         </Routes> 
     )
 }

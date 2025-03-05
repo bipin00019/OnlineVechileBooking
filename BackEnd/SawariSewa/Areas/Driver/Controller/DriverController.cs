@@ -330,6 +330,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                     ApprovedAt = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow,
                     DepartureTime = application.DepartureTime,
+                    IsOnline = true,
                 };
 
                 // Add the approved driver to the ApprovedDrivers table
@@ -447,6 +448,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     DepartureTime = d.DepartureTime,
+                    IsOnline = d.IsOnline,
                 });
             var pagedApplications = await approvedDriversQuery
                 .Skip((page - 1) * pageSize)
@@ -500,6 +502,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     DepartureTime = d.DepartureTime,
+                    IsOnline = d.IsOnline,
                 })
                 .FirstOrDefaultAsync();
             if (driverApplication == null)
@@ -526,5 +529,79 @@ namespace SawariSewa.Areas.Driver.Controllers
             return Ok(destinationLocations);
         }
 
+        [HttpGet("get-vehicle-type")]
+        [Authorize(Roles = "Driver")]
+        public async Task<ActionResult<string>> GetVehicleTypeByDriver()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not authenticated. Please log in." });
+            }
+
+            var driver = await _context.ApprovedDrivers
+                                       .FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (driver == null)
+            {
+                return NotFound(new { message = "Driver not found." });
+            }
+
+            return Ok(driver.VehicleType);
+        }
+
+        [HttpPost("set-online-status")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> SetOnlineStatus(bool isOnline)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not authenticated. Please log in." });
+            }
+
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (driver == null)
+            {
+                return NotFound(new { message = "Driver not found." });
+            }
+
+            driver.IsOnline = isOnline;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = $"Driver is now {(isOnline ? "Online" : "Offline")}" });
+        }
+
+        [HttpGet("driver-status/{id}")]
+        [Authorize(Roles = "Admin,SuperAdmin,Driver")]
+        public async Task<ActionResult> GetDriverStatus(int id)
+        {
+            try
+            {
+                // Find the driver from the ApprovedDrivers table
+                var driver = await _context.ApprovedDrivers
+                    .FirstOrDefaultAsync(d => d.Id == id);
+
+                if (driver == null)
+                {
+                    return NotFound(new { message = "Driver not found." });
+                }
+
+                // Return the driver's online status
+                return Ok(new
+                {
+                    driver.IsOnline
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error fetching driver status.", error = ex.Message });
+            }
+        }
+
+        
     }
 }
