@@ -25,7 +25,7 @@ namespace SawariSewa.Areas.Vehicle.Controller
         public async Task<IActionResult> SetFare([FromBody] SetFareRequest request)
         {
             // Get the logged-in user's UserId from the claims
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // "sub" if you're using JWT "sub"
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -33,7 +33,9 @@ namespace SawariSewa.Areas.Vehicle.Controller
             }
 
             // Check if the driver exists in the ApprovedDrivers table by UserId
-            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId.ToString() == userId);
+            var driver = await _context.ApprovedDrivers
+                .FirstOrDefaultAsync(d => d.UserId.ToString() == userId);
+
             if (driver == null)
             {
                 return NotFound("Driver not found.");
@@ -44,30 +46,32 @@ namespace SawariSewa.Areas.Vehicle.Controller
                 return BadRequest("Fare amount must be greater than zero.");
             }
 
-            // Check if a fare already exists for this vehicle type, starting point, and destination
+            // Check if a fare already exists for this driver
             var existingFare = await _context.Fares
-                .FirstOrDefaultAsync(f => f.VehicleType == driver.VehicleType &&
+                .FirstOrDefaultAsync(f => f.DriverId == driver.UserId &&
+                                          f.VehicleType == driver.VehicleType &&
                                           f.StartingPoint == driver.StartingPoint &&
                                           f.DestinationLocation == driver.DestinationLocation);
 
             if (existingFare != null)
             {
-                // If a fare exists, update it and set UpdatedAt to current time
+                // Update existing fare
                 existingFare.Amount = request.FareAmount;
                 existingFare.UpdatedAt = DateTime.UtcNow;
                 _context.Fares.Update(existingFare);
             }
             else
             {
-                // If no fare exists, create a new fare record and set CreatedAt
+                // Create a new fare entry linked to the specific driver
                 var newFare = new Fare
                 {
+                    DriverId = driver.UserId,  // Store DriverId for uniqueness
                     VehicleType = driver.VehicleType,
                     StartingPoint = driver.StartingPoint,
                     DestinationLocation = driver.DestinationLocation,
                     Amount = request.FareAmount,
-                    CreatedAt = DateTime.UtcNow,  // Set CreatedAt at the time of creation
-                    UpdatedAt = DateTime.UtcNow   // Set UpdatedAt to the same time initially
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
                 await _context.Fares.AddAsync(newFare);
             }

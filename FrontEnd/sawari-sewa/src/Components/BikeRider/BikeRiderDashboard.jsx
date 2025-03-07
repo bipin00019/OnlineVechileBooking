@@ -1,64 +1,9 @@
-// // BikeRiderDashboard.js
-// import React, { useState } from 'react';
-// import TripsTab from './TripsTab';
-// import BookingsTab from './BookingsTab';
 
-// const BikeRiderDashboard = () => {
-//   const [currentTrips] = useState([
-//     { id: 1, from: 'Kathmandu', to: 'Pokhara', date: '2025-02-27', time: '14:30', passengers: 3, fare: 2500, status: 'pending' },
-//     { id: 2, from: 'Pokhara', to: 'Kathmandu', date: '2025-02-28', time: '09:00', passengers: 4, fare: 2500, status: 'accepted' }
-//   ]);
-
-//   const [pastTrips] = useState([
-//     { id: 3, from: 'Kathmandu', to: 'Chitwan', date: '2025-02-25', time: '08:00', passengers: 2, fare: 1800, rating: 4.8, status: 'completed' },
-//     { id: 4, from: 'Chitwan', to: 'Kathmandu', date: '2025-02-26', time: '16:00', passengers: 3, fare: 1800, rating: 4.5, status: 'completed' }
-//   ]);
-
-//   const [bookingRequests] = useState([
-//     { id: 1, from: 'Kathmandu', to: 'Pokhara', date: '2025-02-27', status: 'pending' }
-//   ]);
-
-//   const [activeTab, setActiveTab] = useState('overview');
-
-//   return (
-//     <div className="flex flex-col min-h-screen bg-gray-100">
-//       <main className="flex-grow container mx-auto p-4 md:p-6">
-//         {/* Dashboard Tabs */}
-//         <div className="mb-6">
-//           <div className="flex border-b">
-//             <button 
-//               onClick={() => setActiveTab('overview')} 
-//               className={`py-2 px-4 font-medium ${activeTab === 'overview' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
-//             >
-//               Overview
-//             </button>
-//             <button 
-//               onClick={() => setActiveTab('trips')} 
-//               className={`py-2 px-4 font-medium ${activeTab === 'trips' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
-//             >
-//               My Trips
-//             </button>
-//             <button 
-//               onClick={() => setActiveTab('bookings')} 
-//               className={`py-2 px-4 font-medium ${activeTab === 'bookings' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'}`}
-//             >
-//               Booking Requests
-//             </button>
-//           </div>
-//         </div>
-//         <h1>hello</h1>
-//         {/* Content */}
-//         {activeTab === 'trips' && <TripsTab currentTrips={currentTrips} pastTrips={pastTrips} />}
-//         {activeTab === 'bookings' && <BookingsTab bookingRequests={bookingRequests} />}
-        
-//       </main>
-//     </div>
-//   );
-// };
-
-//export default BikeRiderDashboard;
 import React, { useState } from 'react';
 import { setDriverOnlineStatus } from '../../services/DriverService';
+import { useNavigate } from 'react-router-dom';
+
+
 const BikeRiderDashboard = () => {
   // Sample data - In a real app, this would come from an API
   const [riderStats, setRiderStats] = useState({
@@ -69,6 +14,9 @@ const BikeRiderDashboard = () => {
     available: true
   });
 
+ 
+
+  
   const [currentTrips, setCurrentTrips] = useState([
     { id: 3, date: "2025-03-01", pickup: "Kathmandu-Chabahil", dropoff: "Solukhumbu-Salleri", fare: 3000.00, status: "Ongoing" }
   ]);

@@ -42,13 +42,21 @@ namespace SawariSewa.Areas.Vehicle.Controller
                     v.Email,
                     v.VehiclePhotoPath,
                     v.DepartureTime,
-                    v.IsOnline
+                    
+                    // Fetch fare specifically assigned to this driver
+                    FareAmount = _context.Fares
+                        .Where(f => f.DriverId == v.UserId &&
+                                    f.VehicleType == v.VehicleType &&
+                                    f.StartingPoint == v.StartingPoint &&
+                                    f.DestinationLocation == v.DestinationLocation)
+                        .Select(f => f.Amount)
+                        .FirstOrDefault() // Get driver's fare, if available
                 })
                 .ToListAsync();
 
             if (!availableVehicles.Any())
             {
-                return NotFound("Vehicle is unavailable.");
+                return NotFound("No available vehicles found.");
             }
 
             return Ok(availableVehicles);

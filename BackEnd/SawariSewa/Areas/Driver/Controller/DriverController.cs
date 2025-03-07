@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.Security.Cryptography.Xml;
 using SawariSewa.Services;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace SawariSewa.Areas.Driver.Controllers
 {
@@ -551,9 +553,11 @@ namespace SawariSewa.Areas.Driver.Controllers
             return Ok(driver.VehicleType);
         }
 
-        [HttpPost("set-online-status")]
+   
+
+        [HttpPost("set-online")]
         [Authorize(Roles = "Driver")]
-        public async Task<IActionResult> SetOnlineStatus(bool isOnline)
+        public async Task<IActionResult> SetOnline()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -562,6 +566,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                 return Unauthorized(new { message = "User not authenticated. Please log in." });
             }
 
+            // Retrieve the driver from the ApprovedDrivers table
             var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
 
             if (driver == null)
@@ -569,11 +574,61 @@ namespace SawariSewa.Areas.Driver.Controllers
                 return NotFound(new { message = "Driver not found." });
             }
 
-            driver.IsOnline = isOnline;
-            await _context.SaveChangesAsync();
+            // Set the driver's IsOnline status to true (online)
+            driver.IsOnline = true;
 
-            return Ok(new { message = $"Driver is now {(isOnline ? "Online" : "Offline")}" });
+            // Mark the entity as modified
+            _context.Entry(driver).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Driver is now Online." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating the status.", error = ex.Message });
+            }
         }
+
+        [HttpPost("set-offline")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> SetOffline()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not authenticated. Please log in." });
+            }
+
+            // Retrieve the driver from the ApprovedDrivers table
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (driver == null)
+            {
+                return NotFound(new { message = "Driver not found." });
+            }
+
+            // Set the driver's IsOnline status to false (offline)
+            driver.IsOnline = false;
+
+            // Mark the entity as modified
+            _context.Entry(driver).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Driver is now Offline." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating the status.", error = ex.Message });
+            }
+        }
+
+
+
 
         [HttpGet("driver-status/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin,Driver")]

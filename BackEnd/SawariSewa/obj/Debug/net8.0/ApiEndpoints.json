@@ -326,18 +326,22 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
-    "Method": "SetOnlineStatus",
-    "RelativePath": "api/Driver/set-online-status",
+    "Method": "SetOffline",
+    "RelativePath": "api/Driver/set-offline",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "isOnline",
-        "Type": "System.Boolean",
-        "IsRequired": false
-      }
-    ],
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "SetOnline",
+    "RelativePath": "api/Driver/set-online",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
