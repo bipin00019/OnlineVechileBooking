@@ -504,26 +504,32 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
-    "Method": "GetAvailableVehicles",
-    "RelativePath": "api/Vehicle/available-vehicles",
-    "HttpMethod": "GET",
+    "Method": "ScheduleVehicle",
+    "RelativePath": "api/Vehicle/create-schedule-vehicle",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "startingPoint",
-        "Type": "System.String",
-        "IsRequired": false
-      },
+        "Name": "model",
+        "Type": "SawariSewa.Areas.Vehicle.DTO.VehicleScheduleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "SearchAvailableVehicles",
+    "RelativePath": "api/Vehicle/search-available-vehicles",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
       {
-        "Name": "destination",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "vehicleType",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "searchModel",
+        "Type": "SawariSewa.Areas.Vehicle.DTO.VehicleSearchDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

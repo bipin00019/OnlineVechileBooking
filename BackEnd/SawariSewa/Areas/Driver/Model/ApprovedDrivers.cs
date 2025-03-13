@@ -28,7 +28,7 @@
         public DateTime ApprovedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public string DepartureTime {  get; set; }
-        public bool? IsOnline { get; set; }
+        public bool IsOnline { get; set; }
     }
 
 }

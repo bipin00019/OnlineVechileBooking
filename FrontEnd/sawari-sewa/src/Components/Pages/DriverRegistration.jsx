@@ -194,7 +194,25 @@ const DriverRegistration = () => {
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {renderTextInput('LicenseNumber', 'License Number')}
               {renderTextInput('VehicleNumber', 'Vehicle Number')}
-              {renderTextInput('VehicleType', 'Vehicle Type')}
+              {/* {renderTextInput('VehicleType', 'Vehicle Type')} */}
+              <div className="mb-4 w-full">
+                <label className="block text-lg font-medium mb-1 text-white">
+                  Vehicle Type <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="VehicleType"
+                  value={formData.VehicleType}
+                  onChange={handleChange}
+                  required
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-lg focus:ring-2 focus:ring-blue-500 text-black"
+                >
+                  <option value="" disabled>Select a vehicle type</option>
+                  <option value="Bus">Bus</option>
+                  <option value="Jeep">Jeep</option>
+                  <option value="Van">Van</option>
+                  <option value="Bike">Bike</option>
+                </select>
+              </div>
               {renderTextInput('StartingPoint', 'Starting Point')}
               {renderTextInput('DestinationLocation', 'Destination Location')}
               {renderTextInput('DepartureTime', 'Departure Time')}
