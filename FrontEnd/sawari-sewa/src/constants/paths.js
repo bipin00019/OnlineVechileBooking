@@ -10,7 +10,8 @@ export const PATHS = {
     DRIVERDASHBOARD: "/driver-dashboard",
     APPROVEDDRIVERSLIST: "/approved-drivers-list",
     VIEWAPPROVEDDRIVER: "/view-approved-driver/:id",
-    AVAILABLEVEHICLE: "/available-vehicle"
+    AVAILABLEVEHICLE: "/available-vehicle",
+    CREATEVEHICLESCHEDULE: "/create-vehicle-schedule"
 
 }
 

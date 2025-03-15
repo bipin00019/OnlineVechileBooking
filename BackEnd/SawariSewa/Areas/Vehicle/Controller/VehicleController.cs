@@ -21,7 +21,8 @@ namespace SawariSewa.Areas.Vehicle.Controller
             _context = context;
         }
 
-        [HttpPost("create-schedule-vehicle")]
+        [HttpPost("create-vehicle-schedule")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
         public async Task<IActionResult> ScheduleVehicle([FromBody] VehicleScheduleDto model)
         {
             // Ensure the driver exists in ApprovedDrivers
@@ -75,7 +76,37 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok(new { message = "Vehicle scheduled successfully!" });
         }
 
-        
+        [HttpGet("get-all-vehicle-schedules")]
+        public async Task<IActionResult> GetAllVehicleSchedules()
+        {
+            var schedules = await _context.VehicleAvailability
+                .Select(v => new
+                {
+                    v.Id,
+                    v.DriverId,
+                    v.VehicleType,
+                    v.VehicleNumber,
+                    v.TotalSeats,
+                    v.AvailableSeats,
+                    v.BookedSeats,
+                    v.Location,
+                    v.Destination,
+                    v.DepartureDate,
+                    v.DepartureTime,
+                    v.Fare,
+                    v.Status,
+                    v.CreatedAt,
+                    v.UpdatedAt
+                })
+                .ToListAsync();
+
+            if (schedules == null || schedules.Count == 0)
+                return NotFound(new { message = "No vehicle schedules found." });
+
+            return Ok(schedules);
+        }
+
+
 
         [HttpPost("search-available-vehicles")]
         public async Task<IActionResult> SearchAvailableVehicles([FromBody] VehicleSearchDto searchModel)

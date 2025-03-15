@@ -130,6 +130,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     CreatedAt = DateTime.UtcNow,
                     VehiclePhotoPath = vehiclePhotoPath,
                     DepartureTime = driverApplicationDto.DepartureTime,
+                    PickupPoint = driverApplicationDto.PickupPoint,
+                    DropOffPoint = driverApplicationDto.DropOffPoint,
                 };
 
                 _context.DriverApplications.Add(driverApplication);
@@ -220,6 +222,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                         FirstName = u.FirstName,
                         LastName = u.LastName,
                         DepartureTime = d.DepartureTime,
+                        PickupPoint = d.PickupPoint,
+                        DropOffPoint = d.DropOffPoint,
                     });
 
             // Apply pagination (skip and take)
@@ -279,6 +283,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     DepartureTime = d.DepartureTime,
+                    DropOffPoint = d.DropOffPoint,
+                    PickupPoint = d.PickupPoint,
                 })
                 .FirstOrDefaultAsync();
             if (driverApplication == null)
@@ -332,6 +338,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     ApprovedAt = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow,
                     DepartureTime = application.DepartureTime,
+                    PickupPoint = application.PickupPoint,
+                    DropOffPoint = application.DropOffPoint,
                     IsOnline = true,
                 };
 
@@ -450,6 +458,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     DepartureTime = d.DepartureTime,
+                    PickupPoint = d.PickupPoint,
+                    DropOffPoint = d.DropOffPoint,
                     IsOnline = d.IsOnline,
                 });
             var pagedApplications = await approvedDriversQuery
@@ -504,6 +514,8 @@ namespace SawariSewa.Areas.Driver.Controllers
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     DepartureTime = d.DepartureTime,
+                    PickupPoint = d.PickupPoint,
+                    DropOffPoint = d.DropOffPoint,
                     IsOnline = d.IsOnline,
                 })
                 .FirstOrDefaultAsync();

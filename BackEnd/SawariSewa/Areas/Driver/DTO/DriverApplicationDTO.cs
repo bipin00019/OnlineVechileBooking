@@ -16,6 +16,9 @@
         public string StartingPoint { get; set; }
         public string DestinationLocation { get; set; }
         public string DepartureTime { get; set; }
+        public string PickupPoint { get; set; }
+        public string DropOffPoint { get; set; }
+
         //public DateTime CreatedAt { get; set; }
         //public string ApprovedBy { get; set; }
         //public DateTime? ApprovedAt { get; set; }

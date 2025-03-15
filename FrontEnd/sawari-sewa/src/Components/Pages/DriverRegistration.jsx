@@ -11,6 +11,8 @@ const DriverRegistration = () => {
     StartingPoint: '',
     DestinationLocation: '',
     DepartureTime: '',
+    DropOffPoint: '',
+    PickupPoint: '',
   });
 
   const [files, setFiles] = useState({
@@ -213,9 +215,11 @@ const DriverRegistration = () => {
                   <option value="Bike">Bike</option>
                 </select>
               </div>
-              {renderTextInput('StartingPoint', 'Starting Point')}
+              {renderTextInput('StartingPoint', 'Starting Location')}
               {renderTextInput('DestinationLocation', 'Destination Location')}
               {renderTextInput('DepartureTime', 'Departure Time')}
+              {renderTextInput('PickupPoint', 'Pickup Point')}
+              {renderTextInput('DropOffPoint', 'Drop Off Point')}
               {renderFileInput('LicensePhoto', 'License Photo')}
               {renderFileInput('DriverPhoto', 'Driver Photo')}
               {renderFileInput('BillbookPhoto', 'Vehicle Billbook Photo')}

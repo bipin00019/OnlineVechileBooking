@@ -23,5 +23,7 @@
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string DepartureTime { get; set; }   
+        public string PickupPoint { get; set; }
+        public string DropOffPoint { get; set; }
     }
 }

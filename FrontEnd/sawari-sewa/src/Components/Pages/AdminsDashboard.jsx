@@ -8,6 +8,7 @@ import {
   Calendar,
   DollarSign,
   Dock,
+  PlusCircle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '../../constants/paths';
@@ -158,14 +159,24 @@ const AdminDashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow lg:col-span-3">
             <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <button 
+              onClick={()=>navigate(PATHS.CREATEVEHICLESCHEDULE)}
+              className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
+              <PlusCircle className="h-6 w-6 text-green-600 mb-2" />
+                <span className="text-sm font-medium">Create Vehicle Schedule</span>
+              </button>
+              <button className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
+              <Car className="h-6 w-6 text-green-600 mb-2" />
+                <span className="text-sm font-medium">Vehicle Schedule</span>
+              </button>
               <button className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
                 <Users className="h-6 w-6 text-blue-600 mb-2" />
                 <span className="text-sm font-medium">Manage Users</span>
               </button>
-              <button className="p-4 bg-green-50 rounded-lg flex flex-col items-center justify-center hover:bg-green-100 transition-colors">
+              {/* <button className="p-4 bg-green-50 rounded-lg flex flex-col items-center justify-center hover:bg-green-100 transition-colors">
                 <Car className="h-6 w-6 text-green-600 mb-2" />
                 <span className="text-sm font-medium">Add Vehicle</span>
-              </button>
+              </button> */}
               <button className="p-4 bg-purple-50 rounded-lg flex flex-col items-center justify-center hover:bg-purple-100 transition-colors">
                 <MapPin className="h-6 w-6 text-purple-600 mb-2" />
                 <span className="text-sm font-medium">Track Routes</span>

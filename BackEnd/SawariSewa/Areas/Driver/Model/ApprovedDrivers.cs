@@ -29,6 +29,9 @@
         public DateTime CreatedAt { get; set; }
         public string DepartureTime {  get; set; }
         public bool IsOnline { get; set; }
+
+        public string PickupPoint {  get; set; }    
+        public string DropOffPoint { get; set; }
     }
 
 }

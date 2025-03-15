@@ -102,6 +102,7 @@ const ApprovedDriversList = () => {
             <table className="min-w-full bg-white border border-gray-300">
               <thead className="bg-gray-50">
                 <tr>
+                <th className="px-4 py-2 border-b text-left">Driver ID</th>
                   <th className="px-4 py-2 border-b text-left">Name</th>
                   <th className="px-4 py-2 border-b text-left">License</th>
                   <th className="px-4 py-2 border-b text-left">Vehicle Details</th>
@@ -116,6 +117,7 @@ const ApprovedDriversList = () => {
                     navigate(`/view-approved-driver/${application.id}`);
                   }}
                   className="hover:bg-gray-50 cursor-pointer">
+                    <td className="px-4 py-2 border-b">{application.id}</td>
                     <td className="px-4 py-2 border-b">
                       {application.firstName} {application.lastName}
                     </td>

@@ -113,6 +113,8 @@ const ViewApprovedDriver = () => {
               <p><span className="font-medium">Starting Point:</span> {application.startingPoint}</p>
               <p><span className="font-medium">Destination:</span> {application.destinationLocation}</p>
               <p><span className="font-medium">Departure Time:</span> {application.departureTime}</p>
+              <p><span className="font-medium">Pickup Point:</span> {application.pickupPoint}</p>
+              <p><span className="font-medium">Dropoff Point:</span> {application.dropOffPoint}</p>
             </div>
           </div>
         </div>

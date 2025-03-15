@@ -212,6 +212,16 @@
         "Name": "DepartureTime",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "PickupPoint",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "DropOffPoint",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -505,7 +515,7 @@
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
     "Method": "ScheduleVehicle",
-    "RelativePath": "api/Vehicle/create-schedule-vehicle",
+    "RelativePath": "api/Vehicle/create-vehicle-schedule",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -516,6 +526,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "GetAllVehicleSchedules",
+    "RelativePath": "api/Vehicle/get-all-vehicle-schedules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

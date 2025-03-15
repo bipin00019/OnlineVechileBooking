@@ -1,4 +1,5 @@
-﻿using SawariSewa.Data;
+﻿using Microsoft.Identity.Client;
+using SawariSewa.Data;
 
 namespace SawariSewa.Areas.Driver.Model
 {
@@ -22,6 +23,8 @@ namespace SawariSewa.Areas.Driver.Model
         public DateTime? ApprovedAt { get; set; }
         public string VehiclePhotoPath { get; set; }
         public string DepartureTime { get; set; }
+        public string PickupPoint { get; set; }
+        public string DropOffPoint { get; set; }
 
         // Navigation property to link with AspNetUsers table
         public virtual ApplicationUser User { get; set; }
