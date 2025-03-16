@@ -11,7 +11,8 @@ export const PATHS = {
     APPROVEDDRIVERSLIST: "/approved-drivers-list",
     VIEWAPPROVEDDRIVER: "/view-approved-driver/:id",
     AVAILABLEVEHICLE: "/available-vehicle",
-    CREATEVEHICLESCHEDULE: "/create-vehicle-schedule"
+    CREATEVEHICLESCHEDULE: "/create-vehicle-schedule",
+    VIEWVEHICLESCHEDULE: "/view-vehicle-schedule",
 
 }
 

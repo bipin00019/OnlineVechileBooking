@@ -165,9 +165,11 @@ const AdminDashboard = () => {
               <PlusCircle className="h-6 w-6 text-green-600 mb-2" />
                 <span className="text-sm font-medium">Create Vehicle Schedule</span>
               </button>
-              <button className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
+              <button 
+              onClick={()=>navigate(PATHS.VIEWVEHICLESCHEDULE)}
+              className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
               <Car className="h-6 w-6 text-green-600 mb-2" />
-                <span className="text-sm font-medium">Vehicle Schedule</span>
+                <span className="text-sm font-medium">View Vehicle Schedule</span>
               </button>
               <button className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
                 <Users className="h-6 w-6 text-blue-600 mb-2" />

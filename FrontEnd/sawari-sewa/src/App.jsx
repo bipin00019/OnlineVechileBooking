@@ -10,7 +10,7 @@ function App() {
     <>
     <AuthProvider>
      <Router>
-      
+      <Navbar/>
       <AppRoutes/>
       </Router>
       <ToastContainer position="bottom-right" autoClose={3000} />

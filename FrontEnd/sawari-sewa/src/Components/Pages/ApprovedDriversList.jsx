@@ -90,7 +90,7 @@ const ApprovedDriversList = () => {
 
   return (
     <div>
-      <Navbar /> {/* Include Navbar component */}
+      
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Approved Drivers List</h1>
         {approvedDrivers.length === 0 ? (

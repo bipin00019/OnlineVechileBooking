@@ -32,17 +32,16 @@ export const fetchAvailableVehicles = async (location, destination, vehicleType,
   }
 };
 
-export const createVehicleSchedule = async (scheduleData) => {
+
+
+export const fetchViewVehicleSchedule = async (pageNumber = 1, pageSize = 8) => {
   try {
-    const response = await axios.post(`${API_URL}/Vehicle/create-vehicle-schedule`, scheduleData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.get(
+      `${API_URL}/Vehicle/view-vehicle-schedules?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
     return response.data;
   } catch (error) {
-    console.error("Error creating vehicle schedule:", error.response ? error.response.data : error.message);
-    throw new Error(error.response ? error.response.data : "Failed to create vehicle schedule");
+    console.error("Error fetching vehicle schedule", error);
+    throw new Error(error.response?.data?.message || "Failed to fetch vehicle schedules");
   }
 };

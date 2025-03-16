@@ -211,7 +211,7 @@ const loadApprovedDrivers = async () => {
       <option value="">Select a driver</option>
       {drivers.map(driver => (
         <option key={driver.id} value={driver.id}>
-          Driver Id: {driver.id} - {driver.firstName} {driver.lastName} - {driver.vehicleNumber}
+          Driver Id: {driver.id} - {driver.firstName} {driver.lastName} - {driver.vehicleNumber}-{driver.vehicleType}
         </option>
       ))}
     </select>

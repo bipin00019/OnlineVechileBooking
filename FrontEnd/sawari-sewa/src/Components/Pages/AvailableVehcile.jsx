@@ -69,7 +69,7 @@ const AvailableVehicle = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen font-sans">
-      <Navbar />
+      
       {/* Header */}
       <div className="bg-white p-6 shadow-md">
         <div className="max-w-7xl mx-auto">

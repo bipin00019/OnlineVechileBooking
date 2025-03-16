@@ -14,6 +14,7 @@ import ApprovedDriversList from "../Components/Pages/ApprovedDriversList";
 import ViewApprovedDriver from "../Components/Pages/ViewApprovedDriver";
 import AvailableVehcile from "../Components/Pages/AvailableVehcile";
 import CreateVehicleSchedule from "../Components/VehiclePages/CreateVehicleSchedule";
+import ViewVehicleSchedule from "../Components/VehiclePages/ViewVehicleSchedule";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -30,6 +31,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.VIEWAPPROVEDDRIVER} element = {<ViewApprovedDriver/>} />
             <Route path = {PATHS.AVAILABLEVEHICLE} element = {<AvailableVehcile/>} />
             <Route path = {PATHS.CREATEVEHICLESCHEDULE} element = {<CreateVehicleSchedule/>} />
+            <Route path = {PATHS.VIEWVEHICLESCHEDULE} element = {<ViewVehicleSchedule/>} />
         </Routes> 
     )
 }

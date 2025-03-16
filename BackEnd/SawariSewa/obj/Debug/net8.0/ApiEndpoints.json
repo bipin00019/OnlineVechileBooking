@@ -530,16 +530,6 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
-    "Method": "GetAllVehicleSchedules",
-    "RelativePath": "api/Vehicle/get-all-vehicle-schedules",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
     "Method": "SearchAvailableVehicles",
     "RelativePath": "api/Vehicle/search-available-vehicles",
     "HttpMethod": "POST",
@@ -550,6 +540,27 @@
         "Name": "searchModel",
         "Type": "SawariSewa.Areas.Vehicle.DTO.VehicleSearchDto",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "GetAllVehicleSchedules",
+    "RelativePath": "api/Vehicle/view-vehicle-schedules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

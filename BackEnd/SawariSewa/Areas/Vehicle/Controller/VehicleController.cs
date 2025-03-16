@@ -76,10 +76,20 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok(new { message = "Vehicle scheduled successfully!" });
         }
 
-        [HttpGet("get-all-vehicle-schedules")]
-        public async Task<IActionResult> GetAllVehicleSchedules()
+        [HttpGet("view-vehicle-schedules")]
+        public async Task<IActionResult> GetAllVehicleSchedules(int pageNumber = 1, int pageSize = 8)
         {
+            if (pageNumber < 1 || pageSize < 1)
+            {
+                return BadRequest(new { message = "Invalid pagination parameters." });
+            }
+
+            var totalRecords = await _context.VehicleAvailability.CountAsync();
+
             var schedules = await _context.VehicleAvailability
+                .OrderBy(v => v.DepartureDate) // Sorting by departure date
+                .Skip((pageNumber - 1) * pageSize) // Skip previous records
+                .Take(pageSize) // Take only the required records
                 .Select(v => new
                 {
                     v.Id,
@@ -100,11 +110,21 @@ namespace SawariSewa.Areas.Vehicle.Controller
                 })
                 .ToListAsync();
 
-            if (schedules == null || schedules.Count == 0)
+            if (!schedules.Any())
                 return NotFound(new { message = "No vehicle schedules found." });
 
-            return Ok(schedules);
+            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            return Ok(new
+            {
+                pageNumber,
+                pageSize,
+                totalRecords,
+                totalPages,
+                data = schedules
+            });
         }
+
 
 
 
