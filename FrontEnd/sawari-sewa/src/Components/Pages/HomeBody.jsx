@@ -333,6 +333,7 @@ export default function HomeBody() {
                           onClick={() => {
                             setSelectedStartingPoint(point);
                             setIsStartDropdownOpen(false);
+                            setIsDestinationDropdownOpen(true);
                           }}
                         >
                           {point}
@@ -366,6 +367,7 @@ export default function HomeBody() {
                           onClick={() => {
                             setSelectedDestinationPoint(point);
                             setIsDestinationDropdownOpen(false);
+                            setIsVehicleDropdownOpen(true);
                           }}
                         >
                           {point}

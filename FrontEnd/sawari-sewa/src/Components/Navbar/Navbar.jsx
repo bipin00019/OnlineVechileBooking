@@ -4,6 +4,7 @@ import { Phone, Facebook, Instagram, Youtube, Mail, LogIn, UserPlus } from 'luci
 import { FaWhatsapp, FaUserCircle } from 'react-icons/fa';
 import { PATHS } from '../../constants/paths';
 import { fetchUserProfile, switchRole } from '../../services/roleManagement'; 
+import { checkDriverApplicationStatus } from '../../services/DriverService';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const Navbar = () => {
   const [userRoles, setUserRoles] = useState([]);
   const [isApprovedDriver, setIsApprovedDriver] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [pendingApplication, setPendingApplication] = useState(false);
   const dropdownRef = useRef(null); // Reference to the dropdown menu
   const navbarRef = useRef(null); // Reference to the navbar area to detect outside click
 
@@ -31,6 +33,9 @@ const Navbar = () => {
 
         // Store the current role state in localStorage
       //localStorage.setItem("userRole", JSON.stringify(profile.roles || []));
+
+      const applicationStatus = await checkDriverApplicationStatus();
+      setPendingApplication(applicationStatus);
 
       } catch (error) {
         console.error("Failed to fetch user profile", error);
@@ -59,6 +64,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     setUser(null);
     setUserRoles([]);
     setIsApprovedDriver(false);
@@ -182,8 +188,15 @@ const Navbar = () => {
                           <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Log Out</button>
                         </>
                       ) : (
-                        <>
+                        <> 
+                        {pendingApplication ? (
+                          <p className="block px-4 py-2 text-red-500 w-full text-left">
+                          You already have a pending application. Please wait for approval.
+                        </p>
+                        ) : (
                           <button onClick={() => navigate(PATHS.DRIVERREGISTRATION)} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Be a Driver</button>
+                        )}
+                          
                           <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Log Out</button>
                         </>
                       )}

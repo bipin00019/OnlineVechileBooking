@@ -184,8 +184,23 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
         }
 
+        [HttpGet("check-application-status")]
+        public async Task<ActionResult<object>> CheckDriverApplicationStatus()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User not authenticated." });
+            }
 
-        
+            var existingApplication = await _context.DriverApplications
+                .Where(d => d.UserId == userId && (d.Status == "Pending" || d.Status == "In Progress"))
+                .FirstOrDefaultAsync();
+
+            return Ok(new { hasPendingApplication = existingApplication != null });
+        }
+
+
 
         [HttpGet("all-driver-applications")]
         [Authorize(Roles = "Admin,SuperAdmin")]

@@ -84,6 +84,25 @@ export const applyForDriver = async (driverData) => {
   }
 };
 
+// Function to check if the user has a pending driver application
+export const checkDriverApplicationStatus = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+
+    const response = await axios.get(`${API_URL}/Driver/check-application-status`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data.hasPendingApplication; // Expecting a boolean response from API
+  } catch (error) {
+    console.error("Error checking driver application status:", error);
+    return false;
+  }
+};
+
 export const allDriverApplications = async (page = 1, pageSize = 5) => {
   try {
     // Send pagination parameters (page and pageSize) in the request

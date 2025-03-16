@@ -254,6 +254,16 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "CheckDriverApplicationStatus",
+    "RelativePath": "api/Driver/check-application-status",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "GetDriverCounts",
     "RelativePath": "api/Driver/driver-count",
     "HttpMethod": "GET",
