@@ -540,6 +540,27 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "EditVehicleSchedule",
+    "RelativePath": "api/Vehicle/edit-vehicle-schedule/{Id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "SawariSewa.Areas.Vehicle.DTO.EditVehicleScheduleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
     "Method": "SearchAvailableVehicles",
     "RelativePath": "api/Vehicle/search-available-vehicles",
     "HttpMethod": "POST",

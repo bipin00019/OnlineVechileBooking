@@ -89,7 +89,7 @@ const ViewApprovedDriver = () => {
 
   return (
     <div>
-      <Navbar />
+      
       <div className="p-6 max-w-7xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Approved Driver Details</h1>
         

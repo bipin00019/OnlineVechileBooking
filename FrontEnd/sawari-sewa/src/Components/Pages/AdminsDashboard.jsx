@@ -86,7 +86,7 @@ const AdminDashboard = () => {
             <p className="text-2xl font-bold text-gray-900">{totalApplications}</p>
           </div>
           <div 
-          className="bg-white p-6 rounded-lg shadow"
+          className="bg-white p-6 rounded-lg shadow cursor-pointer hover:text-blue-200 hover:bg-gray-100 transition-colors"
           onClick={() => navigate(PATHS.APPROVEDDRIVERSLIST)}
           >
             <div className="flex items-center justify-between mb-2">

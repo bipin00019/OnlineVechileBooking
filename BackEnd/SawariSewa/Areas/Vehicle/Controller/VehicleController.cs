@@ -164,5 +164,33 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok(availableVehicles);
         }
 
+        [HttpPut("edit-vehicle-schedule/{Id}")]
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<IActionResult> EditVehicleSchedule(int Id, [FromBody] EditVehicleScheduleDto model)
+        {
+            var existingSchedule = await _context.VehicleAvailability.FindAsync(Id);
+            if (existingSchedule == null)
+                return NotFound("Vehicle schedule not found.");
+
+            // Validate inputs
+            if (model.TotalSeats <= 0 || model.Fare <= 0 || model.BookedSeats < 0)
+                return BadRequest("Total seats and fare must be greater than zero, and booked seats cannot be negative.");
+
+            // You can use the DriverId from the existingSchedule (no need to pass it in the request body)
+            var driverId = existingSchedule.DriverId;
+
+            // Update schedule details
+            existingSchedule.TotalSeats = model.TotalSeats;
+            existingSchedule.BookedSeats = model.BookedSeats;
+            existingSchedule.AvailableSeats = model.TotalSeats - model.BookedSeats; // Adjust available seats
+            existingSchedule.DepartureDate = model.DepartureDate;
+            existingSchedule.Fare = model.Fare;
+            existingSchedule.UpdatedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Vehicle schedule updated successfully!" });
+        }
+
     }
 }

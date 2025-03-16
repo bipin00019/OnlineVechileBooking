@@ -17,7 +17,7 @@ const CreateVehicleSchedule = () => {
   const [driverDetails, setDriverDetails] = useState(null);
   const [pagination, setPagination] = useState({
     page: 1,
-    pageSize: 10,
+    pageSize: 8,
     totalCount: 0
   });
 
@@ -37,7 +37,7 @@ const CreateVehicleSchedule = () => {
 
 
 
-const loadApprovedDrivers = async () => {
+  const loadApprovedDrivers = async () => {
     try {
       setLoading(true);
   
@@ -54,7 +54,7 @@ const loadApprovedDrivers = async () => {
   
       // Fetch all scheduled drivers
       const scheduleResponse = await axios.get(
-        `${API_URL}/Vehicle/get-all-vehicle-schedules`, 
+        `${API_URL}/Vehicle/view-vehicle-schedules`, 
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -63,8 +63,12 @@ const loadApprovedDrivers = async () => {
         }
       );
   
-      if (driverResponse.data && driverResponse.data.data && scheduleResponse.data) {
-        const scheduledDriverIds = new Set(scheduleResponse.data.map(schedule => schedule.driverId));
+      if (driverResponse.data && driverResponse.data.data) {
+        const scheduledDriverIds = new Set();
+        if (Array.isArray(scheduleResponse.data)) {
+          // Only map if the response is an array
+          scheduleResponse.data.forEach(schedule => scheduledDriverIds.add(schedule.driverId));
+        }
   
         // Filter out scheduled drivers
         const availableDrivers = driverResponse.data.data.filter(driver => !scheduledDriverIds.has(driver.id));
@@ -84,6 +88,7 @@ const loadApprovedDrivers = async () => {
       setLoading(false);
     }
   };
+  
   
   const loadDriverDetails = async (driverId) => {
     try {
