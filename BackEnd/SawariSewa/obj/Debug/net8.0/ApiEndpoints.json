@@ -79,6 +79,43 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "BookSeat",
+    "RelativePath": "api/Booking/book-seat",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vehicleAvailabilityId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "seatNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "GetBookedSeats",
+    "RelativePath": "api/Booking/GetBookedSeats/{vehicleAvailabilityId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vehicleAvailabilityId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "GetApprovedDriver",
     "RelativePath": "api/Driver/all-approved-drivers",

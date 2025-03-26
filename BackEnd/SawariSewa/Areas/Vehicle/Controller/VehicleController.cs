@@ -34,10 +34,12 @@ namespace SawariSewa.Areas.Vehicle.Controller
             string vehicleType = driver.VehicleType;
             string vehicleNumber = driver.VehicleNumber;
             string location = driver.StartingPoint;
-            string destination = driver.DestinationLocation;
+            string destination = driver.DestinationLocation;           
+            string departureTimeString = driver.DepartureTime;
+            string pickupPoint = driver.PickupPoint;
+            string dropOffPoint = driver.DropOffPoint;
 
-            // Get the DepartureTime from the ApprovedDrivers table (already stored as a string)
-            string departureTimeString = driver.DepartureTime; // Assuming DepartureTime is already stored as a string
+            
 
             // Check if a vehicle schedule already exists for this driver and departure time
             var existingSchedule = await _context.VehicleAvailability
@@ -65,8 +67,11 @@ namespace SawariSewa.Areas.Vehicle.Controller
                 DepartureTime = departureTimeString,  // Use the DepartureTime from the driver record
                 Fare = model.Fare,
                 Status = "Available",
+                PickupPoint = pickupPoint,
+                DropOffPoint = dropOffPoint,
                 CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                UpdatedAt = DateTime.Now,
+           
             };
 
             // Add the new schedule to the context and save changes
@@ -142,18 +147,25 @@ namespace SawariSewa.Areas.Vehicle.Controller
                             && v.VehicleType.ToLower() == searchModel.VehicleType.ToLower()
                             && v.DepartureDate == searchModel.Date.Date
                             && v.Status.ToLower() == "available")
-                .Select(v => new
-                {
-                    v.VehicleNumber,
-                    v.VehicleType,
-                    v.TotalSeats,
-                    v.AvailableSeats,
-                    v.Fare,
-                    v.DepartureDate,
-                    v.Location,
-                    v.Destination,
-                    v.DepartureTime
-                })
+                .Join(_context.ApprovedDrivers,
+                      v => v.DriverId,
+                      d => d.Id, // Assuming the primary key in ApprovedDrivers is Id
+                      (v, d) => new
+                      {
+                          v.Id,
+                          v.DriverId,
+                          v.VehicleNumber,
+                          v.VehicleType,
+                          v.TotalSeats,
+                          v.AvailableSeats,
+                          v.Fare,
+                          v.DepartureDate,
+                          v.Location,
+                          v.Destination,
+                          v.DepartureTime,
+                          PickupPoint = d.PickupPoint,
+                          DropOffPoint = d.DropOffPoint
+                      })
                 .ToListAsync();
 
             // If no available vehicles found, return a message
@@ -163,6 +175,7 @@ namespace SawariSewa.Areas.Vehicle.Controller
             // Return the list of available vehicles
             return Ok(availableVehicles);
         }
+
 
         [HttpPut("edit-vehicle-schedule/{Id}")]
         [Authorize(Roles = "Admin, SuperAdmin")]

@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.Filters;
 using SawariSewa.Data;
 using SawariSewa.Models;
 using Microsoft.Extensions.FileProviders;
+using SawariSewa.Areas.Vehicle.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 
 builder.Services.AddMemoryCache(); // Add this for caching OTPs
 
+builder.Services.AddScoped<BookingService>(); // Register the service
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 // Add JWT Authentication middleware
@@ -168,7 +170,6 @@ using (var scope = app.Services.CreateScope())
 
     foreach (var role in roles)
     {
-        if (!await roleManager.RoleExistsAsync(role))
         {
             await roleManager.CreateAsync(new IdentityRole(role));
         }

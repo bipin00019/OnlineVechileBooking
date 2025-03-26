@@ -46,5 +46,7 @@ namespace SawariSewa.Areas.Vehicle.Model
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public string PickupPoint { get; set; }
+        public string DropOffPoint { get; set; }
     }
 }

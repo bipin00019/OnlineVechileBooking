@@ -45,3 +45,47 @@ export const fetchViewVehicleSchedule = async (pageNumber = 1, pageSize = 8) => 
     throw new Error(error.response?.data?.message || "Failed to fetch vehicle schedules");
   }
 };
+
+
+// Function to fetch booked seats for a specific vehicle availability
+export const fetchBookedSeats = async (vehicleAvailabilityId) => {
+  try {
+    if (!vehicleAvailabilityId) throw new Error("Vehicle ID is required");
+
+    const response = await axios.get(
+      `${API_URL}/Booking/GetBookedSeats/${vehicleAvailabilityId}`
+    );
+    console.log("Booked seats:",response.data.bookedSeats)
+    return response.data.bookedSeats; // Return booked seats array
+    
+
+  } catch (error) {
+    console.error("Error fetching booked seats:", error.response?.data || error.message);
+    throw new Error(error.response?.data || "Failed to fetch booked seats");
+  }
+};
+
+// Function to book a seat
+export const bookSeat = async (vehicleAvailabilityId, seatNumber) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/Booking/book-seat`,
+      null, // Since the API expects query parameters, body is null
+      {
+        params: { vehicleAvailabilityId, seatNumber },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error booking seat:", error.response?.data || error.message);
+    throw error;
+  }
+};
