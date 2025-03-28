@@ -518,6 +518,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controllers.PaymentController",
+    "Method": "InitiatePayment",
+    "RelativePath": "api/payment/initiate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SawariSewa.Areas.Vehicle.Controllers.PaymentRequestModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controllers.PaymentController",
+    "Method": "VerifyPayment",
+    "RelativePath": "api/payment/verify-payment",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SawariSewa.Areas.Vehicle.Controllers.PaymentController\u002BVerifyPaymentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Controllers.ResetPasswordController",
     "Method": "ForgotPassword",
     "RelativePath": "api/ResetPassword/forgot-password",

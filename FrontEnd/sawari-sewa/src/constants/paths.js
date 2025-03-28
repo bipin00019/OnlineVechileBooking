@@ -13,7 +13,8 @@ export const PATHS = {
     AVAILABLEVEHICLE: "/available-vehicle",
     CREATEVEHICLESCHEDULE: "/create-vehicle-schedule",
     VIEWVEHICLESCHEDULE: "/view-vehicle-schedule",
-    BOOKINGCONFIRMATION: "/booking-confirmation"
+    BOOKINGCONFIRMATION: "/booking-confirmation",
+    VERIFYPAYMENT: "/verify-payment",
 
 }
 

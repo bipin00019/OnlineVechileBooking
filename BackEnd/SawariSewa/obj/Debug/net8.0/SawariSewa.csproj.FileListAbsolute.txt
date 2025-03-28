@@ -157,3 +157,16 @@ C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\ne
 C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Physical.dll
 C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.FileSystemGlobbing.dll
 C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\bipin\OneDrive\Desktop\FYP Project\Code\BackEnd\SawariSewa\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll

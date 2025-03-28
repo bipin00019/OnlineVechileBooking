@@ -350,7 +350,7 @@ const handleViewSeats = async (vehicleId) => {
                             pickupPoint={vehicle.pickupPoint}
                             fare={vehicle.fare}
                             showLoginMessage={showLoginMessage}
-                            //onContinue={handleContinue}
+                            onContinue={handleContinue}
                             onLogin={navigateToLogin}
                           />
                         </div>
@@ -368,3 +368,4 @@ const handleViewSeats = async (vehicleId) => {
 };
 
 export default AvailableVehicle;
+

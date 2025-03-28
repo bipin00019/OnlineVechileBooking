@@ -85,8 +85,10 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddMemoryCache(); // Add this for caching OTPs
 
 builder.Services.AddScoped<BookingService>(); // Register the service
-
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddHttpClient<IPaymentService, PaymentService>();
+
 // Add JWT Authentication middleware
 builder.Services.AddAuthentication(options =>
 {
@@ -194,7 +196,7 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","uploads")),
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads")),
     RequestPath = "/uploads",
     ServeUnknownFileTypes = true // Allow all file types
 });
@@ -216,3 +218,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

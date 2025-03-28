@@ -45,7 +45,6 @@ function AppWithNavbar() {
 
   // Check if the current path is not for login or register
   const showNavbar = !['/login', '/register'].includes(location.pathname);
-
   return (
     <>
       {showNavbar && <Navbar />}  {/* Conditionally render Navbar */}

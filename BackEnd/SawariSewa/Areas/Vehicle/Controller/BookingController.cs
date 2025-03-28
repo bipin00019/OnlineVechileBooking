@@ -50,3 +50,47 @@ namespace SawariSewa.Areas.Vehicle.Controller
         }
     }
 }
+
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using SawariSewa.Areas.Vehicle.Services;
+//using System.Security.Claims;
+
+//[Route("api/[controller]")]
+//[ApiController]
+//public class PaymentController : ControllerBase
+//{
+//    private readonly IPaymentService _paymentService;
+//    private readonly IBookingService _bookingService;
+
+//    public PaymentController(IPaymentService paymentService, IBookingService bookingService)
+//    {
+//        _paymentService = paymentService;
+//        _bookingService = bookingService;
+//    }
+
+//    [HttpPost("process-payment")]
+//    [Authorize]
+//    public async Task<IActionResult> ProcessPayment(int vehicleAvailabilityId, decimal amount, string paymentToken, string seatNumbers)
+//    {
+//        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the logged-in user's ID
+
+//        // Step 1: Process payment
+//        var paymentSuccess = await _paymentService.ProcessPaymentAsync(vehicleAvailabilityId, amount, paymentToken, userId);
+
+//        if (!paymentSuccess)
+//        {
+//            return BadRequest("Payment failed.");
+//        }
+
+//        // Step 2: Once payment is successful, book the seat
+//        var bookingSuccess = await _bookingService.BookSeatAsync(vehicleAvailabilityId, userId, seatNumbers);
+
+//        if (bookingSuccess)
+//        {
+//            return Ok(new { status = "Booking successful" });
+//        }
+
+//        return BadRequest("Failed to confirm booking.");
+//    }
+//}

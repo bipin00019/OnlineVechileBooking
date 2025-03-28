@@ -17,6 +17,8 @@ import CreateVehicleSchedule from "../Components/VehiclePages/CreateVehicleSched
 import ViewVehicleSchedule from "../Components/VehiclePages/ViewVehicleSchedule";
 import BookingConfirmation from "../Components/Pages/BookingConfirmation";
 import AvailableVehicle from "../Components/AvailableVehicles/AvailableVehicle";
+import VerifyPayment from "../Components/AvailableVehicles/VerifyPayment";
+
 const AppRoutes = () => {
     return(
         <Routes>
@@ -35,6 +37,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.CREATEVEHICLESCHEDULE} element = {<CreateVehicleSchedule/>} />
             <Route path = {PATHS.VIEWVEHICLESCHEDULE} element = {<ViewVehicleSchedule/>} />
             <Route path = {PATHS.BOOKINGCONFIRMATION} element = {<BookingConfirmation/>} />
+            <Route path = {PATHS.VERIFYPAYMENT} element = {<VerifyPayment/>} />
         </Routes> 
     )
 }

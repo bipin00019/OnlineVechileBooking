@@ -20,6 +20,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Fare> Fares { get; set; }
     public DbSet<VehicleAvailability> VehicleAvailability { get; set; }
     public DbSet<SeatBookings> SeatBookings { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
 
 
