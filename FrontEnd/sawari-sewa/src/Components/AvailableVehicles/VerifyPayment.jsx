@@ -93,8 +93,9 @@ const VerifyPayment = () => {
 
     // Fetch the stored values from localStorage
     const vehicleAvailabilityId = localStorage.getItem("vehicleAvailabilityId");
-    const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats")) || [];
 
+    const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats")) || [];
+    console.log("Selected Seats:", selectedSeats);
     if (!pidx || isNaN(amount)) {
       setErrorMessage("Invalid payment details.");
       setIsLoading(false);
@@ -121,7 +122,7 @@ const VerifyPayment = () => {
             localStorage.removeItem("vehicleAvailabilityId");
             localStorage.removeItem("selectedSeats");
 
-            setBookingStatus("Booking successful! 🎉");
+            setBookingStatus("Booking successful🎉! Check email address for booking confirmation.");
             setErrorMessage(""); // Clear error message if booking is successful
           } catch (error) {
             setErrorMessage("Booking failed. " + (error.response?.data || error.message));

@@ -48,5 +48,8 @@ namespace SawariSewa.Areas.Vehicle.Model
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public string PickupPoint { get; set; }
         public string DropOffPoint { get; set; }
+        public string DriverPhoneNumber { get; set; }
+        public string DriverFirstName { get; set; }
+        public string DriverLastName { get; set; }
     }
 }

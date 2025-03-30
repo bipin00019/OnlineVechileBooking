@@ -77,9 +77,7 @@ const BookingDetails = ({
         <label className="block text-gray-700 text-sm font-medium mb-2">
           Boarding Point : {pickupPoint}
         </label>
-        <label className="block text-gray-700 text-sm font-medium mb-2">
-          Vehicle Availability Number : {vehicleAvailabilityId}
-        </label>
+        
         <label className="block text-gray-700 text-sm font-medium mb-2">
           Selected Seats : {selectedSeats.join(", ")}
         </label>

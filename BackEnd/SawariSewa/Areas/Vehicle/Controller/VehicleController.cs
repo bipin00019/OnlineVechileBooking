@@ -38,6 +38,9 @@ namespace SawariSewa.Areas.Vehicle.Controller
             string departureTimeString = driver.DepartureTime;
             string pickupPoint = driver.PickupPoint;
             string dropOffPoint = driver.DropOffPoint;
+            string driverPhoneNumber = driver.PhoneNumber;
+            string driverFirstName = driver.FirstName;
+            string driverLastName = driver.LastName;
 
             
 
@@ -71,6 +74,10 @@ namespace SawariSewa.Areas.Vehicle.Controller
                 DropOffPoint = dropOffPoint,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
+                DriverPhoneNumber = driverPhoneNumber,
+                DriverFirstName = driverFirstName,
+                DriverLastName = driverLastName
+
            
             };
 

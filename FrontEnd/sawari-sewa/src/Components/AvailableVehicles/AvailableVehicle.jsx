@@ -249,6 +249,7 @@ const handleViewSeats = async (vehicleId) => {
                           <div className="flex-1">
                             <div className="text-gray-600">{vehicle.location}</div>
                             <div className="text-sm text-gray-500">Starting Point</div>
+                            <div className="text-sm text-gray-500">Pick Up point: {vehicle.pickupPoint}</div>
                           </div>
 
                           {/* Journey visual */}
@@ -270,6 +271,7 @@ const handleViewSeats = async (vehicleId) => {
                           <div className="flex-1 text-right">
                             <div className="text-gray-600">{vehicle.destination}</div>
                             <div className="text-sm text-gray-500">Final Destination</div>
+                            <div className="text-sm text-gray-500">Drop Off point: {vehicle.dropOffPoint}</div>
                           </div>
                         </div>
                         {/* Footer */}
