@@ -169,9 +169,10 @@ namespace SawariSewa.Areas.Vehicle.Controller
                           v.DepartureDate,
                           v.Location,
                           v.Destination,
-                          v.DepartureTime,
+                          v.DepartureTime,                          
                           PickupPoint = d.PickupPoint,
-                          DropOffPoint = d.DropOffPoint
+                          DropOffPoint = d.DropOffPoint,
+                          
                       })
                 .ToListAsync();
 

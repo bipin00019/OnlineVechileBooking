@@ -51,5 +51,6 @@ namespace SawariSewa.Areas.Vehicle.Model
         public string DriverPhoneNumber { get; set; }
         public string DriverFirstName { get; set; }
         public string DriverLastName { get; set; }
+       
     }
 }

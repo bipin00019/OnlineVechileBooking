@@ -41,9 +41,10 @@ namespace SawariSewa.Areas.Vehicle.Controller
         {
             var bookedSeats = await _bookingService.GetBookedSeatsAsync(vehicleAvailabilityId);
 
+            // Return an empty list if no booked seats are found (instead of a 404)
             if (bookedSeats == null || bookedSeats.Count == 0)
             {
-                return NotFound("No booked seats found.");
+                return Ok(new { bookedSeats = new List<string>() }); // Empty list instead of 404
             }
 
             return Ok(new { bookedSeats });

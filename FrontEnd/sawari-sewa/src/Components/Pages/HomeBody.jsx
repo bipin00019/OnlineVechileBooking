@@ -248,7 +248,7 @@ export default function HomeBody() {
   const [isDestinationDropdownOpen, setIsDestinationDropdownOpen] = useState(false);
   const [isVehicleDropdownOpen, setIsVehicleDropdownOpen] = useState(false);
 
-  const vehicleTypes = ["Bike", "Van", "Bus", "Jeep"];
+  const vehicleTypes = ["Bike", "Van", "Bus", "Jeep","Deluxe_Bus", "Sofa Seater Bus"];
   const navigate = useNavigate();
 
   useEffect(() => {
