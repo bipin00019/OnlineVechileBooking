@@ -609,6 +609,14 @@ const SeatSelection = ({
           handleSeatSelection={handleSeatSelection}
           getSeatStatus={getSeatStatus}
         />;
+        case 'deluxe_bus':
+          return <BusLayout 
+            totalSeats={totalSeats}
+            selectedSeats={selectedSeats}
+            bookedSeats={bookedSeats}
+            handleSeatSelection={handleSeatSelection}
+            getSeatStatus={getSeatStatus}
+          />;
       default:
         return <GenericLayout 
           totalSeats={totalSeats}
@@ -627,9 +635,11 @@ const SeatSelection = ({
       case 'bus':
         return totalSeats ; 
       case 'sofa seater bus':
+        return totalSeats;
+      case 'deluxe_bus':
         return totalSeats; 
       case 'van':
-        return totalSeats; // Driver + front passenger + 3 middle + 2 back
+        return totalSeats; 
       case 'car':
         return totalSeats; 
       case 'jeep':
@@ -681,13 +691,7 @@ const SeatSelection = ({
               <div className="w-4 h-4 bg-orange-500 rounded mr-2"></div>
               <span className="text-sm text-gray-600">Selected</span>
             </div>
-            <div className="mt-3">
-              <span className="text-sm text-gray-700 font-medium">Vehicle Type: {vehicleType.charAt(0).toUpperCase() + vehicleType.slice(1)}</span>
-              <br />
-              <span className="text-sm text-gray-700 font-medium">Total Seats: {getVehicleSeatCount()}</span> 
-              <br />
-              <span className="text-sm text-gray-700 font-medium">Selected: {selectedSeats.length} seat(s)</span>
-            </div>
+            
           </div>
         </div>
       </div>

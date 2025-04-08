@@ -179,6 +179,26 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
+    "Method": "GetApprovedDriver",
+    "RelativePath": "api/Driver/all-drivers-forSchedule",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[SawariSewa.Areas.Driver.Model.ApprovedDrivers, SawariSewa, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "ApplyForDriver",
     "RelativePath": "api/Driver/apply-for-driver",
     "HttpMethod": "POST",
@@ -452,6 +472,42 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "CompleteTripByVehicle",
+    "RelativePath": "api/DriverDashboard/complete-trip/{vehicleAvailabilityId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vehicleAvailabilityId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetDriverCurrentTrips",
+    "RelativePath": "api/DriverDashboard/driver/current-trips",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetDriverUpcomingTrips",
+    "RelativePath": "api/DriverDashboard/driver/upcoming-trips",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.FareController",

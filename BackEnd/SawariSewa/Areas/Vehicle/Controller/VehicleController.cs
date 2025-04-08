@@ -89,7 +89,7 @@ namespace SawariSewa.Areas.Vehicle.Controller
         }
 
         [HttpGet("view-vehicle-schedules")]
-        public async Task<IActionResult> GetAllVehicleSchedules(int pageNumber = 1, int pageSize = 8)
+        public async Task<IActionResult> GetAllVehicleSchedules(int pageNumber = 1, int pageSize = 10)
         {
             if (pageNumber < 1 || pageSize < 1)
             {

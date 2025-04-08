@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SawariSewa")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5bb4e69db57829ffa2a41027229e8265bea7ad8b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24370aa3b07d406603c543b39da0590b983216cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("SawariSewa")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SawariSewa")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

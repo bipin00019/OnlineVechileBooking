@@ -14,7 +14,7 @@ const ApprovedDriversList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [imageLoadErrors, setImageLoadErrors] = useState({});
 
-  const pageSize = 10;
+  const pageSize = 5;
 
   useEffect(() => {
     const fetchApprovedDriversList = async () => {

@@ -21,6 +21,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<VehicleAvailability> VehicleAvailability { get; set; }
     public DbSet<SeatBookings> SeatBookings { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<DriverStats> DriverStats { get; set; }
+
 
 
 

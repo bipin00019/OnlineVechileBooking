@@ -132,7 +132,8 @@ namespace SawariSewa.Areas.Vehicle.Services
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     PickupPoint = vehicleAvailability.PickupPoint,
-                    DropOffPoint = vehicleAvailability.DropOffPoint
+                    DropOffPoint = vehicleAvailability.DropOffPoint,
+                    RideStatus = "Not Started"
                 };
 
                 // Add the seat booking to the database

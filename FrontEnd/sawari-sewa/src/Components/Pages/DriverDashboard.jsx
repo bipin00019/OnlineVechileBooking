@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { fetchVehicleType } from "../../services/DriverService";
-import BusDriverDashboard from "../BusDriver/BusDriverDashboard";
-import VanDriverDashboard from "../VanDriver/VanDriverDashboard";
-import JeepDriverDashboard from "../JeepDriver/JeepDriverDashboard";
-import BikeRiderDashboard from "../BikeRider/BikeRiderDashboard";
+import BusDriverDashboard from "../DriverDashboards/BusDriver/BusDriverDashboard";
+import VanDriverDashboard from "../DriverDashboards/VanDriver/VanDriverDashboard";
+import JeepDriverDashboard from "../DriverDashboards/JeepDriver/JeepDriverDashboard";
+import BikeRiderDashboard from "../DriverDashboards/BikeRider/BikeRiderDashboard";
 import { Loader2 } from "lucide-react"; // Loading spinner
 
 const DriverDashboard = () => {

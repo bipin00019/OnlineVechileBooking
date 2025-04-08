@@ -498,6 +498,55 @@ namespace SawariSewa.Areas.Driver.Controllers
 
         }
 
+        [HttpGet("all-drivers-forSchedule")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<IEnumerable<ApprovedDrivers>>> GetApprovedDriver()
+        {
+            var approvedDriversQuery = _context.ApprovedDrivers
+                .Join(_context.Users,
+                    d => d.UserId,
+                    u => u.Id,
+                    (d, u) => new ApprovedDrivers
+                    {
+                        Id = d.Id,
+                        LicenseNumber = d.LicenseNumber,
+                        VehicleType = d.VehicleType,
+                        VehicleNumber = d.VehicleNumber,
+                        LicensePhotoPath = d.LicensePhotoPath,
+                        DriverPhotoPath = d.DriverPhotoPath,
+                        BillbookPhotoPath = d.BillbookPhotoPath,
+                        CitizenshipFrontPath = d.CitizenshipFrontPath,
+                        CitizenshipBackPath = d.CitizenshipBackPath,
+                        SelfieWithIDPath = d.SelfieWithIDPath,
+                        VehiclePhotoPath = d.VehiclePhotoPath,
+                        StartingPoint = d.StartingPoint,
+                        DestinationLocation = d.DestinationLocation,
+                        CreatedAt = d.CreatedAt,
+                        ApprovedAt = d.ApprovedAt,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        DepartureTime = d.DepartureTime,
+                        PickupPoint = d.PickupPoint,
+                        DropOffPoint = d.DropOffPoint,
+                        IsOnline = d.IsOnline,
+                    });
+
+            var approvedDrivers = await approvedDriversQuery.ToListAsync();
+
+            if (!approvedDrivers.Any())
+            {
+                return Ok(new { data = new List<DriverApplicationReviewDTO>(), totalCount = 0 });
+            }
+
+            // Return all data without pagination
+            return Ok(new
+            {
+                totalCount = approvedDrivers.Count,
+                data = approvedDrivers
+            });
+        }
+
+
         [HttpGet("single-approved-driver/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<DriverApplicationReviewDTO>> GetSingleApprovedDriver(int id)

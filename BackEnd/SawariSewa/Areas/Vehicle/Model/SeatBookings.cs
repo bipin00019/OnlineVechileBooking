@@ -14,6 +14,7 @@ namespace SawariSewa.Areas.Vehicle.Model
         public string UserId { get; set; }  // Foreign key from AspNetUsers table
         public DateTime BookingDate { get; set; }
         public string BookingStatus { get; set; }
+        public string RideStatus { get; set; }
         public decimal Fare { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
