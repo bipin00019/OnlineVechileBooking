@@ -67,6 +67,7 @@ namespace YourNamespace.Controllers
                         combined.SeatBooking.BookingId,
                         combined.SeatBooking.VehicleAvailabilityId,
                         combined.SeatBooking.SeatNumber,
+                        combined.VehicleAvailability.DriverId,
                         combined.SeatBooking.UserId,
                         PassengerName = $"{u.FirstName} {u.LastName}",
                         u.PhoneNumber,
@@ -140,6 +141,7 @@ namespace YourNamespace.Controllers
                         combined.SeatBooking.VehicleAvailabilityId,
                         combined.SeatBooking.SeatNumber,
                         combined.SeatBooking.UserId,
+                        combined.VehicleAvailability.DriverId,
                         PassengerName = $"{u.FirstName} {u.LastName}",
                         u.PhoneNumber,
                         BookingDate = combined.SeatBooking.BookingDate.Date.ToString("yyyy-MM-dd"),
@@ -196,15 +198,20 @@ namespace YourNamespace.Controllers
             // Update or create driver stats
             if (driverStats != null)
             {
-                driverStats.TotalRides += 1;
-                driverStats.TotalIncome += totalFare;
-
+                // If the last update was today, increment today's income, else reset it
                 if (driverStats.LastUpdated.Date == today)
+                {
                     driverStats.TodaysIncome += totalFare;
+                }
                 else
+                {
                     driverStats.TodaysIncome = totalFare;
+                }
 
+                driverStats.TotalIncome += totalFare;
+                driverStats.TotalRides += 1;
                 driverStats.LastUpdated = DateTime.Now;
+
                 _context.DriverStats.Update(driverStats);
             }
             else
@@ -233,6 +240,49 @@ namespace YourNamespace.Controllers
             // Return success message
             return Ok("Trip completed, driver stats updated, and seat bookings removed.");
         }
+
+        [Authorize(Roles = "Driver,Admin,SuperAdmin")] // Adjust roles as needed
+        [HttpGet("driver/stats")]
+        public async Task<IActionResult> GetDriverStats()
+        {
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return Unauthorized("User not authenticated.");
+            }
+
+            var driver = await _context.ApprovedDrivers
+                .FirstOrDefaultAsync(d => d.UserId == currentUserId);
+
+            if (driver == null)
+            {
+                return NotFound("No driver record found for this user.");
+            }
+
+            var approvedDriverId = driver.Id;
+
+            var driverStats = await _context.DriverStats
+                .Where(ds => ds.DriverId == approvedDriverId)
+                .Select(ds => new
+                {
+                    ds.Id,
+                    ds.DriverId,
+                    ds.TotalRides,
+                    ds.TotalIncome,
+                    ds.TodaysIncome,
+                    LastUpdated = ds.LastUpdated.ToString("yyyy-MM-dd HH:mm:ss")
+                })
+                .FirstOrDefaultAsync();
+
+            if (driverStats == null)
+            {
+                return NotFound($"No stats found for DriverId {approvedDriverId}");
+            }
+
+            return Ok(driverStats);
+        }
+
 
     }
 }

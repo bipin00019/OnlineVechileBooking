@@ -706,15 +706,22 @@ namespace SawariSewa.Areas.Driver.Controllers
 
 
 
-        [HttpGet("driver-status/{id}")]
+        [HttpGet("driver-status")]
         [Authorize(Roles = "Admin,SuperAdmin,Driver")]
-        public async Task<ActionResult> GetDriverStatus(int id)
+        public async Task<ActionResult> GetDriverStatus()
         {
             try
             {
-                // Find the driver from the ApprovedDrivers table
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { message = "User is not authenticated." });
+                }
+
+                // Find the driver from the ApprovedDrivers table using the userId
                 var driver = await _context.ApprovedDrivers
-                    .FirstOrDefaultAsync(d => d.Id == id);
+                    .FirstOrDefaultAsync(d => d.UserId == userId);
 
                 if (driver == null)
                 {
@@ -733,6 +740,7 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
         }
 
-        
+
+
     }
 }

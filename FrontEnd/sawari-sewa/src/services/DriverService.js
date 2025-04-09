@@ -255,7 +255,7 @@ export const setDriverOnlineStatus = async (isOnline) => {
 
   try {
     const response = await axios.post(
-      `${API_URL}/Driver/set-online-status`, 
+      `${API_URL}/Driver/set-online`, 
       isOnline, 
       {
         headers: {
@@ -272,23 +272,52 @@ export const setDriverOnlineStatus = async (isOnline) => {
   }
 };
 
-export const fetchDriverStatus = async (driverId) => {
+export const setDriverOfflineStatus = async (isOnline) => {
+  const token = localStorage.getItem('token'); // Get the token from localStorage
+  if (!token) {
+    alert("Session expired. Please login again.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/Driver/set-offline`, 
+      isOnline, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    console.log(response.data.message); // This will log the response, e.g., "Driver is now Online"
+    return response.data;
+  } catch (error) {
+    console.error("Error while updating driver status:", error);
+    throw error.response?.data?.message || "Failed to update driver status.";
+  }
+};
+
+export const fetchDriverStatus = async () => {
   const token = localStorage.getItem("token");
+
   if (!token) {
     alert("Session expired. Please login again");
     return;
   }
 
   try {
-    const response = await axios.get(`${API_URL}/Driver/driver-status/${driverId}`, {
+    const response = await axios.get(`${API_URL}/Driver/driver-status`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
     return response.data;
   } catch (error) {
-    console.log("Error while fetching the driver status: ", error);
+    console.log("Error while fetching the driver status:", error);
     throw error.response?.data?.message || "Failed to fetch driver status.";
   }
 };
+
 

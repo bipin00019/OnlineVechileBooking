@@ -47,4 +47,27 @@ export const fetchDriverCurrentTrips = async () => {
     }
   };
   
-  
+// Fetch driver stats for the currently logged-in driver
+export const fetchDriverStats = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/DriverDashboard/driver/stats`, 
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching driver stats:", error.response?.data || error.message);
+    throw new Error(error.response?.data || "Failed to fetch driver stats");
+  }
+};

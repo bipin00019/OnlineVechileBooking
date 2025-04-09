@@ -332,17 +332,11 @@
   {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "GetDriverStatus",
-    "RelativePath": "api/Driver/driver-status/{id}",
+    "RelativePath": "api/Driver/driver-status",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -493,6 +487,16 @@
     "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
     "Method": "GetDriverCurrentTrips",
     "RelativePath": "api/DriverDashboard/driver/current-trips",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetDriverStats",
+    "RelativePath": "api/DriverDashboard/driver/stats",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
