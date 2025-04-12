@@ -49,6 +49,8 @@ const DriverDashboard = () => {
       return <VanDriverDashboard />;
     case "Bus":
       return <BusDriverDashboard />;
+      case "Sofa Seater Bus":
+        return <BusDriverDashboard />;
     case "Jeep":
       return <JeepDriverDashboard />;
     default:

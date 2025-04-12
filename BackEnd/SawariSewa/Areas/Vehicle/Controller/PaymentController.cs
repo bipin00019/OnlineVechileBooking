@@ -324,9 +324,8 @@ namespace SawariSewa.Areas.Vehicle.Controllers
     public class PaymentVerificationRequest
     {
         public string pidx { get; set; }
-        
+
         public decimal amount { get; set; }
-        
+
     }
 }
-

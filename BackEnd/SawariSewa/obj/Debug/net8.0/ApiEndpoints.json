@@ -485,6 +485,16 @@
   },
   {
     "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetDriverGroupedCurrentTrips",
+    "RelativePath": "api/DriverDashboard/driver/current-grouped-trips",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
     "Method": "GetDriverCurrentTrips",
     "RelativePath": "api/DriverDashboard/driver/current-trips",
     "HttpMethod": "GET",
@@ -505,8 +515,28 @@
   },
   {
     "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetGroupedDriverUpcomingTrips",
+    "RelativePath": "api/DriverDashboard/driver/upcoming-grouped-trips",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
     "Method": "GetDriverUpcomingTrips",
     "RelativePath": "api/DriverDashboard/driver/upcoming-trips",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetPassengerStats",
+    "RelativePath": "api/DriverDashboard/vehicle/passenger-count",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
