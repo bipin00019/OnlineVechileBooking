@@ -116,6 +116,32 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "ManualBookSeat",
+    "RelativePath": "api/Booking/manual-book-seat",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "seatNumber",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "passengerName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "passengerContact",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "GetApprovedDriver",
     "RelativePath": "api/Driver/all-approved-drivers",
@@ -683,9 +709,49 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
-    "Method": "ScheduleVehicle",
-    "RelativePath": "api/Vehicle/create-vehicle-schedule",
-    "HttpMethod": "POST",
+    "Method": "CheckScheduleExists",
+    "RelativePath": "api/Vehicle/check-schedule-exists",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "DeleteSchedule",
+    "RelativePath": "api/Vehicle/delete-schedule",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "GetBookedSeatsForDriver",
+    "RelativePath": "api/Vehicle/driver/booked-seatNumber",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "GetDriverSeatStats",
+    "RelativePath": "api/Vehicle/driver/seat-stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "EditFareAndSchedule",
+    "RelativePath": "api/Vehicle/edit-fare-and-schedule",
+    "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -720,6 +786,16 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "GetMySchedule",
+    "RelativePath": "api/Vehicle/my-schedule",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
     "Method": "SearchAvailableVehicles",
     "RelativePath": "api/Vehicle/search-available-vehicles",
     "HttpMethod": "POST",
@@ -729,6 +805,22 @@
       {
         "Name": "searchModel",
         "Type": "SawariSewa.Areas.Vehicle.DTO.VehicleSearchDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "SetFareAndSchedule",
+    "RelativePath": "api/Vehicle/set-fare-and-schedule",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "SawariSewa.Areas.Vehicle.DTO.VehicleScheduleDto",
         "IsRequired": true
       }
     ],

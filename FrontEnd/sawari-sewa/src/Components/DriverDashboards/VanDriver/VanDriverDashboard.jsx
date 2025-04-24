@@ -20,8 +20,23 @@ const VanDriverDashboard = () => {
   const [passengerStats, setPassengerStats] = useState({
     passengerCount: 0,
     totalCapacity: 0
-  })
+  });
   
+  useEffect(() => {
+    const getPassengerStats = async () => {
+      try {
+        const data = await fetchPassengerStats();
+        setPassengerStats({
+          passengerCount: data.passengerCount,
+          totalCapacity: data.totalCapacity,
+        });
+      } catch (error) {
+        console.error("Error fetching passenger stats:", error.message);
+      }
+    };
+
+    getPassengerStats();
+  }, []); 
   
   const [currentTrips, setCurrentTrips] = useState([]);
   const [upcomingTrips, setUpcomingTrips] = useState([]);

@@ -35,6 +35,31 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok("Seat booked successfully.");
         }
 
+        // API endpoint for manual seat booking (no UserId)
+        [HttpPost("manual-book-seat")]
+        [Authorize(Roles = "Driver")] // Ensure only drivers can access this endpoint
+        public async Task<IActionResult> ManualBookSeat(string seatNumber, string passengerName, string passengerContact)
+        {
+            // Get the driver's UserId from the logged-in user
+            var driverUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Call the service method to perform the manual booking
+            var result = await _bookingService.ManualBookSeatAsync(
+                seatNumber,
+                passengerName,
+                passengerContact,
+                driverUserId // Pass the driverUserId to the service
+            );
+
+            // Handle the result of the booking
+            if (!result)
+            {
+                return BadRequest("Manual booking failed. Make sure you're an active driver with available trips.");
+            }
+
+            return Ok("Seat manually booked successfully.");
+        }
+
         // API endpoint to get booked seats
         [HttpGet("GetBookedSeats/{vehicleAvailabilityId}")]
         public async Task<IActionResult> GetBookedSeats(int vehicleAvailabilityId)

@@ -24,8 +24,12 @@ namespace SawariSewa.Areas.Vehicle.Model
 
         [ForeignKey("VehicleAvailabilityId")]
         public virtual VehicleAvailability VehicleAvailability { get; set; }
+        // Add new fields for manual booking
+        public string? ManualPassengerName { get; set; }  // Name of the manual passenger
+        public string? ManualPassengerPhoneNumber { get; set; }  // Contact of the manual passenger
 
         [ForeignKey("UserId")]
         public virtual ApplicationUser User { get; set; }
+
     }
 }

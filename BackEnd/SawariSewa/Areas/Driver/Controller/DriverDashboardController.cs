@@ -290,55 +290,40 @@ namespace YourNamespace.Controllers
         [HttpPost("complete-trip/{vehicleAvailabilityId}")]
         public async Task<IActionResult> CompleteTripByVehicle(int vehicleAvailabilityId)
         {
-            // Fetch the active bookings for the given vehicleAvailabilityId
             var bookings = await _context.SeatBookings
                 .Where(sb => sb.VehicleAvailabilityId == vehicleAvailabilityId && sb.RideStatus != "Completed")
                 .ToListAsync();
 
-            // Check if there are any bookings
             if (!bookings.Any())
                 return NotFound("No active bookings found for this vehicle availability ID.");
 
-            // Calculate the total fare from all bookings
             var totalFare = bookings.Sum(b => b.Fare);
 
-            // Fetch the driverId for the given vehicleAvailabilityId
-            var driverId = await _context.VehicleAvailability
-                .Where(va => va.Id == vehicleAvailabilityId)
-                .Select(va => va.DriverId)
-                .FirstOrDefaultAsync();
+            var vehicle = await _context.VehicleAvailability.FindAsync(vehicleAvailabilityId);
+            if (vehicle == null)
+                return NotFound("Vehicle not found.");
 
-            // If no driver is found for the given vehicleAvailabilityId, return a bad request
-            if (driverId == 0) // If driverId is 0, it indicates that no driver was found
+            var driverId = vehicle.DriverId;
+            if (driverId == 0)
                 return BadRequest("Driver not found for the vehicle availability.");
 
             var today = DateTime.Today;
 
-            // Fetch the driver stats for the specific driver
             var driverStats = await _context.DriverStats.FirstOrDefaultAsync(ds => ds.DriverId == driverId);
-
-            // Update or create driver stats
             if (driverStats != null)
             {
-                // If the last update was today, increment today's income, else reset it
                 if (driverStats.LastUpdated.Date == today)
-                {
                     driverStats.TodaysIncome += totalFare;
-                }
                 else
-                {
                     driverStats.TodaysIncome = totalFare;
-                }
 
                 driverStats.TotalIncome += totalFare;
                 driverStats.TotalRides += 1;
                 driverStats.LastUpdated = DateTime.Now;
-
                 _context.DriverStats.Update(driverStats);
             }
             else
             {
-                // Add new driver stats if not found
                 _context.DriverStats.Add(new DriverStats
                 {
                     DriverId = driverId,
@@ -349,114 +334,40 @@ namespace YourNamespace.Controllers
                 });
             }
 
-            // Mark bookings as completed and remove them from the table
             foreach (var booking in bookings)
             {
                 booking.RideStatus = "Completed";
                 _context.SeatBookings.Remove(booking);
             }
 
-            // Save changes to the database
+            // Parse departure date safely
+            DateTime parsedDepartureDate;
+            if (vehicle.DepartureDate is DateTime dt)
+            {
+                parsedDepartureDate = dt;
+            }
+            else if (!DateTime.TryParse(vehicle.DepartureDate?.ToString(), out parsedDepartureDate))
+            {
+                return BadRequest("Invalid departure date format.");
+            }
+
+            // Swap location and destination, pickup and drop-off, update the departure date
+            (vehicle.Location, vehicle.Destination) = (vehicle.Destination, vehicle.Location);
+            (vehicle.PickupPoint, vehicle.DropOffPoint) = (vehicle.DropOffPoint, vehicle.PickupPoint);
+            vehicle.DepartureDate = parsedDepartureDate.AddDays(1);
+            vehicle.BookedSeats = 0;
+            vehicle.AvailableSeats = vehicle.TotalSeats;
+            vehicle.Status = "Available";
+            vehicle.UpdatedAt = DateTime.Now;
+
+            _context.VehicleAvailability.Update(vehicle);
             await _context.SaveChangesAsync();
 
-            // Return success message
-            return Ok("Trip completed, driver stats updated, and seat bookings removed.");
+            return Ok("Trip completed, stats updated, bookings removed, and return trip prepared.");
         }
 
-        //[Authorize(Roles = "Driver,Admin,SuperAdmin")] // Adjust roles as needed
-        //[HttpGet("driver/stats")]
-        //public async Task<IActionResult> GetDriverStats()
-        //{
-        //    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        //    if (string.IsNullOrEmpty(currentUserId))
-        //    {
-        //        return Unauthorized("User not authenticated.");
-        //    }
 
-        //    var driver = await _context.ApprovedDrivers
-        //        .FirstOrDefaultAsync(d => d.UserId == currentUserId);
-
-        //    if (driver == null)
-        //    {
-        //        return NotFound("No driver record found for this user.");
-        //    }
-
-        //    var approvedDriverId = driver.Id;
-
-        //    var driverStats = await _context.DriverStats
-        //        .Where(ds => ds.DriverId == approvedDriverId)
-        //        .Select(ds => new
-        //        {
-        //            ds.Id,
-        //            ds.DriverId,
-        //            ds.TotalRides,
-        //            ds.TotalIncome,
-        //            ds.TodaysIncome,
-        //            LastUpdated = ds.LastUpdated.ToString("yyyy-MM-dd HH:mm:ss")
-        //        })
-        //        .FirstOrDefaultAsync();
-
-        //    if (driverStats == null)
-        //    {
-        //        return NotFound($"No stats found for DriverId {approvedDriverId}");
-        //    }
-
-        //    return Ok(driverStats);
-        //}
-
-        //[Authorize(Roles = "Driver,Admin,SuperAdmin")] // Adjust roles as needed
-        //[HttpGet("driver/stats")]
-        //public async Task<IActionResult> GetDriverStats()
-        //{
-        //    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        //    if (string.IsNullOrEmpty(currentUserId))
-        //    {
-        //        return Unauthorized("User not authenticated.");
-        //    }
-
-        //    var driver = await _context.ApprovedDrivers
-        //        .FirstOrDefaultAsync(d => d.UserId == currentUserId);
-
-        //    if (driver == null)
-        //    {
-        //        return NotFound("No driver record found for this user.");
-        //    }
-
-        //    var approvedDriverId = driver.Id;
-
-        //    var driverStats = await _context.DriverStats
-        //        .Where(ds => ds.DriverId == approvedDriverId)
-        //        .Select(ds => new
-        //        {
-        //            ds.Id,
-        //            ds.DriverId,
-        //            ds.TotalRides,
-        //            ds.TotalIncome,
-        //            ds.TodaysIncome,
-        //            LastUpdated = ds.LastUpdated.ToString("yyyy-MM-dd HH:mm:ss")
-        //        })
-        //        .FirstOrDefaultAsync();
-
-        //    if (driverStats == null)
-        //    {
-        //        // Return default stats with zero values
-        //        var defaultStats = new
-        //        {
-        //            Id = 0,
-        //            DriverId = approvedDriverId,
-        //            TotalRides = 0,
-        //            TotalIncome = 0.0,
-        //            TodaysIncome = 0.0,
-        //            LastUpdated = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-        //        };
-
-        //        return Ok(defaultStats);
-        //    }
-
-        //    return Ok(driverStats);
-        //}
         [Authorize(Roles = "Driver,Admin,SuperAdmin")] // Adjust roles as needed
         [HttpGet("driver/stats")]
         public async Task<IActionResult> GetDriverStats()
@@ -527,7 +438,6 @@ namespace YourNamespace.Controllers
         public async Task<IActionResult> GetPassengerStats()
         {
             var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             if (string.IsNullOrEmpty(currentUserId))
             {
                 return Unauthorized("User not authenticated.");
@@ -536,7 +446,6 @@ namespace YourNamespace.Controllers
             // Get the ApprovedDriver for the current user
             var driver = await _context.ApprovedDrivers
                 .FirstOrDefaultAsync(d => d.UserId == currentUserId);
-
             if (driver == null)
             {
                 return NotFound("Driver not found.");
@@ -548,9 +457,14 @@ namespace YourNamespace.Controllers
                 .OrderByDescending(v => v.CreatedAt)
                 .FirstOrDefaultAsync();
 
+            // Instead of returning 404, return 200 with a different structure
             if (vehicle == null)
             {
-                return NotFound("No active vehicle availability found.");
+                return Ok(new
+                {
+                    hasSchedule = false,
+                    message = "No active vehicle availability found."
+                });
             }
 
             // Count confirmed seat bookings for that vehicle
@@ -559,6 +473,7 @@ namespace YourNamespace.Controllers
 
             var result = new
             {
+                hasSchedule = true,
                 vehicleAvailabilityId = vehicle.Id,
                 passengerCount,
                 totalCapacity = vehicle.TotalSeats
@@ -566,7 +481,6 @@ namespace YourNamespace.Controllers
 
             return Ok(result);
         }
-
 
 
     }

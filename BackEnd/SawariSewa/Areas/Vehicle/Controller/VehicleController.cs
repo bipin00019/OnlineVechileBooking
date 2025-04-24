@@ -6,6 +6,7 @@ using SawariSewa.Areas.Vehicle.Model;
 using SawariSewa.Data;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SawariSewa.Areas.Vehicle.Controller
@@ -20,73 +21,249 @@ namespace SawariSewa.Areas.Vehicle.Controller
         {
             _context = context;
         }
-
-        [HttpPost("create-vehicle-schedule")]
-        [Authorize(Roles = "Admin, SuperAdmin")]
-        public async Task<IActionResult> ScheduleVehicle([FromBody] VehicleScheduleDto model)
+        [HttpPost("set-fare-and-schedule")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> SetFareAndSchedule([FromBody] VehicleScheduleDto model)
         {
-            // Ensure the driver exists in ApprovedDrivers
-            var driver = await _context.ApprovedDrivers.FindAsync(model.DriverId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
             if (driver == null)
                 return BadRequest("Driver not found or not approved.");
 
-            // Fetch vehicle details from the ApprovedDriver table
-            string vehicleType = driver.VehicleType;
-            string vehicleNumber = driver.VehicleNumber;
-            string location = driver.StartingPoint;
-            string destination = driver.DestinationLocation;           
-            string departureTimeString = driver.DepartureTime;
-            string pickupPoint = driver.PickupPoint;
-            string dropOffPoint = driver.DropOffPoint;
-            string driverPhoneNumber = driver.PhoneNumber;
-            string driverFirstName = driver.FirstName;
-            string driverLastName = driver.LastName;
+            // Basic validation
+            if (model.Fare <= 0 || model.TotalSeats <= 0)
+                return BadRequest("Fare and Total Seats must be greater than zero.");
 
-            
-
-            // Check if a vehicle schedule already exists for this driver and departure time
+            // Check if schedule already exists
             var existingSchedule = await _context.VehicleAvailability
-                .FirstOrDefaultAsync(v => v.DriverId == model.DriverId && v.DepartureTime == departureTimeString);
+                .FirstOrDefaultAsync(v => v.DriverId == driver.Id && v.DepartureTime == driver.DepartureTime);
 
             if (existingSchedule != null)
-                return BadRequest($"A schedule for this vehicle (Vehicle Number: {existingSchedule.VehicleNumber}) is already created for the selected departure time ({departureTimeString}).");
+                return BadRequest("A schedule already exists for the current departure time.");
 
-            // Validate inputs
-            if (model.TotalSeats <= 0 || model.Fare <= 0)
-                return BadRequest("Total seats and fare must be greater than zero.");
-
-            // Create new VehicleAvailability schedule
-            var newSchedule = new VehicleAvailability
+            // Create schedule
+            var schedule = new VehicleAvailability
             {
-                DriverId = model.DriverId,
-                VehicleType = vehicleType,
-                VehicleNumber = vehicleNumber,
-                TotalSeats = model.TotalSeats,
-                AvailableSeats = model.TotalSeats,
-                BookedSeats = 0,
-                Location = location,
-                Destination = destination,
+                DriverId = driver.Id,
+                VehicleType = driver.VehicleType,
+                VehicleNumber = driver.VehicleNumber,
+                Location = driver.StartingPoint,
+                Destination = driver.DestinationLocation,
                 DepartureDate = model.DepartureDate,
-                DepartureTime = departureTimeString,  // Use the DepartureTime from the driver record
+                DepartureTime = driver.DepartureTime,
                 Fare = model.Fare,
+                TotalSeats = model.TotalSeats,
+                BookedSeats = 0,
+                AvailableSeats = model.TotalSeats,
                 Status = "Available",
-                PickupPoint = pickupPoint,
-                DropOffPoint = dropOffPoint,
+                PickupPoint = driver.PickupPoint,
+                DropOffPoint = driver.DropOffPoint,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                DriverPhoneNumber = driverPhoneNumber,
-                DriverFirstName = driverFirstName,
-                DriverLastName = driverLastName
-
-           
+                DriverPhoneNumber = driver.PhoneNumber,
+                DriverFirstName = driver.FirstName,
+                DriverLastName = driver.LastName
             };
 
-            // Add the new schedule to the context and save changes
-            _context.VehicleAvailability.Add(newSchedule);
+            _context.VehicleAvailability.Add(schedule);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Vehicle scheduled successfully!" });
+            return Ok(new { message = "Vehicle schedule created successfully!" });
         }
+
+        [HttpGet("check-schedule-exists")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> CheckScheduleExists()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (driver == null)
+                return BadRequest("Driver not found or not approved.");
+
+            var existingSchedule = await _context.VehicleAvailability
+                .FirstOrDefaultAsync(v => v.DriverId == driver.Id && v.DepartureTime == driver.DepartureTime);
+
+            return Ok(existingSchedule != null);
+        }
+
+        [HttpGet("my-schedule")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> GetMySchedule()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (driver == null)
+                return BadRequest("Driver not found or not approved.");
+
+            var schedule = await _context.VehicleAvailability
+                .Where(v => v.DriverId == driver.Id)
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+
+            return Ok(schedule);
+        }
+
+        [HttpDelete("delete-schedule")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> DeleteSchedule()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (driver == null)
+                return BadRequest("Driver not found or not approved.");
+
+            var schedule = await _context.VehicleAvailability
+                .FirstOrDefaultAsync(v => v.DriverId == driver.Id);
+
+            if (schedule == null)
+                return NotFound("No schedule found to delete.");
+
+            _context.VehicleAvailability.Remove(schedule);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Vehicle schedule deleted successfully." });
+        }
+
+
+
+        //[HttpPut("edit-fare-and-schedule/{vehicleAvaibilityId}")]
+        //[Authorize(Roles = "Driver")]
+        //public async Task<IActionResult> EditFareAndSchedule(int vehicleAvaibilityId, [FromBody] VehicleScheduleDto model)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+        //    if (driver == null)
+        //        return BadRequest("Driver not found or not approved.");
+
+        //    var existingSchedule = await _context.VehicleAvailability.FirstOrDefaultAsync(v => v.Id == vehicleAvaibilityId && v.DriverId == driver.Id);
+        //    if (existingSchedule == null)
+        //        return NotFound("Schedule not found or you are not authorized to edit this schedule.");
+
+        //    // Validate inputs
+        //    if (model.Fare <= 0 || model.TotalSeats <= 0)
+        //        return BadRequest("Fare and Total Seats must be greater than zero.");
+
+        //    if (model.TotalSeats < existingSchedule.BookedSeats)
+        //        return BadRequest("Total seats cannot be less than already booked seats.");
+
+        //    // Update fields
+        //    existingSchedule.Fare = model.Fare;
+        //    existingSchedule.TotalSeats = model.TotalSeats;
+        //    existingSchedule.BookedSeats = model.bookedSeats;
+        //    existingSchedule.AvailableSeats = model.TotalSeats - model.bookedSeats;
+        //    existingSchedule.DepartureDate = model.DepartureDate;
+        //    existingSchedule.UpdatedAt = DateTime.Now;
+
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(new { message = "Vehicle schedule updated successfully!" });
+        //}
+        [HttpPut("edit-fare-and-schedule")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> EditFareAndSchedule([FromBody] VehicleScheduleDto model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (driver == null)
+                return BadRequest("Driver not found or not approved.");
+
+            var existingSchedule = await _context.VehicleAvailability
+                .FirstOrDefaultAsync(v => v.DriverId == driver.Id && v.Status == "Available");
+
+            if (existingSchedule == null)
+                return NotFound("No active schedule found to edit.");
+
+            // Validate inputs
+            if (model.Fare <= 0 || model.TotalSeats <= 0)
+                return BadRequest("Fare and Total Seats must be greater than zero.");
+
+            if (model.TotalSeats < existingSchedule.BookedSeats)
+                return BadRequest("Total seats cannot be less than already booked seats.");
+
+            // Update fields
+            existingSchedule.Fare = model.Fare;
+            existingSchedule.TotalSeats = model.TotalSeats;
+            existingSchedule.BookedSeats = model.bookedSeats;
+            existingSchedule.AvailableSeats = model.TotalSeats - model.bookedSeats;
+            existingSchedule.DepartureDate = model.DepartureDate;
+            existingSchedule.UpdatedAt = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Vehicle schedule updated successfully!" });
+        }
+
+
+
+        //[HttpPost("create-vehicle-schedule")]
+        //[Authorize(Roles = "Admin, SuperAdmin")]
+        //public async Task<IActionResult> ScheduleVehicle([FromBody] VehicleScheduleDto model)
+        //{
+        //    // Ensure the driver exists in ApprovedDrivers
+        //    var driver = await _context.ApprovedDrivers.FindAsync(model.DriverId);
+        //    if (driver == null)
+        //        return BadRequest("Driver not found or not approved.");
+
+        //    // Fetch vehicle details from the ApprovedDriver table
+        //    string vehicleType = driver.VehicleType;
+        //    string vehicleNumber = driver.VehicleNumber;
+        //    string location = driver.StartingPoint;
+        //    string destination = driver.DestinationLocation;           
+        //    string departureTimeString = driver.DepartureTime;
+        //    string pickupPoint = driver.PickupPoint;
+        //    string dropOffPoint = driver.DropOffPoint;
+        //    string driverPhoneNumber = driver.PhoneNumber;
+        //    string driverFirstName = driver.FirstName;
+        //    string driverLastName = driver.LastName;
+
+
+
+        //    // Check if a vehicle schedule already exists for this driver and departure time
+        //    var existingSchedule = await _context.VehicleAvailability
+        //        .FirstOrDefaultAsync(v => v.DriverId == model.DriverId && v.DepartureTime == departureTimeString);
+
+        //    if (existingSchedule != null)
+        //        return BadRequest($"A schedule for this vehicle (Vehicle Number: {existingSchedule.VehicleNumber}) is already created for the selected departure time ({departureTimeString}).");
+
+        //    // Validate inputs
+        //    if (model.TotalSeats <= 0 || model.Fare <= 0)
+        //        return BadRequest("Total seats and fare must be greater than zero.");
+
+        //    // Create new VehicleAvailability schedule
+        //    var newSchedule = new VehicleAvailability
+        //    {
+        //        DriverId = model.DriverId,
+        //        VehicleType = vehicleType,
+        //        VehicleNumber = vehicleNumber,
+        //        TotalSeats = model.TotalSeats,
+        //        AvailableSeats = model.TotalSeats,
+        //        BookedSeats = 0,
+        //        Location = location,
+        //        Destination = destination,
+        //        DepartureDate = model.DepartureDate,
+        //        DepartureTime = departureTimeString,  // Use the DepartureTime from the driver record
+        //        Fare = model.Fare,
+        //        Status = "Available",
+        //        PickupPoint = pickupPoint,
+        //        DropOffPoint = dropOffPoint,
+        //        CreatedAt = DateTime.Now,
+        //        UpdatedAt = DateTime.Now,
+        //        DriverPhoneNumber = driverPhoneNumber,
+        //        DriverFirstName = driverFirstName,
+        //        DriverLastName = driverLastName
+
+
+        //    };
+
+        //    // Add the new schedule to the context and save changes
+        //    _context.VehicleAvailability.Add(newSchedule);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(new { message = "Vehicle scheduled successfully!" });
+        //}
 
         [HttpGet("view-vehicle-schedules")]
         public async Task<IActionResult> GetAllVehicleSchedules(int pageNumber = 1, int pageSize = 10)
@@ -211,6 +388,94 @@ namespace SawariSewa.Areas.Vehicle.Controller
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Vehicle schedule updated successfully!" });
+        }
+
+        [Authorize]
+        [HttpGet("driver/seat-stats")]
+        public async Task<IActionResult> GetDriverSeatStats()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // gets logged-in user's Id
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User not logged in.");
+            }
+
+            var driver = await _context.ApprovedDrivers
+                .FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (driver == null)
+            {
+                return NotFound("Driver not found or not approved.");
+            }
+
+            var vehicleStats = await _context.VehicleAvailability
+                .Where(v => v.DriverId == driver.Id)
+                .Select(v => new
+                {
+                    v.VehicleType,
+                    v.VehicleNumber,
+                    v.TotalSeats,
+                    v.AvailableSeats,
+                    v.BookedSeats,
+                    v.Location,
+                    v.Destination,
+                    v.DepartureDate,
+                    v.DepartureTime,
+                    v.Fare,
+                    v.Status,
+                    v.PickupPoint,
+                    v.DropOffPoint,
+                    v.DriverFirstName,
+                    v.DriverLastName,
+                    v.DriverPhoneNumber
+                })
+                .ToListAsync();
+
+            return Ok(vehicleStats);
+        }
+
+        [Authorize]
+        [HttpGet("driver/booked-seatNumber")]
+        public async Task<IActionResult> GetBookedSeatsForDriver()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Logged-in User's ID
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User not logged in.");
+
+            // Get Driver Id from ApprovedDrivers
+            var driver = await _context.ApprovedDrivers
+                .FirstOrDefaultAsync(d => d.UserId == userId);
+
+            if (driver == null)
+                return NotFound("Driver not found or not approved.");
+
+            // Get all VehicleAvailabilityId for this driver
+            var vehicleIds = await _context.VehicleAvailability
+                .Where(v => v.DriverId == driver.Id)
+                .Select(v => v.Id)
+                .ToListAsync();
+
+            // Get all seat bookings for those vehicle IDs
+            var bookedSeats = await _context.SeatBookings
+                .Where(sb => vehicleIds.Contains(sb.VehicleAvailabilityId))
+                .Select(sb => new
+                {
+                    sb.VehicleAvailabilityId,
+                    sb.SeatNumber,
+                    sb.UserId,
+                    sb.BookingStatus,
+                    sb.BookingDate,
+                    sb.RideStatus,
+                    sb.ManualPassengerName,
+                    sb.ManualPassengerPhoneNumber,
+                    sb.PickupPoint,
+                    sb.DropOffPoint,
+                })
+                .ToListAsync();
+
+            return Ok(bookedSeats);
         }
 
     }
