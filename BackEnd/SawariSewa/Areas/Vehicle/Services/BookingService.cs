@@ -172,6 +172,77 @@ namespace SawariSewa.Areas.Vehicle.Services
             return true;
         }
 
+        public async Task<bool> ReserveWholeVehicleAsync(int vehicleAvailabilityId, string userId)
+        {
+            // Retrieve vehicle availability details
+            var vehicleAvailability = await _context.VehicleAvailability
+                .FirstOrDefaultAsync(v => v.Id == vehicleAvailabilityId);
+
+            if (vehicleAvailability == null)
+                return false;
+
+            // Check if all seats are available (no previous bookings)
+            if (vehicleAvailability.BookedSeats > 0 || vehicleAvailability.AvailableSeats != vehicleAvailability.TotalSeats)
+            {
+                // Whole vehicle can't be reserved if any seat is already booked
+                return false;
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return false;
+
+            int totalSeatsToBook = vehicleAvailability.TotalSeats;
+
+            // Book all seats one by one
+            for (int i = 1; i <= totalSeatsToBook; i++)
+            {
+                var seatBooking = new SeatBookings
+                {
+                    VehicleAvailabilityId = vehicleAvailabilityId,
+                    SeatNumber = i.ToString(), // Seat numbers: "1", "2", ..., "TotalSeats"
+                    UserId = userId,
+                    BookingDate = DateTime.UtcNow,
+                    BookingStatus = "Confirmed",
+                    Fare = vehicleAvailability.Fare,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    PickupPoint = vehicleAvailability.PickupPoint,
+                    DropOffPoint = vehicleAvailability.DropOffPoint,
+                    RideStatus = "Not Started"
+                };
+
+                _context.SeatBookings.Add(seatBooking);
+            }
+
+            // Update vehicle seat counts
+            vehicleAvailability.BookedSeats = totalSeatsToBook;
+            vehicleAvailability.AvailableSeats = 0;
+
+            _context.VehicleAvailability.Update(vehicleAvailability);
+            await _context.SaveChangesAsync();
+
+            // Email confirmation
+            string emailBody = $@"
+<h2>Full Vehicle Reservation Confirmed</h2>
+<p>Dear {user.FirstName},</p>
+<p>You have successfully reserved the entire vehicle.</p>
+<p><strong>Total Seats Reserved:</strong> {totalSeatsToBook}</p>
+<p><strong>Pickup Point:</strong> {vehicleAvailability.PickupPoint}</p>
+<p><strong>Drop Off Point:</strong> {vehicleAvailability.DropOffPoint}</p>
+<p><strong>Fare per seat:</strong> {vehicleAvailability.Fare} NPR</p>
+<p><strong>Total Fare:</strong> {vehicleAvailability.Fare * totalSeatsToBook} NPR</p>
+<p><strong>Departure Date:</strong> {(vehicleAvailability.DepartureDate?.ToShortDateString() ?? "Not Available")}</p>
+<p><strong>Departure Time:</strong> {vehicleAvailability.DepartureTime}</p>
+<p><strong>Vehicle Number:</strong> {vehicleAvailability.VehicleNumber}</p>
+<p>Thank you for choosing Sawari Sewa!</p>";
+
+            await _emailService.SendEmailAsync(user.Email, "Full Vehicle Reservation - Sawari Sewa", emailBody);
+
+            return true;
+        }
+
+
         // New method for manual seat booking (without UserId)
         public async Task<bool> ManualBookSeatAsync(string seatNumber, string passengerName, string passengerContact, string driverUserId)
         {

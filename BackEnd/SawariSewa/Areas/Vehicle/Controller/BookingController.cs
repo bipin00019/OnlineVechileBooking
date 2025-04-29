@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SawariSewa.Areas.Vehicle.Services;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace SawariSewa.Areas.Vehicle.Controller
 {
@@ -35,18 +36,50 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok("Seat booked successfully.");
         }
 
-        // API endpoint for manual seat booking (no UserId)
+        [HttpPost("reserve-whole-vehicle")]
+        [Authorize]
+        public async Task<IActionResult> ReserveWholeVehicle(int vehicleAvailabilityId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _bookingService.ReserveWholeVehicleAsync(vehicleAvailabilityId, userId);
+
+            if (!result)
+            {
+                return BadRequest(new { success = false, message = "Whole vehicle reservation failed. It might already have some seats booked." });
+            }
+
+            return Ok(new { success = true, message = "Whole vehicle reserved successfully." });
+        }
+
         [HttpPost("manual-book-seat")]
         [Authorize(Roles = "Driver")] // Ensure only drivers can access this endpoint
         public async Task<IActionResult> ManualBookSeat(string seatNumber, string passengerName, string passengerContact)
         {
+            // Validate inputs
+            if (string.IsNullOrWhiteSpace(seatNumber))
+            {
+                return BadRequest(new { success = false, message = "Seat number is required." });
+            }
+
+            if (string.IsNullOrWhiteSpace(passengerName))
+            {
+                return BadRequest(new { success = false, message = "Passenger name is required." });
+            }
+
+            // Validate passenger contact is exactly 10 digits
+            if (string.IsNullOrWhiteSpace(passengerContact) || !Regex.IsMatch(passengerContact, @"^\d{10}$"))
+            {
+                return BadRequest(new { success = false, message = "Contact number must be exactly 10 digits." });
+            }
+
             // Get the driver's UserId from the logged-in user
             var driverUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Call the service method to perform the manual booking
             var result = await _bookingService.ManualBookSeatAsync(
                 seatNumber,
-                passengerName,
+                passengerName.Trim(),
                 passengerContact,
                 driverUserId // Pass the driverUserId to the service
             );
@@ -54,12 +87,11 @@ namespace SawariSewa.Areas.Vehicle.Controller
             // Handle the result of the booking
             if (!result)
             {
-                return BadRequest("Manual booking failed. Make sure you're an active driver with available trips.");
+                return BadRequest(new { success = false, message = "Manual booking failed. Make sure you're an active driver with available trips." });
             }
 
-            return Ok("Seat manually booked successfully.");
+            return Ok(new { success = true, message = "Seat manually booked successfully." });
         }
-
         // API endpoint to get booked seats
         [HttpGet("GetBookedSeats/{vehicleAvailabilityId}")]
         public async Task<IActionResult> GetBookedSeats(int vehicleAvailabilityId)

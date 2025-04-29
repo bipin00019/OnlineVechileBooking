@@ -142,3 +142,4 @@ const ManualSeatBookingBike = () => {
 };
 
 export default ManualSeatBookingBike;
+

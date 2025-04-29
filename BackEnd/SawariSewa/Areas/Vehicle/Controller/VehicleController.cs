@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SawariSewa.Areas.Vehicle.DTO;
 using SawariSewa.Areas.Vehicle.Model;
 using SawariSewa.Data;
+using SawariSewa.Services;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -16,10 +19,14 @@ namespace SawariSewa.Areas.Vehicle.Controller
     public class VehicleController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
 
-        public VehicleController(ApplicationDbContext context)
+        public VehicleController(ApplicationDbContext context, IEmailService emailService, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _emailService = emailService;
         }
         [HttpPost("set-fare-and-schedule")]
         [Authorize(Roles = "Driver")]
@@ -105,6 +112,28 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok(schedule);
         }
 
+        //[HttpDelete("delete-schedule")]
+        //[Authorize(Roles = "Driver")]
+        //public async Task<IActionResult> DeleteSchedule()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //    var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+        //    if (driver == null)
+        //        return BadRequest("Driver not found or not approved.");
+
+        //    var schedule = await _context.VehicleAvailability
+        //        .FirstOrDefaultAsync(v => v.DriverId == driver.Id);
+
+        //    if (schedule == null)
+        //        return NotFound("No schedule found to delete.");
+
+        //    _context.VehicleAvailability.Remove(schedule);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(new { message = "Vehicle schedule deleted successfully." });
+        //}
+
         [HttpDelete("delete-schedule")]
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> DeleteSchedule()
@@ -121,10 +150,43 @@ namespace SawariSewa.Areas.Vehicle.Controller
             if (schedule == null)
                 return NotFound("No schedule found to delete.");
 
+            var relatedBookings = await _context.SeatBookings
+                .Where(b => b.VehicleAvailabilityId == schedule.Id)
+                .ToListAsync();
+
+            if (relatedBookings != null && relatedBookings.Any())
+            {
+                foreach (var booking in relatedBookings)
+                {
+                    if (!string.IsNullOrEmpty(booking.UserId))
+                    {
+                        var user = await _userManager.FindByIdAsync(booking.UserId);
+                        if (user != null && !string.IsNullOrEmpty(user.Email))
+                        {
+                            string emailBody = $@"
+<h2>Booking Cancellation Notice</h2>
+<p>Dear {user.FirstName},</p>
+<p>Your seat booking has been cancelled because the driver has removed the vehicle schedule.</p>
+<p><strong>Pickup Point:</strong> {schedule.PickupPoint}</p>
+<p><strong>Drop Off Point:</strong> {schedule.DropOffPoint}</p>
+<p><strong>Fare:</strong> {schedule.Fare} NPR</p>
+<p><strong>Departure Date:</strong> {(schedule.DepartureDate?.ToShortDateString() ?? "Not Available")}</p>
+<p><strong>Departure Time:</strong> {schedule.DepartureTime}</p>
+<p>We apologize for the inconvenience. Please contact the driver or support for further assistance.</p>
+<p>Thank you for understanding!</p>
+                            ";
+
+                            await _emailService.SendEmailAsync(user.Email, "Booking Cancelled - Sawari Sewa", emailBody);
+                        }
+                    }
+                    _context.SeatBookings.Remove(booking);
+                }
+            }
+
             _context.VehicleAvailability.Remove(schedule);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Vehicle schedule deleted successfully." });
+            return Ok(new { message = "Vehicle schedule and associated bookings deleted successfully." });
         }
 
 

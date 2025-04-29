@@ -142,6 +142,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "ReserveWholeVehicle",
+    "RelativePath": "api/Booking/reserve-whole-vehicle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vehicleAvailabilityId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Areas.Driver.Controllers.DriverController",
     "Method": "GetApprovedDriver",
     "RelativePath": "api/Driver/all-approved-drivers",
