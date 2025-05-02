@@ -484,6 +484,48 @@ namespace SawariSewa.Areas.Vehicle.Services
             return khaltiResponse?.payment_url; // Return the payment URL from the response
         }
 
+        public async Task<string> InitiateReservationPaymentAsync(decimal amount, string orderId, string orderName, string customerName, string customerEmail, string customerPhone)
+        {
+            var khaltiApiKey = _configuration["Khalti:ApiKey"];
+            var khaltiInitiateUrl = "https://dev.khalti.com/api/v2/epayment/initiate/";
+
+            var data = new
+            {
+                return_url = "http://localhost:5173/verify-reservation-payment",  // Update return URL to our verification API
+                website_url = "http://localhost:5178/",
+                amount = amount * 100, // Convert to paisa
+                purchase_order_id = orderId,
+                purchase_order_name = orderName,
+                customer_info = new
+                {
+                    name = customerName,
+                    email = customerEmail,
+                    phone = customerPhone
+                }
+            };
+            Console.WriteLine($"Return URL: {data.return_url}");
+
+            var jsonPayload = JsonConvert.SerializeObject(data);
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, khaltiInitiateUrl)
+            {
+                Content = content
+            };
+            requestMessage.Headers.Add("Authorization", $"Key {khaltiApiKey}");
+
+            var response = await _httpClient.SendAsync(requestMessage);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null; // Payment initiation failed
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var khaltiResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
+
+            return khaltiResponse?.payment_url; // Return the payment URL from the response
+        }
         /// <summary>
         /// Verifies a payment using the pidx received from Khalti.
         /// </summary>

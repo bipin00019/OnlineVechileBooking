@@ -274,6 +274,35 @@ namespace SawariSewa.Areas.Vehicle.Controllers
             }
         }
 
+        
+        [HttpPost("reservation-initiate")]
+        public async Task<IActionResult> InitiateReservationPayment([FromBody] PaymentRequestModel request)
+        {
+            if (request == null || request.Amount <= 0 || string.IsNullOrEmpty(request.OrderId))
+            {
+                return BadRequest(new { message = "Invalid payment request" });
+            }
+
+            try
+            {
+                var paymentUrl = await _paymentService.InitiateReservationPaymentAsync(  // ✅ Correct method
+                    request.Amount, request.OrderId, request.OrderName,
+                    request.CustomerName, request.CustomerEmail, request.CustomerPhone
+                );
+
+                if (string.IsNullOrEmpty(paymentUrl))
+                {
+                    return BadRequest(new { message = "Failed to initiate payment" });
+                }
+
+                return Ok(new { paymentUrl });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred while initiating payment", error = ex.Message });
+            }
+        }
+
         /// <summary>
         /// Verifies a payment when Khalti redirects to this API.
         /// </summary>

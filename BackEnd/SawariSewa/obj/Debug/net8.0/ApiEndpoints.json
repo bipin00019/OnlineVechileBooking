@@ -101,6 +101,22 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "CanReserveWholeVehicle",
+    "RelativePath": "api/Booking/can-reserve-whole-vehicle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "vehicleAvailabilityId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
     "Method": "GetBookedSeats",
     "RelativePath": "api/Booking/GetBookedSeats/{vehicleAvailabilityId}",
     "HttpMethod": "GET",
@@ -653,6 +669,22 @@
     "ContainingType": "SawariSewa.Areas.Vehicle.Controllers.PaymentController",
     "Method": "InitiatePayment",
     "RelativePath": "api/payment/initiate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SawariSewa.Areas.Vehicle.Controllers.PaymentRequestModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controllers.PaymentController",
+    "Method": "InitiateReservationPayment",
+    "RelativePath": "api/payment/reservation-initiate",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

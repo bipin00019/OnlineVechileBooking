@@ -210,7 +210,7 @@ const DriverRegistration = () => {
                 >
                   <option value="" disabled>Select a vehicle type</option>
                   <option value="Bus">Bus</option>
-                  <option value="Deluxe_Bus"> Deluxe Bus</option>
+                  <option value="Deluxe Bus"> Deluxe Bus</option>
                   <option value="Sofa Seater Bus"> Sofa Seater Bus</option>
                   <option value="Jeep">Jeep</option>
                   <option value="Van">Van</option>

@@ -191,38 +191,6 @@ namespace SawariSewa.Areas.Vehicle.Controller
 
 
 
-        //[HttpPut("edit-fare-and-schedule/{vehicleAvaibilityId}")]
-        //[Authorize(Roles = "Driver")]
-        //public async Task<IActionResult> EditFareAndSchedule(int vehicleAvaibilityId, [FromBody] VehicleScheduleDto model)
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
-        //    if (driver == null)
-        //        return BadRequest("Driver not found or not approved.");
-
-        //    var existingSchedule = await _context.VehicleAvailability.FirstOrDefaultAsync(v => v.Id == vehicleAvaibilityId && v.DriverId == driver.Id);
-        //    if (existingSchedule == null)
-        //        return NotFound("Schedule not found or you are not authorized to edit this schedule.");
-
-        //    // Validate inputs
-        //    if (model.Fare <= 0 || model.TotalSeats <= 0)
-        //        return BadRequest("Fare and Total Seats must be greater than zero.");
-
-        //    if (model.TotalSeats < existingSchedule.BookedSeats)
-        //        return BadRequest("Total seats cannot be less than already booked seats.");
-
-        //    // Update fields
-        //    existingSchedule.Fare = model.Fare;
-        //    existingSchedule.TotalSeats = model.TotalSeats;
-        //    existingSchedule.BookedSeats = model.bookedSeats;
-        //    existingSchedule.AvailableSeats = model.TotalSeats - model.bookedSeats;
-        //    existingSchedule.DepartureDate = model.DepartureDate;
-        //    existingSchedule.UpdatedAt = DateTime.Now;
-
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(new { message = "Vehicle schedule updated successfully!" });
-        //}
         [HttpPut("edit-fare-and-schedule")]
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> EditFareAndSchedule([FromBody] VehicleScheduleDto model)

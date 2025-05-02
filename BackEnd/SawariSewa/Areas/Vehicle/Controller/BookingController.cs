@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SawariSewa.Areas.Vehicle.Services;
+using SawariSewa.Areas.Vehicle.DTO;
+using SawariSewa.Data;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -11,9 +14,11 @@ namespace SawariSewa.Areas.Vehicle.Controller
     public class BookingController : ControllerBase
     {
         private readonly BookingService _bookingService;
+        private readonly ApplicationDbContext _context;
 
-        public BookingController(BookingService bookingService)
+        public BookingController(ApplicationDbContext context, BookingService bookingService)
         {
+            _context = context;
             _bookingService = bookingService;
         }
 
@@ -51,6 +56,29 @@ namespace SawariSewa.Areas.Vehicle.Controller
 
             return Ok(new { success = true, message = "Whole vehicle reserved successfully." });
         }
+
+        [HttpGet("can-reserve-whole-vehicle")]
+        
+        public async Task<IActionResult> CanReserveWholeVehicle(int vehicleAvailabilityId)
+        {
+            var vehicleAvailability = await _context.VehicleAvailability
+                .FirstOrDefaultAsync(v => v.Id == vehicleAvailabilityId);
+
+            if (vehicleAvailability == null)
+            {
+                return Ok(new { canReserve = false, message = "No schedule available for this vehicle." });
+            }
+
+            if (vehicleAvailability.TotalSeats == vehicleAvailability.AvailableSeats)
+            {
+                return Ok(new { canReserve = true, message = "Whole vehicle can be reserved." });
+            }
+
+            return Ok(new { canReserve = false, message = "Some seats are already booked. Whole vehicle cannot be reserved." });
+        }
+
+
+
 
         [HttpPost("manual-book-seat")]
         [Authorize(Roles = "Driver")] // Ensure only drivers can access this endpoint

@@ -294,13 +294,19 @@ export const fetchDriverSeatStats = async () => {
 };
 
 
-
 export const checkScheduleExists = async () => {
   try {
-    const response = await axios.get('/api/your-controller-name/check-schedule-exists'); // replace with actual controller route
-    return response.data; // will return true or false
+    const response = await axios.get(`${API_URL}/Vehicle/check-schedule-exists`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}` // replace with your auth logic
+      }
+    });
+    console.log("Schedule exists:", response.data);
+    return response.data;
   } catch (error) {
-    console.error('Error checking schedule:', error);
-    return false; // or handle as needed
+    console.error("Error checking schedule:", error.response?.data || error.message);
+    return null;
   }
 };
+
+

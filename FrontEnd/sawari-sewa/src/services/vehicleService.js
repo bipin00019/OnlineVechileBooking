@@ -89,3 +89,51 @@ export const bookSeat = async (vehicleAvailabilityId, seatNumber) => {
     throw error;
   }
 };
+
+export const reserveWholeVehicle = async (vehicleAvailabilityId) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("User is not authenticated");
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/Booking/reserve-whole-vehicle`,
+      null,
+      {
+        params: { vehicleAvailabilityId },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error reserving whole vehicle:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const canReserveWholeVehicle = async (vehicleAvailabilityId) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/Booking/can-reserve-whole-vehicle`,
+      {
+        params: { vehicleAvailabilityId },
+      }
+    );
+
+    return response.data; // { canReserve: boolean, message: string }
+  } catch (error) {
+    console.error("Error checking whole vehicle reservation status:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
+
+
+
+
+
