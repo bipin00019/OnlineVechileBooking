@@ -188,7 +188,7 @@ export const fetchMySchedule = async () => {
 // Delete the driver's schedule
 export const deleteMySchedule = async () => {
   try {
-    const response = await axios.delete(`${API_URL}/Vehicle/delete-schedule`); // Replace with actual controller route
+    const response = await axios.delete(`${API_URL}/Vehicle/delete-schedule`); 
     return response.data; // Success message
   } catch (error) {
     console.error('Error deleting schedule:', error);
@@ -202,11 +202,11 @@ export const deleteMySchedule = async () => {
 export const setFareAndSchedule = async (fare, totalSeats, departureDate, token) => {
   try {
     const response = await axios.post(
-      `${API_URL}/Vehicle/set-fare-and-schedule`, // replace with your real API route
+      `${API_URL}/Vehicle/set-fare-and-schedule`,
       {
         fare: parseFloat(fare),
         totalSeats: parseInt(totalSeats),
-        bookedSeats: 0, // optional: backend already defaults this to 0
+        bookedSeats: 0, 
         departureDate: new Date(departureDate).toISOString()
       },
       {
@@ -229,7 +229,7 @@ export const editFareAndSchedule = async (fare, totalSeats, departureDate, token
       {
         fare: parseFloat(fare),
         totalSeats: parseInt(totalSeats),
-        bookedSeats: 0, // optional: backend already defaults this to 0
+        bookedSeats: 0, 
         departureDate: new Date(departureDate).toISOString()
       },
       {
@@ -269,7 +269,7 @@ export const fetchBookedSeatNumbers = async () => {
   try {
     const response = await axios.get(`${API_URL}/Vehicle/driver/booked-seatNumber`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}` // Assumes token is stored in localStorage
+        Authorization: `Bearer ${localStorage.getItem('token')}` 
       }
     });
     return response.data;
@@ -298,7 +298,7 @@ export const checkScheduleExists = async () => {
   try {
     const response = await axios.get(`${API_URL}/Vehicle/check-schedule-exists`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}` // replace with your auth logic
+        Authorization: `Bearer ${localStorage.getItem("token")}` 
       }
     });
     console.log("Schedule exists:", response.data);
@@ -309,4 +309,131 @@ export const checkScheduleExists = async () => {
   }
 };
 
+// export const checkAllSeatsAvailable = async () => {
+//   try {
+//     const response = await axios.get(`${API_URL}/Vehicle/are-all-seats-available`, {
+//       method: 'GET',
+//       headers: {
+//         'Authorization': `Bearer ${localStorage.getItem('token')}`, 
+//         'Content-Type': 'application/json'
+//       }
+//     });
 
+//     if (!response.ok) {
+//       const errorText = await response.text();
+//       console.error("Error:", errorText);
+//       return false;
+//     }
+
+//     const result = await response.json();
+//     console.log("Are all seats available?", result);
+//     return result; // true or false
+//   } catch (error) {
+//     console.error("Request failed:", error);
+//     return false;
+//   }
+// };
+
+// export const manualReserveAllSeats = async (passengerName, passengerContact) => {
+//   try {
+//     const response = await fetch(`${API_URL}/Booking/manual-reserve-all-seats`, {
+//       method: 'POST',
+//       headers: {
+//         'Authorization': `Bearer ${localStorage.getItem('token')}`, 
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({
+//         passengerName,
+//         passengerContact
+//       })
+//     });
+
+//     const result = await response.json();
+
+//     if (!response.ok) {
+//       console.error("Reservation failed:", result.message);
+//       return { success: false, message: result.message };
+//     }
+
+//     console.log("Reservation success:", result.message);
+//     return { success: true, message: result.message };
+
+//   } catch (error) {
+//     console.error("Network error:", error);
+//     return { success: false, message: "Network error occurred." };
+//   }
+// };
+
+export const checkAllSeatsAvailable = async () => {
+  try {
+    const response = await fetch(`${API_URL}/Vehicle/are-all-seats-available`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+    });
+
+    // If the response is not ok, throw an error
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    // Check if response can be parsed as JSON
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      // Return true or false based on response data structure
+      return data.allSeatsAvailable || false;
+    } else {
+      // If not JSON, try to get text and parse as boolean
+      const textData = await response.text();
+      // If the text is "true" string, return true, otherwise false
+      return textData.trim().toLowerCase() === "true";
+    }
+  } catch (error) {
+    console.error('Request failed:', error);
+    // Default to false on error
+    return false;
+  }
+};
+
+
+export const manualReserveAllSeats = async (bookingData) => {
+  const { passengerName, passengerContact } = bookingData;
+
+  try {
+    const response = await fetch(
+      `${API_URL}/Booking/manual-reserve-all-seats?passengerName=${encodeURIComponent(passengerName)}&passengerContact=${encodeURIComponent(passengerContact)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          // 'Content-Type' is not needed here since there's no body
+        }
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Error response: ${response.status} - ${errorText}`);
+      return {
+        success: false,
+        message: `Server error: ${response.status}`
+      };
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      ...data
+    };
+
+  } catch (error) {
+    console.error('Reservation failed:', error);
+    return {
+      success: false,
+      message: error.message || "Failed to reserve seats"
+    };
+  }
+};

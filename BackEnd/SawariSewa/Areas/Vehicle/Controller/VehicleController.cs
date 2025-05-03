@@ -93,6 +93,22 @@ namespace SawariSewa.Areas.Vehicle.Controller
 
             return Ok(existingSchedule != null);
         }
+        [HttpGet("are-all-seats-available")]
+        [Authorize(Roles = "Driver")]
+        public async Task<IActionResult> AreAllSeatsAvailable()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+            if (driver == null)
+                return BadRequest("Driver not found or not approved.");
+
+            var hasAllSeatsAvailable = await _context.VehicleAvailability
+                .AnyAsync(v => v.DriverId == driver.Id && v.TotalSeats == v.AvailableSeats);
+
+            return Ok(hasAllSeatsAvailable);
+        }
+
 
         [HttpGet("my-schedule")]
         [Authorize(Roles = "Driver")]

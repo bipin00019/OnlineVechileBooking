@@ -159,6 +159,27 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "ManualReserveAllSeats",
+    "RelativePath": "api/Booking/manual-reserve-all-seats",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "passengerName",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "passengerContact",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
     "Method": "ReserveWholeVehicle",
     "RelativePath": "api/Booking/reserve-whole-vehicle",
     "HttpMethod": "POST",
@@ -753,6 +774,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.VehicleController",
+    "Method": "AreAllSeatsAvailable",
+    "RelativePath": "api/Vehicle/are-all-seats-available",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
