@@ -30,7 +30,6 @@
 
     <ItemGroup>
       <Folder Include="Areas\User\" />
-      <Folder Include="Areas\Passenger\Controllers\" />
       <Folder Include="Areas\Passenger\ViewModel\" />
     </ItemGroup>
 

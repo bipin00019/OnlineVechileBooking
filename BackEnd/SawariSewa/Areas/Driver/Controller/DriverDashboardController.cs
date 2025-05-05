@@ -472,6 +472,7 @@ namespace YourNamespace.Controllers
         //    return Ok("Trip completed, stats updated, bookings archived, and return trip prepared.");
         //}
 
+
         [HttpPost("complete-trip/{vehicleAvailabilityId}")]
         public async Task<IActionResult> CompleteTripByVehicle(int vehicleAvailabilityId)
         {
@@ -496,21 +497,22 @@ namespace YourNamespace.Controllers
 
             var today = DateTime.Today;
 
-            // Aggregate fares by UserId (Passenger)
+            // Group bookings by UserId
             var aggregatedBookings = bookings
                 .GroupBy(b => b.UserId)
                 .Select(group => new
                 {
                     UserId = group.Key,
                     TotalFare = group.Sum(b => b.Fare),
-                    PickupPoint = group.First().PickupPoint,  // Assuming all bookings have the same PickupPoint
-                    DropOffPoint = group.First().DropOffPoint // Assuming all bookings have the same DropOffPoint
+                    PickupPoint = group.First().PickupPoint,
+                    DropOffPoint = group.First().DropOffPoint,
+                    BookingDate = group.First().BookingDate
                 }).ToList();
 
             // Update driver stats
             var totalFare = aggregatedBookings.Sum(ab => ab.TotalFare);
-
             var driverStats = await _context.DriverStats.FirstOrDefaultAsync(ds => ds.DriverId == driverId);
+
             if (driverStats != null)
             {
                 if (driverStats.LastUpdated.Date == today)
@@ -521,6 +523,7 @@ namespace YourNamespace.Controllers
                 driverStats.TotalIncome += totalFare;
                 driverStats.TotalRides += 1;
                 driverStats.LastUpdated = DateTime.Now;
+
                 _context.DriverStats.Update(driverStats);
             }
             else
@@ -535,44 +538,50 @@ namespace YourNamespace.Controllers
                 });
             }
 
-            // Save driver trip history and update seat bookings
+            // Save aggregated passenger booking history
+            var passengerHistories = aggregatedBookings.Select(group => new PassengerBookingHistory
+            {
+                DriverId = driver.Id,
+                UserId = group.UserId,
+                DriverName = $"{driver.FirstName} {driver.LastName}",
+                DriverPhoneNumber = driver.PhoneNumber,
+                VehicleNumber = driver.VehicleNumber,
+                VehicleType = driver.VehicleType,
+                BookingDate = group.BookingDate,
+                Fare = group.TotalFare,
+                PickupPoint = group.PickupPoint,
+                DropOffPoint = group.DropOffPoint,
+                CompletedAt = DateTime.Now
+            }).ToList();
+
+            _context.PassengerBookingHistory.AddRange(passengerHistories);
+
+            // Save driver trip history
             foreach (var aggregatedBooking in aggregatedBookings)
             {
-                var history = new DriverTripHistory
+                var driverTrip = new DriverTripHistory
                 {
-                    UserId = aggregatedBooking.UserId,
-                 
-                    
-                    BookingDate = bookings.First(b => b.UserId == aggregatedBooking.UserId).BookingDate,  // Get booking date from first booking of that user
+                    UserId = driver.UserId,
+                    BookingDate = aggregatedBooking.BookingDate,
                     Fare = aggregatedBooking.TotalFare,
                     PickupPoint = aggregatedBooking.PickupPoint,
                     DropOffPoint = aggregatedBooking.DropOffPoint,
                     CreatedAt = DateTime.Now
                 };
 
-                _context.DriverTripHistory.Add(history);
-
-                // Update the seat bookings as completed
-                var userBookings = bookings.Where(b => b.UserId == aggregatedBooking.UserId).ToList();
-                foreach (var booking in userBookings)
-                {
-                    booking.RideStatus = "Completed";
-                    _context.SeatBookings.Remove(booking);
-                }
+                _context.DriverTripHistory.Add(driverTrip);
             }
 
-            // Parse departure date safely
-            DateTime parsedDepartureDate;
-            if (vehicle.DepartureDate is DateTime dt)
-            {
-                parsedDepartureDate = dt;
-            }
-            else if (!DateTime.TryParse(vehicle.DepartureDate?.ToString(), out parsedDepartureDate))
-            {
-                return BadRequest("Invalid departure date format.");
-            }
+            // Delete all seat bookings for this trip
+            _context.SeatBookings.RemoveRange(bookings);
 
             // Prepare return trip
+            DateTime parsedDepartureDate;
+            if (vehicle.DepartureDate is DateTime dt)
+                parsedDepartureDate = dt;
+            else if (!DateTime.TryParse(vehicle.DepartureDate?.ToString(), out parsedDepartureDate))
+                return BadRequest("Invalid departure date format.");
+
             (vehicle.Location, vehicle.Destination) = (vehicle.Destination, vehicle.Location);
             (vehicle.PickupPoint, vehicle.DropOffPoint) = (vehicle.DropOffPoint, vehicle.PickupPoint);
             vehicle.DepartureDate = parsedDepartureDate.AddDays(1);
@@ -582,10 +591,12 @@ namespace YourNamespace.Controllers
             vehicle.UpdatedAt = DateTime.Now;
 
             _context.VehicleAvailability.Update(vehicle);
+
             await _context.SaveChangesAsync();
 
             return Ok("Trip completed, stats updated, bookings archived, and return trip prepared.");
         }
+
 
 
         [Authorize(Roles = "Driver,Admin,SuperAdmin")] // Adjust roles as needed
@@ -701,6 +712,44 @@ namespace YourNamespace.Controllers
 
             return Ok(result);
         }
+        [Authorize(Roles = "Driver")]
+        [HttpGet("recent-rides")]
+        public async Task<IActionResult> GetRecentRidesForDriver(int pageNumber = 1, int pageSize = 8)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found.");
+
+            // Ensure valid page size and page number
+            if (pageSize <= 0) pageSize = 8; // Default size is 8 if pageSize <= 0
+            if (pageNumber <= 0) pageNumber = 1; // Default to first page if pageNumber <= 0
+
+            var totalRides = await _context.DriverTripHistory
+                                           .Where(r => r.UserId == userId)
+                                           .CountAsync(); // Get total count for pagination
+
+            var rides = await _context.DriverTripHistory
+                                       .Where(r => r.UserId == userId)
+                                       .OrderByDescending(r => r.CreatedAt)
+                                       .Skip((pageNumber - 1) * pageSize) // Skip previous pages
+                                       .Take(pageSize) // Take only the current page's records
+                                       .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling((double)totalRides / pageSize);
+
+            // Return the paginated result
+            return Ok(new
+            {
+                TotalRides = totalRides,
+                TotalPages = totalPages,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                Rides = rides
+            });
+        }
+
+
 
 
     }

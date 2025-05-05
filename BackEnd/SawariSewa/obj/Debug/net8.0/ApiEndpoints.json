@@ -614,6 +614,27 @@
   },
   {
     "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
+    "Method": "GetRecentRidesForDriver",
+    "RelativePath": "api/DriverDashboard/recent-rides",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "YourNamespace.Controllers.DriverDashboardController",
     "Method": "GetPassengerStats",
     "RelativePath": "api/DriverDashboard/vehicle/passenger-count",
     "HttpMethod": "GET",
@@ -682,6 +703,27 @@
         "Name": "request",
         "Type": "SawariSewa.Areas.Admin.Controllers.VerifyCodeRequest",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Passenger.Controllers.PassengerController",
+    "Method": "GetPassengerBookingHistory",
+    "RelativePath": "api/Passenger/Passenger/booking-history",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

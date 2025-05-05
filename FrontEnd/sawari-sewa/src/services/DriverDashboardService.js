@@ -437,3 +437,30 @@ export const manualReserveAllSeats = async (bookingData) => {
     };
   }
 };
+
+
+export const fetchRecentRides = async (pageNumber = 1, pageSize = 8) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/DriverDashboard/recent-rides?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Replace with your token method
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch recent rides");
+    }
+
+    const data = await response.json();
+    console.log("Paginated Recent Rides:", data);
+    return data; // contains Rides, TotalPages, etc.
+  } catch (error) {
+    console.error("Error fetching recent rides:", error.message);
+    return null;
+  }
+};
