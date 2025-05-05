@@ -751,6 +751,48 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ReviewController",
+    "Method": "AddReview",
+    "RelativePath": "api/Review/add-reviews",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "reviewDto",
+        "Type": "SawariSewa.DTO.CreateReviewDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ReviewController",
+    "Method": "GetMyAverageRating",
+    "RelativePath": "api/Review/my-average-rating",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ReviewController",
+    "Method": "GetReviewsForDriver",
+    "RelativePath": "api/Review/view-reviews/{approvedDriverId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "approvedDriverId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "SawariSewa.Controllers.RoleManagementController",
     "Method": "GetUserProfile",
     "RelativePath": "api/RoleManagement/profile",

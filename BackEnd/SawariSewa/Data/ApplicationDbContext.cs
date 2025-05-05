@@ -22,9 +22,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<SeatBookings> SeatBookings { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<DriverStats> DriverStats { get; set; }
+    public DbSet<Review> Reviews { get; set; }
+    public DbSet<PassengerBookingHistory> PassengerBookingHistory { get; set; }
 
-
-
+    public DbSet<DriverTripHistory> DriverTripHistory { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelbuilder)
@@ -32,6 +33,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelbuilder);
         // modelbuilder.Entity<PassengerDetails>().ToTable("PassengerDetails");
 
-
+        
     }
 }

@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SawariSewa.Areas.Driver.Model;
 using SawariSewa.Areas.Vehicle.Model;
 using SawariSewa.Data;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace YourNamespace.Controllers
@@ -287,6 +290,188 @@ namespace YourNamespace.Controllers
 
 
 
+        //[HttpPost("complete-trip/{vehicleAvailabilityId}")]
+        //public async Task<IActionResult> CompleteTripByVehicle(int vehicleAvailabilityId)
+        //{
+        //    var bookings = await _context.SeatBookings
+        //        .Where(sb => sb.VehicleAvailabilityId == vehicleAvailabilityId && sb.RideStatus != "Completed")
+        //        .ToListAsync();
+
+        //    if (!bookings.Any())
+        //        return NotFound("No active bookings found for this vehicle availability ID.");
+
+        //    var totalFare = bookings.Sum(b => b.Fare);
+
+        //    var vehicle = await _context.VehicleAvailability.FindAsync(vehicleAvailabilityId);
+        //    if (vehicle == null)
+        //        return NotFound("Vehicle not found.");
+
+        //    var driverId = vehicle.DriverId;
+        //    if (driverId == 0)
+        //        return BadRequest("Driver not found for the vehicle availability.");
+
+        //    var today = DateTime.Today;
+
+        //    var driverStats = await _context.DriverStats.FirstOrDefaultAsync(ds => ds.DriverId == driverId);
+        //    if (driverStats != null)
+        //    {
+        //        if (driverStats.LastUpdated.Date == today)
+        //            driverStats.TodaysIncome += totalFare;
+        //        else
+        //            driverStats.TodaysIncome = totalFare;
+
+        //        driverStats.TotalIncome += totalFare;
+        //        driverStats.TotalRides += 1;
+        //        driverStats.LastUpdated = DateTime.Now;
+        //        _context.DriverStats.Update(driverStats);
+        //    }
+        //    else
+        //    {
+        //        _context.DriverStats.Add(new DriverStats
+        //        {
+        //            DriverId = driverId,
+        //            TotalRides = 1,
+        //            TotalIncome = totalFare,
+        //            TodaysIncome = totalFare,
+        //            LastUpdated = DateTime.Now
+        //        });
+        //    }
+
+        //    foreach (var booking in bookings)
+        //    {
+        //        booking.RideStatus = "Completed";
+        //        _context.SeatBookings.Remove(booking);
+        //    }
+
+        //    // Parse departure date safely
+        //    DateTime parsedDepartureDate;
+        //    if (vehicle.DepartureDate is DateTime dt)
+        //    {
+        //        parsedDepartureDate = dt;
+        //    }
+        //    else if (!DateTime.TryParse(vehicle.DepartureDate?.ToString(), out parsedDepartureDate))
+        //    {
+        //        return BadRequest("Invalid departure date format.");
+        //    }
+
+        //    // Swap location and destination, pickup and drop-off, update the departure date
+        //    (vehicle.Location, vehicle.Destination) = (vehicle.Destination, vehicle.Location);
+        //    (vehicle.PickupPoint, vehicle.DropOffPoint) = (vehicle.DropOffPoint, vehicle.PickupPoint);
+        //    vehicle.DepartureDate = parsedDepartureDate.AddDays(1);
+        //    vehicle.BookedSeats = 0;
+        //    vehicle.AvailableSeats = vehicle.TotalSeats;
+        //    vehicle.Status = "Available";
+        //    vehicle.UpdatedAt = DateTime.Now;
+
+        //    _context.VehicleAvailability.Update(vehicle);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok("Trip completed, stats updated, bookings removed, and return trip prepared.");
+        //}
+
+
+
+        //[HttpPost("complete-trip/{vehicleAvailabilityId}")]
+        //public async Task<IActionResult> CompleteTripByVehicle(int vehicleAvailabilityId)
+        //{
+        //    var bookings = await _context.SeatBookings
+        //        .Where(sb => sb.VehicleAvailabilityId == vehicleAvailabilityId && sb.RideStatus != "Completed")
+        //        .ToListAsync();
+
+        //    if (!bookings.Any())
+        //        return NotFound("No active bookings found for this vehicle availability ID.");
+
+        //    var totalFare = bookings.Sum(b => b.Fare);
+
+        //    var vehicle = await _context.VehicleAvailability.FindAsync(vehicleAvailabilityId);
+        //    if (vehicle == null)
+        //        return NotFound("Vehicle not found.");
+
+        //    var driverId = vehicle.DriverId;
+        //    if (driverId == 0)
+        //        return BadRequest("Driver not found for the vehicle availability.");
+
+        //    var driver = await _context.ApprovedDrivers.FindAsync(driverId);
+        //    if (driver == null)
+        //        return NotFound("Driver information not found.");
+
+        //    var today = DateTime.Today;
+
+        //    var driverStats = await _context.DriverStats.FirstOrDefaultAsync(ds => ds.DriverId == driverId);
+        //    if (driverStats != null)
+        //    {
+        //        if (driverStats.LastUpdated.Date == today)
+        //            driverStats.TodaysIncome += totalFare;
+        //        else
+        //            driverStats.TodaysIncome = totalFare;
+
+        //        driverStats.TotalIncome += totalFare;
+        //        driverStats.TotalRides += 1;
+        //        driverStats.LastUpdated = DateTime.Now;
+        //        _context.DriverStats.Update(driverStats);
+        //    }
+        //    else
+        //    {
+        //        _context.DriverStats.Add(new DriverStats
+        //        {
+        //            DriverId = driverId,
+        //            TotalRides = 1,
+        //            TotalIncome = totalFare,
+        //            TodaysIncome = totalFare,
+        //            LastUpdated = DateTime.Now
+        //        });
+        //    }
+
+        //    // Save booking history before removing bookings
+        //    foreach (var booking in bookings)
+        //    {
+        //        var history = new PassengerBookingHistory
+        //        {
+        //            DriverId = driver.Id,
+        //            UserId = booking.UserId,
+        //            DriverName = $"{driver.FirstName} {driver.LastName}",
+        //            DriverPhoneNumber = driver.PhoneNumber,
+        //            VehicleNumber = driver.VehicleNumber,
+        //            VehicleType = driver.VehicleType,
+        //            BookingDate = booking.BookingDate,
+        //            Fare = booking.Fare,
+        //            PickupPoint = booking.PickupPoint,
+        //            DropOffPoint = booking.DropOffPoint,
+        //            CompletedAt = DateTime.Now
+        //        };
+
+        //        _context.PassengerBookingHistory.Add(history);
+
+        //        booking.RideStatus = "Completed";
+        //        _context.SeatBookings.Remove(booking);
+        //    }
+
+        //    // Parse departure date safely
+        //    DateTime parsedDepartureDate;
+        //    if (vehicle.DepartureDate is DateTime dt)
+        //    {
+        //        parsedDepartureDate = dt;
+        //    }
+        //    else if (!DateTime.TryParse(vehicle.DepartureDate?.ToString(), out parsedDepartureDate))
+        //    {
+        //        return BadRequest("Invalid departure date format.");
+        //    }
+
+        //    // Prepare return trip
+        //    (vehicle.Location, vehicle.Destination) = (vehicle.Destination, vehicle.Location);
+        //    (vehicle.PickupPoint, vehicle.DropOffPoint) = (vehicle.DropOffPoint, vehicle.PickupPoint);
+        //    vehicle.DepartureDate = parsedDepartureDate.AddDays(1);
+        //    vehicle.BookedSeats = 0;
+        //    vehicle.AvailableSeats = vehicle.TotalSeats;
+        //    vehicle.Status = "Available";
+        //    vehicle.UpdatedAt = DateTime.Now;
+
+        //    _context.VehicleAvailability.Update(vehicle);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok("Trip completed, stats updated, bookings archived, and return trip prepared.");
+        //}
+
         [HttpPost("complete-trip/{vehicleAvailabilityId}")]
         public async Task<IActionResult> CompleteTripByVehicle(int vehicleAvailabilityId)
         {
@@ -297,8 +482,6 @@ namespace YourNamespace.Controllers
             if (!bookings.Any())
                 return NotFound("No active bookings found for this vehicle availability ID.");
 
-            var totalFare = bookings.Sum(b => b.Fare);
-
             var vehicle = await _context.VehicleAvailability.FindAsync(vehicleAvailabilityId);
             if (vehicle == null)
                 return NotFound("Vehicle not found.");
@@ -307,7 +490,25 @@ namespace YourNamespace.Controllers
             if (driverId == 0)
                 return BadRequest("Driver not found for the vehicle availability.");
 
+            var driver = await _context.ApprovedDrivers.FindAsync(driverId);
+            if (driver == null)
+                return NotFound("Driver information not found.");
+
             var today = DateTime.Today;
+
+            // Aggregate fares by UserId (Passenger)
+            var aggregatedBookings = bookings
+                .GroupBy(b => b.UserId)
+                .Select(group => new
+                {
+                    UserId = group.Key,
+                    TotalFare = group.Sum(b => b.Fare),
+                    PickupPoint = group.First().PickupPoint,  // Assuming all bookings have the same PickupPoint
+                    DropOffPoint = group.First().DropOffPoint // Assuming all bookings have the same DropOffPoint
+                }).ToList();
+
+            // Update driver stats
+            var totalFare = aggregatedBookings.Sum(ab => ab.TotalFare);
 
             var driverStats = await _context.DriverStats.FirstOrDefaultAsync(ds => ds.DriverId == driverId);
             if (driverStats != null)
@@ -334,10 +535,30 @@ namespace YourNamespace.Controllers
                 });
             }
 
-            foreach (var booking in bookings)
+            // Save driver trip history and update seat bookings
+            foreach (var aggregatedBooking in aggregatedBookings)
             {
-                booking.RideStatus = "Completed";
-                _context.SeatBookings.Remove(booking);
+                var history = new DriverTripHistory
+                {
+                    UserId = aggregatedBooking.UserId,
+                 
+                    
+                    BookingDate = bookings.First(b => b.UserId == aggregatedBooking.UserId).BookingDate,  // Get booking date from first booking of that user
+                    Fare = aggregatedBooking.TotalFare,
+                    PickupPoint = aggregatedBooking.PickupPoint,
+                    DropOffPoint = aggregatedBooking.DropOffPoint,
+                    CreatedAt = DateTime.Now
+                };
+
+                _context.DriverTripHistory.Add(history);
+
+                // Update the seat bookings as completed
+                var userBookings = bookings.Where(b => b.UserId == aggregatedBooking.UserId).ToList();
+                foreach (var booking in userBookings)
+                {
+                    booking.RideStatus = "Completed";
+                    _context.SeatBookings.Remove(booking);
+                }
             }
 
             // Parse departure date safely
@@ -351,7 +572,7 @@ namespace YourNamespace.Controllers
                 return BadRequest("Invalid departure date format.");
             }
 
-            // Swap location and destination, pickup and drop-off, update the departure date
+            // Prepare return trip
             (vehicle.Location, vehicle.Destination) = (vehicle.Destination, vehicle.Location);
             (vehicle.PickupPoint, vehicle.DropOffPoint) = (vehicle.DropOffPoint, vehicle.PickupPoint);
             vehicle.DepartureDate = parsedDepartureDate.AddDays(1);
@@ -363,9 +584,8 @@ namespace YourNamespace.Controllers
             _context.VehicleAvailability.Update(vehicle);
             await _context.SaveChangesAsync();
 
-            return Ok("Trip completed, stats updated, bookings removed, and return trip prepared.");
+            return Ok("Trip completed, stats updated, bookings archived, and return trip prepared.");
         }
-
 
 
         [Authorize(Roles = "Driver,Admin,SuperAdmin")] // Adjust roles as needed

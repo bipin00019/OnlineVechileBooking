@@ -2287,14 +2287,7 @@ const BusDriverDashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto p-4 flex-grow">
-        {/* Status message */}
-        {/* {message && (
-          <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
-            <p>{message}</p>
-          </div>
-        )} */}
-        
+      <main className="container mx-auto p-4 flex-grow">        
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow">
@@ -2324,18 +2317,7 @@ const BusDriverDashboard = () => {
             <div className="mt-2">
               <span className="text-2xl font-bold">Rs {todaysEarnings}</span>
             </div>
-          </div>
-          {/* <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-gray-500 text-sm">Passenger Count</h3>
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-2xl font-bold">{passengerStats.passengerCount}/{passengerStats.totalCapacity}</span>             
-            </div>
-            <div className="mt-1 relative pt-1">
-              <div className="overflow-hidden h-2 mb-1 text-xs flex rounded bg-blue-200">
-                <div style={{ width: `${(passengerStats.passengerCount / passengerStats.totalCapacity) * 100}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
-              </div>
-            </div>
-          </div> */}
+          </div>          
         </div>
 
         <BusDriverDashboardFeatures/>

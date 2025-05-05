@@ -194,9 +194,19 @@ const Navbar = () => {
                           You already have a pending application. Please wait for approval.
                         </p>
                         ) : (
+                          
                           <button onClick={() => navigate(PATHS.DRIVERREGISTRATION)} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Be a Driver</button>
                         )}
-                          
+                          <button 
+                          onClick={() => navigate(PATHS.BOOKINGHISTORY)}
+                          className="block px-4 py-2 hover:bg-gray-800 w-full text-left">
+                          Booking History
+                          </button>
+                          <button 
+                          onClick={() => navigate(PATHS.EDITPROFILE)}
+                          className="block px-4 py-2 hover:bg-gray-800 w-full text-left">
+                            Edit Profile
+                          </button>
                           <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Log Out</button>
                         </>
                       )}
