@@ -20,7 +20,7 @@ import AvailableVehicle from "../Components/AvailableVehicles/AvailableVehicle";
 import VerifyPayment from "../Components/AvailableVehicles/VerifyPayment";
 import VehicleReservation from "../Components/AvailableVehicles/VehicleReservation";
 import VerifyReservationPayment from "../Components/AvailableVehicles/VerifyReservationPayment";
-
+import AllReviews from "../Components/DriverDashboards/AllReviews";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -42,6 +42,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.VERIFYPAYMENT} element = {<VerifyPayment/>} />
             <Route path = {PATHS.VEHICLERESERVATION} element = {<VehicleReservation/>} />
             <Route path = {PATHS.VERIFYRESERVATIONPAYMENT} element = {<VerifyReservationPayment/>} />
+            <Route path = {PATHS.ALLREVIEWS} element = {<AllReviews/>} />
         </Routes> 
     )
 }

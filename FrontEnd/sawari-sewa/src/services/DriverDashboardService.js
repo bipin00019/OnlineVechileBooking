@@ -464,3 +464,42 @@ export const fetchRecentRides = async (pageNumber = 1, pageSize = 8) => {
     return null;
   }
 };
+
+
+
+export const fetchAverageRating = async () => {
+  try {
+    const token = localStorage.getItem('token'); // or however you store your auth token
+    const response = await axios.get(`${API_URL}/Review/my-average-rating`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const { averageRating, totalReviews } = response.data;
+    console.log('Average Rating:', averageRating);
+    console.log('Total Reviews:', totalReviews);
+    return { averageRating, totalReviews };
+  } catch (error) {
+    console.error('Error fetching average rating:', error);
+    throw error;
+  }
+};
+
+export const fetchDriverReviews = async () => {
+  try {
+    const token = localStorage.getItem('token'); // Or use your auth context/provider
+    const response = await axios.get(`${API_URL}/Review/my-reviews`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const reviews = response.data;
+    console.log('Driver Reviews:', reviews);
+    return reviews;
+  } catch (error) {
+    console.error('Error fetching driver reviews:', error);
+    throw error;
+  }
+};

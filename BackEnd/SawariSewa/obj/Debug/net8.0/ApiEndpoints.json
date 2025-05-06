@@ -820,6 +820,16 @@
   },
   {
     "ContainingType": "ReviewController",
+    "Method": "GetMyReviews",
+    "RelativePath": "api/Review/my-reviews",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ReviewController",
     "Method": "GetReviewsForDriver",
     "RelativePath": "api/Review/view-reviews/{approvedDriverId}",
     "HttpMethod": "GET",

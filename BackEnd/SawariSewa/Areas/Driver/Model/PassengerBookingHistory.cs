@@ -23,6 +23,8 @@ namespace SawariSewa.Areas.Driver.Model
         public string DropOffPoint { get; set; }
 
         public DateTime CompletedAt { get; set; }
+
+        public bool? Reviewed { get; set; }
     }
 
 }

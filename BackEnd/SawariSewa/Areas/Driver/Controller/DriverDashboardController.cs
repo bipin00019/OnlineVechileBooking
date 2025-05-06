@@ -551,7 +551,8 @@ namespace YourNamespace.Controllers
                 Fare = group.TotalFare,
                 PickupPoint = group.PickupPoint,
                 DropOffPoint = group.DropOffPoint,
-                CompletedAt = DateTime.Now
+                CompletedAt = DateTime.Now,
+                Reviewed = null
             }).ToList();
 
             _context.PassengerBookingHistory.AddRange(passengerHistories);
