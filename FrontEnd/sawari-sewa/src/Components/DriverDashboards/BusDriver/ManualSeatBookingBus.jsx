@@ -1054,7 +1054,7 @@ const ManualSeatBookingBus = () => {
           </div>
 
           {/* Bus layout */}
-          <div className="w-full mx-auto bus-layout border rounded-lg shadow-inner p-4 bg-gray-50 flex items-center justify-center">
+          <div className="w-600 mx-auto bus-layout border rounded-lg shadow-inner p-4 bg-gray-50 flex items-center justify-center">
             <BusLayout 
               totalSeats={totalSeats}
               selectedSeats={selectedSeats}

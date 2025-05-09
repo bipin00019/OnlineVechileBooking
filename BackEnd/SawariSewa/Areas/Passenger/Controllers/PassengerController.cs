@@ -20,43 +20,38 @@ namespace SawariSewa.Areas.Passenger.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Passenger/booking-history
         [HttpGet("booking-history")]
-        public async Task<IActionResult> GetPassengerBookingHistory(int pageNumber = 1, int pageSize = 8)
+        public async Task<IActionResult> GetPassengerBookingHistory()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized("User ID not found.");
 
-            // Ensure valid page size and page number
-            if (pageSize <= 0) pageSize = 8; // Default size is 8 if pageSize <= 0
-            if (pageNumber <= 0) pageNumber = 1; // Default to first page if pageNumber <= 0
-
-            var totalBookings = await _context.PassengerBookingHistory
-                                              .Where(h => h.UserId == userId)
-                                              .CountAsync(); // Get total count for pagination
-
             var history = await _context.PassengerBookingHistory
                                         .Where(h => h.UserId == userId)
                                         .OrderByDescending(h => h.BookingDate)
-                                        .Skip((pageNumber - 1) * pageSize) // Skip previous pages
-                                        .Take(pageSize) // Take only the current page's records
+                                        .Select(h => new
+                                        {
+                                            h.HistoryId,
+                                            h.DriverId,
+                                            h.DriverName,
+                                            h.DriverPhoneNumber,
+                                            h.VehicleNumber,
+                                            h.VehicleType,
+                                            h.BookingDate,
+                                            h.CompletedAt,
+                                            h.Fare,
+                                            h.PickupPoint,
+                                            h.DropOffPoint,
+                                            h.Reviewed,
+                                            CanGiveReview = h.CompletedAt != null && (h.Reviewed == null || h.Reviewed == false)
+                                        })
                                         .ToListAsync();
 
-            var totalPages = (int)Math.Ceiling((double)totalBookings / pageSize);
-
-            // Return the paginated result
-            return Ok(new
-            {
-                TotalBookings = totalBookings,
-                TotalPages = totalPages,
-                CurrentPage = pageNumber,
-                PageSize = pageSize,
-                BookingHistory = history
-            });
+            return Ok(history);
         }
+
 
     }
 }

@@ -17,7 +17,8 @@ export const PATHS = {
     VERIFYPAYMENT: "/verify-payment",
     VEHICLERESERVATION: "/vehicle-reservation",
     VERIFYRESERVATIONPAYMENT : "/verify-reservation-payment",
-    ALLREVIEWS : "all-reviews"
+    ALLREVIEWS : "all-reviews",
+    BOOKINGHISTORY : "booking-history"
 }
 
 export const DEFAULT_REDIRECT = PATHS.HOME;

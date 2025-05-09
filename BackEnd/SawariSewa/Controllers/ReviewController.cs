@@ -19,6 +19,72 @@ public class ReviewController : ControllerBase
         _userManager = userManager;
     }
 
+    //[HttpPost("add-reviews")]
+    //[Authorize]
+    //public async Task<IActionResult> AddReview([FromBody] CreateReviewDto reviewDto)
+    //{
+    //    if (reviewDto == null)
+    //        return BadRequest("Review data is required.");
+
+    //    var user = await _userManager.GetUserAsync(User);
+    //    if (user == null) return Unauthorized();
+
+    //    try
+    //    {
+    //        // Create the review record
+    //        var review = new Review
+    //        {
+    //            ApprovedDriverId = reviewDto.ApprovedDriverId,
+    //            UserId = user.Id,
+    //            Rating = reviewDto.Rating,
+    //            Comment = reviewDto.Comment,
+    //            CreatedAt = DateTime.UtcNow
+    //        };
+
+    //        _context.Reviews.Add(review);
+
+    //        // Find and update booking history with explicit SQL to ensure the update happens
+    //        var bookingHistory = await _context.PassengerBookingHistory
+    //            .Where(h => h.UserId == user.Id && h.DriverId == reviewDto.ApprovedDriverId &&
+    //                   (h.Reviewed == false || h.Reviewed == null))
+    //            .OrderByDescending(h => h.BookingDate)
+    //            .FirstOrDefaultAsync();
+
+    //        if (bookingHistory != null)
+    //        {
+    //            // Debug logging to see the state before update
+    //            Console.WriteLine($"Before update: BookingHistory ID: {bookingHistory.HistoryId}, " +
+    //                             $"Reviewed status: {bookingHistory.Reviewed}");
+
+    //            // Set the value explicitly
+    //            bookingHistory.Reviewed = true;
+
+    //            // Force EF to detect changes by detaching and reattaching
+    //            _context.Entry(bookingHistory).State = EntityState.Detached;
+    //            _context.PassengerBookingHistory.Attach(bookingHistory);
+    //            _context.Entry(bookingHistory).State = EntityState.Modified;
+
+
+    //        }
+
+    //        // Save changes
+    //        var savedChanges = await _context.SaveChangesAsync();
+
+    //        // Debug logging to confirm number of saved changes
+    //        Console.WriteLine($"SaveChanges result: {savedChanges} rows affected");
+
+    //        return Ok(new { message = "Review submitted successfully." });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // Log the exception details
+    //        Console.WriteLine($"Error submitting review: {ex.Message}");
+    //        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+    //        return StatusCode(500, new { message = "Failed to submit review", error = ex.Message });
+    //    }
+    //}
+
     [HttpPost("add-reviews")]
     [Authorize]
     public async Task<IActionResult> AddReview([FromBody] CreateReviewDto reviewDto)
@@ -29,20 +95,51 @@ public class ReviewController : ControllerBase
         var user = await _userManager.GetUserAsync(User);
         if (user == null) return Unauthorized();
 
-        var review = new Review
+        try
         {
-            ApprovedDriverId = reviewDto.ApprovedDriverId,
-            UserId = user.Id,
-            Rating = reviewDto.Rating,
-            Comment = reviewDto.Comment,
-            CreatedAt = DateTime.UtcNow
-        };
+            // Create the review record
+            var review = new Review
+            {
+                ApprovedDriverId = reviewDto.ApprovedDriverId,
+                UserId = user.Id,
+                Rating = reviewDto.Rating,
+                Comment = reviewDto.Comment,
+                CreatedAt = DateTime.UtcNow
+            };
 
-        _context.Reviews.Add(review);
-        await _context.SaveChangesAsync();
+            _context.Reviews.Add(review);
 
-        return Ok(new { message = "Review submitted successfully." });
+            // Use HistoryId directly to update the correct booking record
+            var bookingHistory = await _context.PassengerBookingHistory
+                .FirstOrDefaultAsync(h => h.HistoryId == reviewDto.HistoryId && h.UserId == user.Id);
+
+            if (bookingHistory != null)
+            {
+                Console.WriteLine($"Before update: BookingHistory ID: {bookingHistory.HistoryId}, " +
+                                  $"Reviewed status: {bookingHistory.Reviewed}");
+
+                bookingHistory.Reviewed = true;
+
+                _context.Entry(bookingHistory).State = EntityState.Detached;
+                _context.PassengerBookingHistory.Attach(bookingHistory);
+                _context.Entry(bookingHistory).State = EntityState.Modified;
+            }
+
+            var savedChanges = await _context.SaveChangesAsync();
+
+            Console.WriteLine($"SaveChanges result: {savedChanges} rows affected");
+
+            return Ok(new { message = "Review submitted successfully." });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error submitting review: {ex.Message}");
+            Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+            return StatusCode(500, new { message = "Failed to submit review", error = ex.Message });
+        }
     }
+
 
     [HttpGet("view-reviews/{approvedDriverId}")]
     public async Task<IActionResult> GetReviewsForDriver(int approvedDriverId)
