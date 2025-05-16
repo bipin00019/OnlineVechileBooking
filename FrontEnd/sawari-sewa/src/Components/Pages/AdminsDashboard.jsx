@@ -13,6 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '../../constants/paths';
 import { totalApplicationCount, totalApprovedDriversCount } from '../../services/DriverService';
+import BookingsPerDayChart from './BookingsPerDayChart';
 
 const AdminDashboard = () => {
   // Sample state data - In real app, this would come from your backend
@@ -103,68 +104,22 @@ const AdminDashboard = () => {
             <p className="text-2xl font-bold text-gray-900">{stats.activeBookings}</p>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow">
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-medium text-gray-600">Today's Revenue</h3>
-              <DollarSign className="h-4 w-4 text-gray-500" />
-            </div>
-            <p className="text-2xl font-bold text-gray-900">NPR {stats.totalRevenue}</p>
-          </div>
+          
 
           
         </div>
 
         {/* Main Content Grid */}
+        <BookingsPerDayChart/>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Vehicle Status */}
-          <div className="bg-white p-6 rounded-lg shadow lg:col-span-2">
-            <h3 className="text-lg font-semibold mb-4">Vehicle Status Overview</h3>
-            <div className="space-y-6">
-              {vehicleTypes.map((vehicle) => (
-                <div key={vehicle.type} className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Car className="h-5 w-5 text-gray-500 mr-2" />
-                    <span className="font-medium">{vehicle.type}</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <span className="text-green-600">{vehicle.available} Available</span>
-                    <span className="text-blue-600">{vehicle.inUse} In Use</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          
 
-          {/* Real-time Alerts */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-4">Real-time Alerts</h3>
-            <div className="space-y-4">
-              {realtimeAlerts.map((alert) => (
-                <div 
-                  key={alert.id} 
-                  className={`p-4 rounded-lg flex items-start space-x-2 ${alert.type === 'warning' 
-                    ? 'bg-red-50 text-red-700' 
-                    : alert.type === 'info' 
-                    ? 'bg-blue-50 text-blue-700' 
-                    : 'bg-green-50 text-green-700'}`}
-                >
-                  <AlertTriangle className="h-5 w-5 flex-shrink-0" />
-                  <p className="text-sm">{alert.message}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Quick Actions */}
           <div className="bg-white p-6 rounded-lg shadow lg:col-span-3">
             <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button 
-              onClick={()=>navigate(PATHS.CREATEVEHICLESCHEDULE)}
-              className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
-              <PlusCircle className="h-6 w-6 text-green-600 mb-2" />
-                <span className="text-sm font-medium">Create Vehicle Schedule</span>
-              </button>
+              
               <button 
               onClick={()=>navigate(PATHS.VIEWVEHICLESCHEDULE)}
               className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
@@ -179,14 +134,7 @@ const AdminDashboard = () => {
                 <Car className="h-6 w-6 text-green-600 mb-2" />
                 <span className="text-sm font-medium">Add Vehicle</span>
               </button> */}
-              <button className="p-4 bg-purple-50 rounded-lg flex flex-col items-center justify-center hover:bg-purple-100 transition-colors">
-                <MapPin className="h-6 w-6 text-purple-600 mb-2" />
-                <span className="text-sm font-medium">Track Routes</span>
-              </button>
-              <button className="p-4 bg-orange-50 rounded-lg flex flex-col items-center justify-center hover:bg-orange-100 transition-colors">
-                <CreditCard className="h-6 w-6 text-orange-600 mb-2" />
-                <span className="text-sm font-medium">Payment Settings</span>
-              </button>
+              
             </div>
           </div>
         </div>

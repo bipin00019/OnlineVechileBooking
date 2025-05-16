@@ -22,6 +22,7 @@ import VehicleReservation from "../Components/AvailableVehicles/VehicleReservati
 import VerifyReservationPayment from "../Components/AvailableVehicles/VerifyReservationPayment";
 import AllReviews from "../Components/DriverDashboards/AllReviews";
 import BookingHistory from "../Components/Pages/BookingHistory";
+import MyBookings from "../Components/Pages/MyBookings";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -45,6 +46,8 @@ const AppRoutes = () => {
             <Route path = {PATHS.VERIFYRESERVATIONPAYMENT} element = {<VerifyReservationPayment/>} />
             <Route path = {PATHS.ALLREVIEWS} element = {<AllReviews/>} />
             <Route path = {PATHS.BOOKINGHISTORY} element = {<BookingHistory/>} />
+            <Route path = {PATHS.MYBOOKINGS} element = {<MyBookings/>} />
+
         </Routes> 
     )
 }

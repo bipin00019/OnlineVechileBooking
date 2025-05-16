@@ -310,6 +310,80 @@ namespace SawariSewa.Areas.Driver.Controllers
         }
 
 
+        //[HttpPost("approve-driver/{id}")]
+        //[Authorize(Roles = "Admin,SuperAdmin")]
+        //public async Task<ActionResult> ApproveDriverApplication(int id)
+        //{
+        //    using var transaction = await _context.Database.BeginTransactionAsync();
+        //    try
+        //    {
+        //        var application = await _context.DriverApplications
+        //            .Include(d => d.User)
+        //            .FirstOrDefaultAsync(d => d.Id == id);
+
+        //        if (application == null)
+        //            return NotFound(new { message = "Application not found." });
+
+        //        if (application.Status != "Pending")
+        //            return BadRequest(new { message = "Application is not in a pending state." });
+
+        //        // Add user to Driver role
+        //        await _userManager.AddToRoleAsync(application.User, "Driver");
+
+        //        // Create an ApprovedDriver record
+        //        var approvedDriver = new ApprovedDrivers
+        //        {
+        //            UserId = application.UserId,
+        //            LicenseNumber = application.LicenseNumber,
+        //            VehicleNumber = application.VehicleNumber,
+        //            VehicleType = application.VehicleType,
+        //            LicensePhotoPath = application.LicensePhotoPath,
+        //            DriverPhotoPath = application.DriverPhotoPath,
+        //            BillbookPhotoPath = application.BillbookPhotoPath,
+        //            CitizenshipFrontPath = application.CitizenshipFrontPath,
+        //            CitizenshipBackPath = application.CitizenshipBackPath,
+        //            SelfieWithIDPath = application.SelfieWithIDPath,
+        //            VehiclePhotoPath = application.VehiclePhotoPath,
+        //            StartingPoint = application.StartingPoint,
+        //            DestinationLocation = application.DestinationLocation,
+        //            PhoneNumber = application.User.PhoneNumber,
+        //            FirstName = application.User.FirstName,
+        //            LastName = application.User.LastName,
+        //            Email = application.User.Email,
+        //            ApprovedAt = DateTime.UtcNow,
+        //            CreatedAt = DateTime.UtcNow,
+        //            DepartureTime = application.DepartureTime,
+        //            PickupPoint = application.PickupPoint,
+        //            DropOffPoint = application.DropOffPoint,
+        //            IsOnline = true,
+        //        };
+
+        //        // Add the approved driver to the ApprovedDrivers table
+        //        _context.ApprovedDrivers.Add(approvedDriver);
+
+        //        // Remove the driver application after approval
+        //        _context.DriverApplications.Remove(application);
+
+        //        await _context.SaveChangesAsync();
+        //        await transaction.CommitAsync();
+
+        //        // Send email notification
+        //        var subject = "Sawari Sewa: Driver Application Approved";
+        //        var body = $"Dear {application.User.FirstName},<br><br>"
+        //            + "Congratulations! Your driver application has been approved. You can now start accepting rides. <br><br>"
+        //            + "Best Regards, <br> Sawari Sewa Team";
+
+        //        await _emailServices.SendEmailAsync(application.User.Email, subject, body);
+
+        //        return Ok(new { message = "Driver application approved and added to ApprovedDrivers table." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        return StatusCode(500, new { message = "Error approving application.", error = ex.Message });
+        //    }
+        //}
+
         [HttpPost("approve-driver/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> ApproveDriverApplication(int id)
@@ -326,6 +400,16 @@ namespace SawariSewa.Areas.Driver.Controllers
 
                 if (application.Status != "Pending")
                     return BadRequest(new { message = "Application is not in a pending state." });
+
+                // Check for existing approved drivers with the same license number or vehicle number
+                bool isDuplicate = await _context.ApprovedDrivers.AnyAsync(ad =>
+                    ad.LicenseNumber == application.LicenseNumber ||
+                    ad.VehicleNumber == application.VehicleNumber);
+
+                if (isDuplicate)
+                {
+                    return BadRequest(new { message = "An approved driver with the same license number or vehicle number already exists." });
+                }
 
                 // Add user to Driver role
                 await _userManager.AddToRoleAsync(application.User, "Driver");
@@ -384,15 +468,54 @@ namespace SawariSewa.Areas.Driver.Controllers
             }
         }
 
+        //[HttpPost("reject-driver/{id}")]
+        //[Authorize(Roles = "Admin,SuperAdmin")]
+        //public async Task<ActionResult> RejectDriverApplication(int id)
+        //{
+        //    using var transaction = await _context.Database.BeginTransactionAsync();
+        //    try
+        //    {
+        //        var application = await _context.DriverApplications
+        //            .Include(d => d.User)  // Include User data
+        //            .FirstOrDefaultAsync(d => d.Id == id);
+
+        //        if (application == null)
+        //            return NotFound(new { message = "Application not found." });
+
+        //        if (application.Status != "Pending")
+        //            return BadRequest(new { message = "Application is not in a pending state." });
+
+        //        // Remove the application after rejection
+        //        _context.DriverApplications.Remove(application);
+        //        await _context.SaveChangesAsync();
+        //        await transaction.CommitAsync();
+
+        //        // Send rejection email
+        //        var subject = "Sawari Sewa: Driver Application Rejected";
+        //        var body = $"Dear {application.User.FirstName},<br><br>"
+        //            + "We regret to inform you that your driver application has been rejected. <br><br>"
+        //            + "Best Regards, <br> Sawari Sewa Team";
+
+        //        await _emailServices.SendEmailAsync(application.User.Email, subject, body);
+
+        //        return Ok(new { message = "Driver application rejected." });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        return StatusCode(500, new { message = "Error rejecting application.", error = ex.Message });
+        //    }
+        //}
+
         [HttpPost("reject-driver/{id}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<ActionResult> RejectDriverApplication(int id)
+        public async Task<ActionResult> RejectDriverApplication(int id, [FromBody] RejectDriverApplicationDto dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 var application = await _context.DriverApplications
-                    .Include(d => d.User)  // Include User data
+                    .Include(d => d.User)
                     .FirstOrDefaultAsync(d => d.Id == id);
 
                 if (application == null)
@@ -406,15 +529,16 @@ namespace SawariSewa.Areas.Driver.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                // Send rejection email
+                // Prepare the email content with the admin's rejection message
                 var subject = "Sawari Sewa: Driver Application Rejected";
                 var body = $"Dear {application.User.FirstName},<br><br>"
-                    + "We regret to inform you that your driver application has been rejected. <br><br>"
+                    + "We regret to inform you that your driver application has been rejected.<br><br>"
+                    + $"Reason: {dto.RejectionMessage ?? "No specific reason provided."}<br><br>"
                     + "Best Regards, <br> Sawari Sewa Team";
 
                 await _emailServices.SendEmailAsync(application.User.Email, subject, body);
 
-                return Ok(new { message = "Driver application rejected." });
+                return Ok(new { message = "Driver application rejected and user notified." });
             }
             catch (Exception ex)
             {
@@ -422,6 +546,7 @@ namespace SawariSewa.Areas.Driver.Controllers
                 return StatusCode(500, new { message = "Error rejecting application.", error = ex.Message });
             }
         }
+
 
 
 
@@ -596,14 +721,14 @@ namespace SawariSewa.Areas.Driver.Controllers
        
         public IActionResult GetStartingPoints()
         {
-            var startingPoints = _context.ApprovedDrivers.Select(d => d.StartingPoint).Distinct().ToList();
+            var startingPoints = _context.VehicleAvailability.Select(d => d.Location).Distinct().ToList();
             return Ok(startingPoints);
         }
         [HttpGet("get-destination-location")]
       
         public IActionResult GetDestinationPoints()
         {
-            var destinationLocations = _context.ApprovedDrivers.Select(d => d.DestinationLocation).Distinct().ToList();
+            var destinationLocations = _context.VehicleAvailability.Select(d => d.Destination).Distinct().ToList();
             return Ok(destinationLocations);
         }
 

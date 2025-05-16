@@ -52,6 +52,81 @@ namespace SawariSewa.Areas.Passenger.Controllers
             return Ok(history);
         }
 
+        //[HttpGet("my-bookings")]
+        //public async Task<IActionResult> GetMyGroupedBookings()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //    if (string.IsNullOrEmpty(userId))
+        //        return Unauthorized("User ID not found in token");
+
+        //    var groupedBookings = await _context.SeatBookings
+        //        .Where(b => b.UserId == userId)
+        //        .GroupBy(b => new
+        //        {
+        //            b.BookingDate,
+        //            b.BookingStatus,
+        //            b.PickupPoint,
+        //            b.DropOffPoint
+        //        })
+        //        .Select(g => new
+        //        {
+        //            BookingDate = g.Key.BookingDate,
+        //            BookingStatus = g.Key.BookingStatus,
+        //            PickupPoint = g.Key.PickupPoint,
+        //            DropOffPoint = g.Key.DropOffPoint,
+        //            SeatNumbers = g.Select(b => b.SeatNumber).ToList()
+        //        })
+        //        .OrderByDescending(g => g.BookingDate)
+        //        .ToListAsync();
+
+        //    return Ok(groupedBookings);
+        //}
+
+        [HttpGet("my-bookings")]
+        public async Task<IActionResult> GetMyGroupedBookings()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User ID not found in token");
+
+            var userBookings = await _context.SeatBookings
+                .Where(b => b.UserId == userId)
+                .Include(b => b.VehicleAvailability)
+                .ToListAsync();
+
+            var grouped = userBookings
+                .GroupBy(b => b.VehicleAvailabilityId)
+                .Select(g =>
+                {
+                    var first = g.First(); // Get shared info from any item in group
+                    var vehicle = first.VehicleAvailability;
+
+                    return new
+                    {
+                        VehicleAvailabilityId = g.Key,
+                        BookingDate = first.BookingDate,
+                        BookingStatus = first.BookingStatus,
+                        PickupPoint = first.PickupPoint,
+                        DropOffPoint = first.DropOffPoint,
+                        TotalSeatsBooked = g.Count(),
+                        SeatNumbers = g.Select(x => x.SeatNumber).ToList(),
+
+                        DepartureDate = vehicle?.DepartureDate,
+                        DepartureTime = vehicle?.DepartureTime,
+                        VehicleNumber = vehicle?.VehicleNumber,
+                        Fare = vehicle?.Fare,
+                        Location = vehicle?.Location,
+                        Destination = vehicle?.Destination
+                    };
+                })
+                .OrderByDescending(x => x.BookingDate)
+                .ToList();
+
+            return Ok(grouped);
+        }
+
 
     }
 }

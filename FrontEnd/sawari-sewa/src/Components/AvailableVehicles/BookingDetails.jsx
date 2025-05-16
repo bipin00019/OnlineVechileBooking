@@ -213,11 +213,9 @@ const BookingDetails = ({
      
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-medium mb-2">
-          Total Amount :
+          Total Amount : Rs. {totalFare}
         </label>
-        <div className="text-gray-800 font-bold">
-          Rs. {totalFare}
-        </div>
+        
       </div>
      
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}

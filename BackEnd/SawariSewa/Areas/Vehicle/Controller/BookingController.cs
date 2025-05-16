@@ -26,9 +26,7 @@ namespace SawariSewa.Areas.Vehicle.Controller
         [Authorize]  // Ensure the user is authenticated
         public async Task<IActionResult> BookSeat(int vehicleAvailabilityId, string seatNumber)
         {
-            // Log the type of the inputs
-            Console.WriteLine($"Type of vehicleAvailabilityId: {vehicleAvailabilityId.GetType()}");
-            Console.WriteLine($"Type of seatNumber: {seatNumber.GetType()}");
+            
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);  // Get the logged-in user's ID
 
             var result = await _bookingService.BookSeatAsync(vehicleAvailabilityId, userId, seatNumber);

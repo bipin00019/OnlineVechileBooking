@@ -10,6 +10,7 @@ using SawariSewa.Controllers;
 using SawariSewa.Data;
 using SawariSewa.Services;
 using SawariSewa.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace TeleMedicineApp.Areas.Admin.Controllers;
 
@@ -128,6 +129,7 @@ public class AccountController : ApiControllerBase
         }
     }
 
+
     //[HttpPost("Register")]
     //[AllowAnonymous]
     //public async Task<IActionResult> Register(RegisterViewModel model)
@@ -140,14 +142,14 @@ public class AccountController : ApiControllerBase
     //        var user = new ApplicationUser
     //        {
     //            UserName = model.Email,
-    //            Email = model.Email,
-    //            EmailConfirmed = true,
+    //            PhoneNumber = model.PhoneNumber,
+    //            Email = model.Email,// Auto-confirm email during registration
     //            FirstName = model.FirstName,
     //            LastName = model.LastName,
-    //            PhoneNumber = model.PhoneNumber,
+    //            EmailConfirmed = true,
 
 
-    //            // Auto-confirm since only SuperAdmin can create users
+
     //        };
 
     //        var result = await _userManager.CreateAsync(user, model.Password);
@@ -156,27 +158,11 @@ public class AccountController : ApiControllerBase
     //        {
     //            _logger.LogInformation("User {Email} created a new account", model.Email);
 
-    //            // Assign roles based on the request
-    //            if (model.Role == "SuperAdmin")
-    //            {
-    //                await _userManager.AddToRoleAsync(user, "SuperAdmin");
-    //            }
-    //            else if (model.Role == "Admin")
-    //            {
-    //                await _userManager.AddToRoleAsync(user, "Admin");
-    //            }
-    //            else if (model.Role == "Driver")
-    //            {
-    //                await _userManager.AddToRoleAsync(user, "Driver");
-    //            }
-    //            else if (model.Role == "Passenger")
-    //            {
-    //                await _userManager.AddToRoleAsync(user, "Passenger");
-    //            }
-
+    //            // Assign the default role "Passenger" to all new users
+    //            await _userManager.AddToRoleAsync(user, "Passenger");
 
     //            var roles = await _userManager.GetRolesAsync(user);
-    //            //var token = _jwtService.GenerateToken(user, roles);
+
     //            var (token, refreshToken) = await _jwtService.GenerateTokensAsync(user, roles);
 
     //            return ApiResponse(new
@@ -215,17 +201,23 @@ public class AccountController : ApiControllerBase
             if (!ModelState.IsValid)
                 return ValidationError();
 
+            // Check if a user with the same phone number already exists
+            var existingUserWithPhone = await _userManager.Users
+                .FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber);
+
+            if (existingUserWithPhone != null)
+            {
+                return ApiError("A user with this phone number already exists.");
+            }
+
             var user = new ApplicationUser
             {
                 UserName = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                Email = model.Email,// Auto-confirm email during registration
+                Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 EmailConfirmed = true,
-
-
-
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -234,7 +226,6 @@ public class AccountController : ApiControllerBase
             {
                 _logger.LogInformation("User {Email} created a new account", model.Email);
 
-                // Assign the default role "Passenger" to all new users
                 await _userManager.AddToRoleAsync(user, "Passenger");
 
                 var roles = await _userManager.GetRolesAsync(user);
@@ -303,4 +294,6 @@ public class AccountController : ApiControllerBase
             ModelState.AddModelError(string.Empty, error.Description);
         }
     }
+
+
 }

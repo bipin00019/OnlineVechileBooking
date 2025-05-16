@@ -175,52 +175,114 @@ export const totalApprovedDriversCount = async() => {
   }
 };
 
-export const approveDriverApplication = async(id) => {
-  try{
+// export const approveDriverApplication = async(id) => {
+//   try{
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//       console.log("No token found. User is not authorized");
+//       alert("Session expired. Please log in again");
+//       return;
+//     }
+//     const response = await axios.post(
+//       `${API_URL}/Driver/approve-driver/${id}`,
+//       {},
+//       {
+//         headers: {
+//           Authorization:`Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Failed to approve the driver application", error);
+//     let errorMessage = error.response?.data?.message || error.response?.data || error.message || "An unknown error occurred";
+//     alert("Approval failed: ",errorMessage);
+//     throw errorMessage;
+//   }
+// }
+
+export const approveDriverApplication = async (id) => {
+  try {
     const token = localStorage.getItem("token");
     if (!token) {
-      console.log("No token found. User is not authorized");
-      alert("Session expired. Please log in again");
+      toast.error("Session expired. Please log in again");
       return;
     }
+
     const response = await axios.post(
       `${API_URL}/Driver/approve-driver/${id}`,
       {},
       {
         headers: {
-          Authorization:`Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
+
     return response.data;
   } catch (error) {
     console.error("Failed to approve the driver application", error);
-    let errorMessage = error.response?.data?.message || error.response?.data || error.message || "An unknown error occurred";
-    alert("Approval failed: ",errorMessage);
-    throw errorMessage;
-  }
-}
 
-export const rejectDriverApplication = async(id) => {
+    const errorMessage =
+      error.response?.data?.message || // Capture custom backend message
+      error.response?.data ||          // Fallback
+      error.message || 
+      "An unknown error occurred";
+
+    throw errorMessage; // Throw message to be handled in the component
+  }
+};
+
+
+// export const rejectDriverApplication = async(id) => {
+//   try {
+//     const token = localStorage.getItem("token");
+//     if (!token) {
+//       alert("Session expired. Please log in");
+//       return;
+//     }
+//     const response = await axios.post(`${API_URL}/Driver/reject-driver/${id}`,
+//       {},
+//       {
+//         headers: {
+//           Authorization:`Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Failed to reject the driver application", error);
+//     let errorMessage = error.response?.data?.message || error.response?.data || error.message || "An unknown error occurred";
+//     //alert("Approval failed: ",errorMessage);
+//     throw errorMessage;
+//   }
+// };
+export const rejectDriverApplication = async (id, rejectionMessage) => {
   try {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Session expired. Please log in");
       return;
     }
-    const response = await axios.post(`${API_URL}/Driver/reject-driver/${id}`,
-      {},
+
+    const response = await axios.post(
+      `${API_URL}/Driver/reject-driver/${id}`,
+      { rejectionMessage }, // send rejection message here
       {
         headers: {
-          Authorization:`Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
+
     return response.data;
   } catch (error) {
     console.error("Failed to reject the driver application", error);
-    let errorMessage = error.response?.data?.message || error.response?.data || error.message || "An unknown error occurred";
-    //alert("Approval failed: ",errorMessage);
+    let errorMessage =
+      error.response?.data?.message ||
+      error.response?.data ||
+      error.message ||
+      "An unknown error occurred";
     throw errorMessage;
   }
 };

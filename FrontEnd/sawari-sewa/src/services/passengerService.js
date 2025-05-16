@@ -43,3 +43,19 @@ export const submitReview = async (reviewData) => {
     throw error;
   }
 };
+
+export const fetchMyBookings = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/Passenger/Passenger/my-bookings`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}` // or however you store your JWT
+      }
+    });
+
+    console.log(response.data); // or set this to state if using React
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching bookings:', error);
+    return [];
+  }
+};

@@ -308,7 +308,7 @@ export default function HomeBody() {
         className="w-full h-screen bg-cover bg-center"
         style={{ backgroundImage: `url(${CarBackground})` }}
       >
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="bg-white rounded-lg shadow-lg p-4 space-y-4 mt-36">
             <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr,auto] gap-4 items-center">
               {/* From Location Dropdown */}

@@ -78,6 +78,22 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok(new { message = "Vehicle schedule created successfully!" });
         }
 
+        //[HttpGet("check-schedule-exists")]
+        //[Authorize(Roles = "Driver")]
+        //public async Task<IActionResult> CheckScheduleExists()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //    var driver = await _context.ApprovedDrivers.FirstOrDefaultAsync(d => d.UserId == userId);
+        //    if (driver == null)
+        //        return BadRequest("Driver not found or not approved.");
+
+        //    var existingSchedule = await _context.VehicleAvailability
+        //        .FirstOrDefaultAsync(v => v.DriverId == driver.Id && v.DepartureTime == driver.DepartureTime);
+
+        //    return Ok(existingSchedule != null);
+        //}
+
         [HttpGet("check-schedule-exists")]
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> CheckScheduleExists()
@@ -89,10 +105,15 @@ namespace SawariSewa.Areas.Vehicle.Controller
                 return BadRequest("Driver not found or not approved.");
 
             var existingSchedule = await _context.VehicleAvailability
-                .FirstOrDefaultAsync(v => v.DriverId == driver.Id && v.DepartureTime == driver.DepartureTime);
+                .FirstOrDefaultAsync(v =>
+                    v.DriverId == driver.Id &&
+                    v.DepartureTime == driver.DepartureTime &&
+                    v.AvailableSeats > 0); // <-- This line ensures available seats are more than 0
 
-            return Ok(existingSchedule != null);
+            // If existingSchedule is null (either doesn't exist or AvailableSeats == 0), return null
+            return Ok(existingSchedule != null); // Will return null if no valid schedule found
         }
+
         [HttpGet("are-all-seats-available")]
         [Authorize(Roles = "Driver")]
         public async Task<IActionResult> AreAllSeatsAvailable()

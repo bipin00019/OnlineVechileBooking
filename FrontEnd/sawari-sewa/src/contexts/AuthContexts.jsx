@@ -69,32 +69,66 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (userData) => {
-    console.log("React component register called with:", userData); // This should show all fields
-    console.log("La hai Register function invoked with userData:", userData); // Log the input data
-    try {
-      const response = await authService.register(userData);  // Pass the user data
-      if (response.success) {
-        const token = response.data.token;
-        console.log("User token",token);
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        setUser(response.data.user);
-        toast.success("Registration successful!");
-        return { success: true };
-      } else {
-        toast.error(response.message || "Registration failed ");
-        console.log("Validation errors:", error.response?.data?.errors);
+  // const register = async (userData) => {
+  //   console.log("React component register called with:", userData); // This should show all fields
+  //   console.log("La hai Register function invoked with userData:", userData); // Log the input data
+  //   try {
+  //     const response = await authService.register(userData);  // Pass the user data
+  //     if (response.success) {
+  //       const token = response.data.token;
+  //       console.log("User token",token);
+  //       localStorage.setItem("token", token);
+  //       localStorage.setItem("user", JSON.stringify(response.data.user));
+  //       setUser(response.data.user);
+  //       toast.success("Registration successful!");
+  //       return { success: true };
+  //     } else {
+  //       toast.error(response.message || "Registration failed ");
+  //       console.log("Validation errors:", error.response?.data?.errors);
 
-        return { success: false, message: errorMessage };
-      }
-    } catch (error) {
-      console.error("Registration error:", error);
-      const errorMessage = error.message || "An error occurred during registration";
+  //       return { success: false, message: errorMessage };
+  //     }
+  //   } catch (error) {
+  //     console.error("Registration error:", error);
+  //     const errorMessage = error.message || "An error occurred during registration";
+  //     toast.error(errorMessage);
+  //     return { success: false, message: errorMessage };
+  //   }
+  // };
+const register = async (userData) => {
+  console.log("React component register called with:", userData); // Debugging
+  try {
+    const response = await authService.register(userData); // Send registration request
+
+    if (response.success) {
+      const token = response.data.token;
+      console.log("User token:", token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      setUser(response.data.user);
+      toast.success("Registration successful!");
+      return { success: true };
+    } else {
+      // If backend returns success: false
+      const errorMessage = response.message || "Registration failed";
+      console.error("Backend error response:", response);
       toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
-  };
+  } catch (error) {
+    // If request itself fails (e.g., network error or 500 response)
+    console.error("Registration error:", error);
+    const errorMessage = error.response?.data?.message || error.message || "An error occurred during registration";
+    
+    // Optional: Log server-side validation errors (like ModelState errors)
+    if (error.response?.data?.errors) {
+      console.error("Validation errors:", error.response.data.errors);
+    }
+
+    toast.error(errorMessage);
+    return { success: false, message: errorMessage };
+  }
+};
 
   const refreshUserToken = async () => {
     try {

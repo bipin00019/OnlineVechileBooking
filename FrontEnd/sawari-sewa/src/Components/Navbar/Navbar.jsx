@@ -430,6 +430,15 @@ const Navbar = () => {
                             }} 
                             className="block px-4 py-2 hover:bg-gray-800 w-full text-left">Be a Driver</button>
                         )}
+
+                          <button 
+                            onClick={() => {
+                              setDropdownVisible(false); // Close dropdown first
+                              navigate(PATHS.MYBOOKINGS);
+                            }}
+                            className="block px-4 py-2 hover:bg-gray-800 w-full text-left">
+                            My Bookings
+                          </button>
                           <button 
                             onClick={() => {
                               setDropdownVisible(false); // Close dropdown first

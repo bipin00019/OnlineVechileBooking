@@ -174,7 +174,56 @@ namespace SawariSewa.Areas.Vehicle.Services
 
 
         // New method for manual seat booking (without UserId)
-        public async Task<bool> ManualBookSeatAsync(string seatNumber, string passengerName, string passengerContact, string driverUserId)
+        //public async Task<bool> ManualBookSeatAsync(string seatNumber, string passengerName, string passengerContact, string driverUserId)
+        //{
+        //    // Check if the driver is approved
+        //    var approvedDriver = await _context.ApprovedDrivers
+        //        .FirstOrDefaultAsync(d => d.UserId == driverUserId);
+
+        //    if (approvedDriver == null)
+        //        return false;
+
+        //    // Check if there's available vehicle for this driver
+        //    var vehicleAvailability = await _context.VehicleAvailability
+        //        .FirstOrDefaultAsync(v => v.DriverFirstName == approvedDriver.FirstName &&
+        //                                  v.DriverLastName == approvedDriver.LastName &&
+        //                                  v.VehicleNumber == approvedDriver.VehicleNumber);
+
+        //    if (vehicleAvailability == null || vehicleAvailability.AvailableSeats <= 0)
+        //        return false;
+
+        //    // Create the seat booking with the driver's UserId
+        //    var seatBooking = new SeatBookings
+        //    {
+        //        VehicleAvailabilityId = vehicleAvailability.Id,
+        //        SeatNumber = seatNumber,
+        //        UserId = driverUserId, // Use the driver's actual UserId instead of generating a random one
+        //        ManualPassengerName = passengerName,
+        //        ManualPassengerPhoneNumber = passengerContact,
+        //        BookingDate = DateTime.UtcNow,
+        //        BookingStatus = "Confirmed",
+        //        Fare = vehicleAvailability.Fare,
+        //        CreatedAt = DateTime.UtcNow,
+        //        UpdatedAt = DateTime.UtcNow,
+        //        PickupPoint = vehicleAvailability.PickupPoint,
+        //        DropOffPoint = vehicleAvailability.DropOffPoint,
+        //        RideStatus = "Not Started"
+        //    };
+
+        //    // Add booking to the context
+        //    _context.SeatBookings.Add(seatBooking);
+
+        //    // Update vehicle availability
+        //    vehicleAvailability.AvailableSeats -= 1;
+        //    vehicleAvailability.BookedSeats += 1;
+        //    _context.VehicleAvailability.Update(vehicleAvailability);
+
+        //    await _context.SaveChangesAsync();
+
+        //    return true;
+        //}
+
+        public async Task<bool> ManualBookSeatAsync(string seatNumbers, string passengerName, string passengerContact, string driverUserId)
         {
             // Check if the driver is approved
             var approvedDriver = await _context.ApprovedDrivers
@@ -183,39 +232,55 @@ namespace SawariSewa.Areas.Vehicle.Services
             if (approvedDriver == null)
                 return false;
 
-            // Check if there's available vehicle for this driver
+            // Get vehicle availability for the driver
             var vehicleAvailability = await _context.VehicleAvailability
-                .FirstOrDefaultAsync(v => v.DriverFirstName == approvedDriver.FirstName &&
-                                          v.DriverLastName == approvedDriver.LastName &&
-                                          v.VehicleNumber == approvedDriver.VehicleNumber);
+                .FirstOrDefaultAsync(v =>
+                    v.DriverFirstName == approvedDriver.FirstName &&
+                    v.DriverLastName == approvedDriver.LastName &&
+                    v.VehicleNumber == approvedDriver.VehicleNumber);
 
-            if (vehicleAvailability == null || vehicleAvailability.AvailableSeats <= 0)
+            if (vehicleAvailability == null)
                 return false;
 
-            // Create the seat booking with the driver's UserId
-            var seatBooking = new SeatBookings
+            // ✅ Split and sanitize seat numbers
+            var seatNumberArray = seatNumbers
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToArray();
+
+            // ✅ Ensure enough available seats
+            if (vehicleAvailability.AvailableSeats < seatNumberArray.Length)
+                return false;
+
+            // ✅ Create one booking per seat
+            foreach (var seatNumber in seatNumberArray)
             {
-                VehicleAvailabilityId = vehicleAvailability.Id,
-                SeatNumber = seatNumber,
-                UserId = driverUserId, // Use the driver's actual UserId instead of generating a random one
-                ManualPassengerName = passengerName,
-                ManualPassengerPhoneNumber = passengerContact,
-                BookingDate = DateTime.UtcNow,
-                BookingStatus = "Confirmed",
-                Fare = vehicleAvailability.Fare,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                PickupPoint = vehicleAvailability.PickupPoint,
-                DropOffPoint = vehicleAvailability.DropOffPoint,
-                RideStatus = "Not Started"
-            };
+                var seatBooking = new SeatBookings
+                {
+                    VehicleAvailabilityId = vehicleAvailability.Id,
+                    SeatNumber = seatNumber,
+                    UserId = driverUserId,
+                    ManualPassengerName = passengerName,
+                    ManualPassengerPhoneNumber = passengerContact,
+                    BookingDate = DateTime.UtcNow,
+                    BookingStatus = "Confirmed",
+                    Fare = vehicleAvailability.Fare,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    PickupPoint = vehicleAvailability.PickupPoint,
+                    DropOffPoint = vehicleAvailability.DropOffPoint,
+                    RideStatus = "Not Started"
+                };
 
-            // Add booking to the context
-            _context.SeatBookings.Add(seatBooking);
+                _context.SeatBookings.Add(seatBooking);
+            }
 
-            // Update vehicle availability
-            vehicleAvailability.AvailableSeats -= 1;
-            vehicleAvailability.BookedSeats += 1;
+            // ✅ Update available and booked seat counts properly
+            int seatsBooked = seatNumberArray.Length;
+            vehicleAvailability.AvailableSeats -= seatsBooked;
+            vehicleAvailability.BookedSeats += seatsBooked;
+
             _context.VehicleAvailability.Update(vehicleAvailability);
 
             await _context.SaveChangesAsync();
