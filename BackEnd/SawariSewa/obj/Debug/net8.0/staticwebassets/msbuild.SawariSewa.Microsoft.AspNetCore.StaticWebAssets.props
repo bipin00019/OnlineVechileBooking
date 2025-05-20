@@ -80,6 +80,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\billbooks\1f0d19e7-a88d-43ca-b530-2e96e91363ba.jpg))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\billbooks\2a8f2e20-74d3-47fd-aa0f-ff03ac4b75ed.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/billbooks/2a8f2e20-74d3-47fd-aa0f-ff03ac4b75ed.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\billbooks\2a8f2e20-74d3-47fd-aa0f-ff03ac4b75ed.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\billbooks\2eb20c9b-c221-4956-98ee-0f6bcabd8390.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>SawariSewa</SourceId>
@@ -1264,6 +1280,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\a6b93eb9-45e9-49e8-8366-2bbd31d1bcbe.jpg))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\a860f69a-a8b1-4444-ab3f-bffcc6d0ba3a.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/citizenships/a860f69a-a8b1-4444-ab3f-bffcc6d0ba3a.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\a860f69a-a8b1-4444-ab3f-bffcc6d0ba3a.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\a8d56a7c-1c3b-4c03-9bdd-4f5c772c417c.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>SawariSewa</SourceId>
@@ -1648,6 +1680,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\de9a9d97-e3f0-4460-a48a-431bf573d252.jpg))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\e2caf328-3d56-4d29-9177-766f6b936c2f.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/citizenships/e2caf328-3d56-4d29-9177-766f6b936c2f.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\e2caf328-3d56-4d29-9177-766f6b936c2f.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\citizenships\ef1e8664-add2-4c24-a24b-40d7385d88ec.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>SawariSewa</SourceId>
@@ -1695,6 +1743,22 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\drivers\122e0569-0260-4390-82fd-46684cfb1034.jpeg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\drivers\2284e65b-ad7c-4541-9d5b-6bf4340a373f.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/drivers/2284e65b-ad7c-4541-9d5b-6bf4340a373f.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\drivers\2284e65b-ad7c-4541-9d5b-6bf4340a373f.jpg))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\drivers\228706d8-f4a9-4cea-a27e-b04b7b6d6e33.jpg))">
       <SourceType>Package</SourceType>
@@ -2624,6 +2688,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\licenses\9fae585d-f2bc-42a6-aa27-901c97e4c830.jpg))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\licenses\a133b6c0-2734-42a8-bc1e-fe1f65608903.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/licenses/a133b6c0-2734-42a8-bc1e-fe1f65608903.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\licenses\a133b6c0-2734-42a8-bc1e-fe1f65608903.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\licenses\a38df36c-eb7b-4510-9ed7-1da1164ff744.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>SawariSewa</SourceId>
@@ -3296,6 +3376,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\selfies\e2f62a07-60b1-4802-801b-f772d22aca98.jpg))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\selfies\e5c94de3-fd2c-4c29-ab68-f43eac74fcca.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/selfies/e5c94de3-fd2c-4c29-ab68-f43eac74fcca.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\selfies\e5c94de3-fd2c-4c29-ab68-f43eac74fcca.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\selfies\ebf0ab4f-1bf0-44ab-83b2-b9e6c3cba909.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>SawariSewa</SourceId>
@@ -3391,6 +3487,22 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\vehicles\105ef2c8-da7d-4cb9-964a-59a3873b25d2.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\vehicles\344c712e-2eec-4ad1-beab-4fa8d1ee96ca.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>SawariSewa</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/SawariSewa</BasePath>
+      <RelativePath>uploads/vehicles/344c712e-2eec-4ad1-beab-4fa8d1ee96ca.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\vehicles\344c712e-2eec-4ad1-beab-4fa8d1ee96ca.jpg))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\vehicles\370a16f4-bfce-44db-833b-38fe496b2728.jpeg))">
       <SourceType>Package</SourceType>

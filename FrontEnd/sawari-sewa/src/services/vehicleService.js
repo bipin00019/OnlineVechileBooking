@@ -130,7 +130,28 @@ export const canReserveWholeVehicle = async (vehicleAvailabilityId) => {
   }
 };
 
+export const fetchDriverAverageRating = async (approvedDriverId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Review/driver-average-rating/${approvedDriverId}`);
+    const averageRating = response.data; // This will be a number like 4.75
+    return averageRating;
+  } catch (error) {
+    console.error('Error fetching average rating:', error);
+    return null;
+  }
+};
 
+export const fetchDriverReviews = async (approvedDriverId) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/Review/driver-reviews/${approvedDriverId}`
+    );
+    return response.data; // Array of reviews
+  } catch (error) {
+    console.error("Error fetching driver reviews:", error);
+    return []; // Return empty list if something goes wrong
+  }
+};
 
 
 

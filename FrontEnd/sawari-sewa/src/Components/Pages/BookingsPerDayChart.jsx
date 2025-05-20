@@ -1,53 +1,66 @@
 import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
-import axios from 'axios';
-import { API_URL } from '../../config';
+import { fetchBookingStats } from '../../services/AdminDashboardService';
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
 
 const BookingsPerDayChart = () => {
-  const [data, setData] = useState([]);
+  const [bookingCounts, setBookingCounts] = useState([]);
+  const [revenue, setRevenue] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBookingData = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/AdminDashboard/daily-booking-counts`);
-    
-    // Adjust this line based on your API's response structure
-    const bookingArray = Array.isArray(response.data) 
-      ? response.data 
-      : response.data.data; // fallback if the actual array is nested inside `data`
-
-    const formattedData = bookingArray.map(item => ({
-      date: new Date(item.date).toLocaleDateString(),
-      bookings: item.count
-    }));
-
-    setData(formattedData);
-  } catch (error) {
-    console.error("Error fetching booking data:", error);
-  }
-};
-
-    
-
-    fetchBookingData();
+    const loadStats = async () => {
+      try {
+        const { bookingCounts, revenue } = await fetchBookingStats();
+        setBookingCounts(bookingCounts);
+        setRevenue(revenue);
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadStats();
   }, []);
 
+  if (loading) return <p>Loading charts...</p>;
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow mt-6">
-      <h3 className="text-lg font-semibold mb-4">Bookings Per Day</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Line type="monotone" dataKey="bookings" stroke="#8884d8" strokeWidth={2} />
-        </LineChart>
-      </ResponsiveContainer>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      
+      {/* Daily Booking Count Chart */}
+      <div className="bg-white p-4 shadow rounded-2xl">
+        <h2 className="text-xl font-semibold mb-2">Daily Booking Counts</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={bookingCounts}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={2} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Daily Revenue Chart */}
+      <div className="bg-white p-4 shadow rounded-2xl">
+        <h2 className="text-xl font-semibold mb-2">Daily Revenue</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={revenue}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip formatter={(value) => `Rs. ${value}`} />
+            <Legend />
+            <Line type="monotone" dataKey="amount" stroke="#82ca9d" strokeWidth={2} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
     </div>
   );
 };
 
 export default BookingsPerDayChart;
-
-

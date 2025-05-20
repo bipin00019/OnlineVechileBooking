@@ -183,6 +183,66 @@ public class ReviewController : ControllerBase
             totalReviews = ratings.Count
         });
     }
+
+    [HttpGet("driver-average-rating/{approvedDriverId}")]
+    public async Task<IActionResult> GetAverageRatingByDriverId(int approvedDriverId)
+    {
+        // Check if the driver exists
+        var approvedDriver = await _context.ApprovedDrivers
+            .FirstOrDefaultAsync(d => d.Id == approvedDriverId);
+
+        if (approvedDriver == null)
+            return NotFound("Approved driver not found.");
+
+        // Get all ratings for the driver
+        var ratings = await _context.Reviews
+            .Where(r => r.ApprovedDriverId == approvedDriverId)
+            .Select(r => r.Rating)
+            .ToListAsync();
+
+        if (!ratings.Any())
+            return Ok(0); // or return NotFound("No ratings found.");
+
+        double average = ratings.Average();
+
+        return Ok(Math.Round(average, 2));
+    }
+
+    [HttpGet("driver-reviews/{approvedDriverId}")]
+    public async Task<IActionResult> GetReviewsByDriverId(int approvedDriverId)
+    {
+        // Step 1: Check if the driver exists
+        var approvedDriver = await _context.ApprovedDrivers
+            .FirstOrDefaultAsync(d => d.Id == approvedDriverId);
+
+        if (approvedDriver == null)
+            return NotFound("Approved driver not found.");
+
+        // Step 2: Get reviews for this driver
+        var reviews = await _context.Reviews
+            .Where(r => r.ApprovedDriverId == approvedDriverId)
+            .ToListAsync();
+
+        // Step 3: Join with AspNetUsers to get passenger names
+        var passengerIds = reviews.Select(r => r.UserId).Distinct().ToList();
+
+        var passengers = await _context.Users
+            .Where(u => passengerIds.Contains(u.Id))
+            .ToDictionaryAsync(u => u.Id, u => u.FirstName + " " + u.LastName);
+
+        // Step 4: Compose final response
+        var result = reviews.Select(r => new
+        {
+            PassengerName = passengers.ContainsKey(r.UserId) ? passengers[r.UserId] : "Unknown",
+            r.Rating,
+            r.Comment,
+            r.CreatedAt
+        });
+
+        return Ok(result);
+    }
+
+
     [HttpGet("my-reviews")]
     [Authorize(Roles = "Driver")]
     public async Task<IActionResult> GetMyReviews()

@@ -80,8 +80,44 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "ChangeUserRole",
+    "RelativePath": "api/AdminDashboard/change-user-role",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SawariSewa.Areas.Admin.DTO.ChangeUserRoleDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
     "Method": "GetDailyBookingCounts",
     "RelativePath": "api/AdminDashboard/daily-booking-counts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "GetDailyRevenue",
+    "RelativePath": "api/AdminDashboard/daily-revenue",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "GetTotalSeatBookingCount",
+    "RelativePath": "api/AdminDashboard/total-seat-booking-count",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -817,6 +853,38 @@
       {
         "Name": "reviewDto",
         "Type": "SawariSewa.DTO.CreateReviewDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ReviewController",
+    "Method": "GetAverageRatingByDriverId",
+    "RelativePath": "api/Review/driver-average-rating/{approvedDriverId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "approvedDriverId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ReviewController",
+    "Method": "GetReviewsByDriverId",
+    "RelativePath": "api/Review/driver-reviews/{approvedDriverId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "approvedDriverId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
