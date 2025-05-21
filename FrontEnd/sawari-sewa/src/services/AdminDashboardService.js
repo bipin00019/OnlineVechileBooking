@@ -18,13 +18,39 @@ export async function fetchBookingStats() {
   }
 }
 
-export const fetchTotalSeatBookingCount = async () => {
+  export const fetchTotalSeatBookingCount = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/AdminDashboard/total-seat-booking-count`);
+      console.log('Total Seat Bookings:', response.data.totalSeatBookings);
+      return response.data.totalSeatBookings;
+    } catch (error) {
+      console.error('Error fetching total seat booking count:', error);
+      return 0;
+    }
+  };
+
+  export const fetchAllUsersWithRoles = async () => {
   try {
-    const response = await axios.get(`${API_URL}/AdminDashboard/total-seat-booking-count`);
-    console.log('Total Seat Bookings:', response.data.totalSeatBookings);
-    return response.data.totalSeatBookings;
+    const response = await axios.get(`${API_URL}/AdminDashboard/GetAllUsersWithRoles`);
+    //console.log('Users with Roles:', response.data);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching total seat booking count:', error);
-    return 0;
+    console.error('Error fetching users with roles:', error);
+    return [];
   }
 };
+
+export const changeUserRole = async (targetUserId, newRole) => {
+  try {
+    const response = await axios.post(`${API_URL}/AdminDashboard/change-user-role`, {
+      targetUserId,
+      newRole
+    });
+    //console.log('User role updated successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error changing user role:', error);
+    throw error;
+  }
+};
+

@@ -4,6 +4,7 @@ import HomeBody from './HomeBody';
 import AdminsDashboard from './AdminsDashboard';
 import DriverDashboard from './DriverDashboard';
 import { RiPlaneFill } from 'react-icons/ri';
+import HomeBody1 from './HomeBody1';
 
 const Home = () => {
   const [userRoles, setUserRoles] = useState([]); // Assuming roles come from your user authentication system
@@ -33,7 +34,10 @@ const Home = () => {
       ) : isDriver ? (
         <DriverDashboard />
       ) : (
-        <HomeBody />
+        <>
+          <HomeBody />
+          <HomeBody1 />
+        </>
       )}
     </div>
   );

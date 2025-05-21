@@ -168,7 +168,20 @@ const AdminDashboard = () => {
   const [totalApplications, setTotalApplications] = useState(0);
   const [totalApprovedDrivers, setTotalApprovedDrivers] = useState(0);
   const [totalBookingCount, setTotalBookingCount] = useState(0);
-
+  const [userRoles, setUserRoles] = useState([]);
+  useEffect(() => {
+      const roleString = localStorage.getItem('user');
+      console.log("roleString: ",roleString);
+      const role = roleString ? JSON.parse(roleString) : null;
+      console.log("Role: ",role);
+      const roles = role && role.roles ? role.roles : [];
+      console.log("Roles: ",roles);
+      setUserRoles(roles);
+      //console.log('Current User Roles:', roles);
+    }, []);
+    const isSuperAdmin = userRoles.includes('SuperAdmin');
+    const isAdmin = userRoles.includes('Admin');
+    const isDriver = userRoles.includes('Driver');
   useEffect(() => {
     const fetchTotalApplications = async () => {
       try {
@@ -259,10 +272,14 @@ const AdminDashboard = () => {
                 <Car className="h-6 w-6 text-green-600 mb-2" />
                 <span className="text-sm font-medium">View Vehicle Schedule</span>
               </button>
-              <button className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors">
+              {isSuperAdmin && (
+                <button 
+              className="p-4 bg-blue-50 rounded-lg flex flex-col items-center justify-center hover:bg-blue-100 transition-colors"
+              onClick={() => navigate(PATHS.ALLUSERS)}>
                 <Users className="h-6 w-6 text-blue-600 mb-2" />
                 <span className="text-sm font-medium">Manage Users</span>
               </button>
+              )}
             </div>
           </div>
         </div>

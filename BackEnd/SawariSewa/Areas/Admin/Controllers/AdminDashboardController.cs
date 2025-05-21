@@ -278,6 +278,28 @@ namespace SawariSewa.Areas.Admin.Controllers
             }
         }
 
+        [HttpGet("GetAllUsersWithRoles")]
+        public IActionResult GetAllUsersWithRoles()
+        {
+            var usersWithRoles = (from user in _context.Users
+                                  join userRole in _context.UserRoles on user.Id equals userRole.UserId into userRolesGroup
+                                  from userRole in userRolesGroup.DefaultIfEmpty()
+                                  join role in _context.Roles on userRole.RoleId equals role.Id into rolesGroup
+                                  from role in rolesGroup.DefaultIfEmpty()
+                                  select new
+                                  {
+                                      UserId = user.Id,
+                                      FirstName = user.FirstName ?? "N/A",
+                                      LastName = user.LastName ?? "N/A",
+                                      Email = user.Email ?? "N/A",
+                                      PhoneNumber = user.PhoneNumber ?? "N/A",
+                                      Role = role != null ? role.Name : "No Role"
+                                  }).ToList();
+
+            return Ok(usersWithRoles);
+        }
 
     }
+
+
 }

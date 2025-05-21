@@ -116,6 +116,16 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "GetAllUsersWithRoles",
+    "RelativePath": "api/AdminDashboard/GetAllUsersWithRoles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
     "Method": "GetTotalSeatBookingCount",
     "RelativePath": "api/AdminDashboard/total-seat-booking-count",
     "HttpMethod": "GET",

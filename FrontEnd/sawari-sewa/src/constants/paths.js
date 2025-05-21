@@ -19,7 +19,8 @@ export const PATHS = {
     VERIFYRESERVATIONPAYMENT : "/verify-reservation-payment",
     ALLREVIEWS : "all-reviews",
     BOOKINGHISTORY : "booking-history",
-    MYBOOKINGS : "my-bookings"
+    MYBOOKINGS : "my-bookings",
+    ALLUSERS : "change-user-roles"
 }
 
 export const DEFAULT_REDIRECT = PATHS.HOME;
