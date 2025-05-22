@@ -180,8 +180,8 @@ const AdminDashboard = () => {
       //console.log('Current User Roles:', roles);
     }, []);
     const isSuperAdmin = userRoles.includes('SuperAdmin');
-    const isAdmin = userRoles.includes('Admin');
-    const isDriver = userRoles.includes('Driver');
+    
+
   useEffect(() => {
     const fetchTotalApplications = async () => {
       try {

@@ -55,8 +55,27 @@ namespace SawariSewa.Areas.Vehicle.Controller
             return Ok(new { success = true, message = "Whole vehicle reserved successfully." });
         }
 
+        //[HttpGet("can-reserve-whole-vehicle")]
+
+        //public async Task<IActionResult> CanReserveWholeVehicle(int vehicleAvailabilityId)
+        //{
+        //    var vehicleAvailability = await _context.VehicleAvailability
+        //        .FirstOrDefaultAsync(v => v.Id == vehicleAvailabilityId);
+
+        //    if (vehicleAvailability == null)
+        //    {
+        //        return Ok(new { canReserve = false, message = "No schedule available for this vehicle." });
+        //    }
+
+        //    if (vehicleAvailability.TotalSeats == vehicleAvailability.AvailableSeats)
+        //    {
+        //        return Ok(new { canReserve = true, message = "Whole vehicle can be reserved." });
+        //    }
+
+        //    return Ok(new { canReserve = false, message = "Some seats are already booked. Whole vehicle cannot be reserved." });
+        //}
+
         [HttpGet("can-reserve-whole-vehicle")]
-        
         public async Task<IActionResult> CanReserveWholeVehicle(int vehicleAvailabilityId)
         {
             var vehicleAvailability = await _context.VehicleAvailability
@@ -65,6 +84,11 @@ namespace SawariSewa.Areas.Vehicle.Controller
             if (vehicleAvailability == null)
             {
                 return Ok(new { canReserve = false, message = "No schedule available for this vehicle." });
+            }
+
+            if (vehicleAvailability.AvailableSeats == 1)
+            {
+                return Ok(new { canReserve = false, message = "Only one seat is available. Whole vehicle cannot be reserved." });
             }
 
             if (vehicleAvailability.TotalSeats == vehicleAvailability.AvailableSeats)
@@ -77,8 +101,7 @@ namespace SawariSewa.Areas.Vehicle.Controller
 
 
 
-
-            [HttpPost("manual-book-seat")]
+        [HttpPost("manual-book-seat")]
             [Authorize(Roles = "Driver")] // Ensure only drivers can access this endpoint
             public async Task<IActionResult> ManualBookSeat(string seatNumber, string passengerName, string passengerContact)
             {

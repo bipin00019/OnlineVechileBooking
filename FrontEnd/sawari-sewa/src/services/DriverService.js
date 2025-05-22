@@ -382,4 +382,13 @@ export const fetchDriverStatus = async () => {
   }
 };
 
+export const fetchDriverReviewsHome = async (approvedDriverId) => {
+  try {
+    const response = await axios.get(`${API_URL}/Review/driver-reviews/${approvedDriverId}`);
+    return response.data; // This will be the array of reviews with PassengerName, Rating, Comment, CreatedAt
+  } catch (error) {
+    console.error("Failed to fetch driver reviews:", error);
+    throw error;
+  }
+};
 

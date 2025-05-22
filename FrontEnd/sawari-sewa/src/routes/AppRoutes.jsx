@@ -24,6 +24,7 @@ import AllReviews from "../Components/DriverDashboards/AllReviews";
 import BookingHistory from "../Components/Pages/BookingHistory";
 import MyBookings from "../Components/Pages/MyBookings";
 import AllUsers from "../Components/Pages/AllUsers";
+import DriverReviews from "../Components/Pages/DriverReviews";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -49,7 +50,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.BOOKINGHISTORY} element = {<BookingHistory/>} />
             <Route path = {PATHS.MYBOOKINGS} element = {<MyBookings/>} />
             <Route path = {PATHS.ALLUSERS} element = {<AllUsers/>} />
-
+            <Route path = {PATHS.DRIVERREVIEWS} element = {<DriverReviews/>} />
         </Routes> 
     )
 }
