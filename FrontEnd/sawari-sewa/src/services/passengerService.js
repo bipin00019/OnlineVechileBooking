@@ -52,10 +52,35 @@ export const fetchMyBookings = async () => {
       }
     });
 
-    console.log(response.data); // or set this to state if using React
+    console.log("My Bookings",response.data); // or set this to state if using React
     return response.data;
   } catch (error) {
     console.error('Error fetching bookings:', error);
     return [];
+  }
+};
+
+
+export const cancelBooking = async (bookingId, khaltiWalletNumber, token) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/Booking/cancel`,
+      {
+        bookingId: bookingId,
+        khaltiWalletNumber: khaltiWalletNumber
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('Booking cancelled:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error cancelling booking:', error.response?.data || error.message);
+    throw error;
   }
 };

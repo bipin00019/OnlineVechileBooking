@@ -95,7 +95,7 @@ const VehicleReservation = ({
      
       <div className="mb-4">
         <label className="block text-gray-700 text-sm font-medium mb-2">
-          Total Amount : Rs. {totalFare} and {vehicleAvailabilityId}
+          Total Amount : Rs. {totalFare} 
         </label>
         
       </div>

@@ -578,7 +578,7 @@ const SeatSelection = ({
           getSeatStatus={getSeatStatus}
         />;
       case 'sofa seater bus':
-        return <SofaSeaterBusLayout 
+        return <BusLayout 
           totalSeats={totalSeats}
           selectedSeats={selectedSeats}
           bookedSeats={bookedSeats}

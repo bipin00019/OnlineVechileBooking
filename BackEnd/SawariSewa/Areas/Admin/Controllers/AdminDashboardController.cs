@@ -278,6 +278,19 @@ namespace SawariSewa.Areas.Admin.Controllers
             }
         }
 
+        [HttpGet("total-cancelledBooking-count")]
+        public async Task<IActionResult> GetTotalCancelledBookingCount()
+        {
+            try
+            {
+                var count = await _context.CancelledBookings.CountAsync();
+                return Ok(new { TotalCancelledBookings = count });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
         [HttpGet("GetAllUsersWithRoles")]
         public IActionResult GetAllUsersWithRoles()
         {
@@ -297,6 +310,63 @@ namespace SawariSewa.Areas.Admin.Controllers
                                   }).ToList();
 
             return Ok(usersWithRoles);
+        }
+
+        [HttpGet("cancelled-bookings")]
+        public async Task<IActionResult> GetCancelledBookingsWithUserDetails()
+        {
+            var bookings = await _context.CancelledBookings
+                .Include(cb => cb.User)
+                .Select(cb => new CancelledBookingDto
+                {
+                    Id = cb.Id,
+                    BookingId = cb.BookingId,
+                    UserId = cb.UserId,
+                    FirstName = cb.User.FirstName,
+                    LastName = cb.User.LastName,
+                    Email = cb.User.Email,
+                    KhaltiWalletNumber = cb.KhaltiWalletNumber,
+                    Fare = cb.Fare,
+                    CancelledAt = cb.CancelledAt,
+                    Reason = cb.Reason,
+                    IsRefunded = cb.IsRefunded
+                })
+                .ToListAsync();
+
+            return Ok(bookings);
+        }
+
+        [HttpPost("process-refund")]
+        public async Task<IActionResult> ProcessRefund([FromQuery] int bookingId)
+        {
+            var booking = await _context.CancelledBookings
+                .Include(cb => cb.User)
+                .FirstOrDefaultAsync(cb => cb.BookingId == bookingId);
+
+            if (booking == null)
+                return NotFound("Booking not found.");
+
+            if (booking.IsRefunded)
+                return BadRequest("Refund already processed.");
+
+            // Mark as refunded
+            booking.IsRefunded = true;
+            await _context.SaveChangesAsync();
+
+            // Compose email
+            var subject = "Your Fare Has Been Refunded";
+            var message = $@"
+        Dear {booking.User.FirstName} {booking.User.LastName},
+
+        Your booking with Booking ID #{booking.BookingId} has been successfully refunded.
+        NPR {booking.Fare} has been credited to your Khalti wallet: {booking.KhaltiWalletNumber}.
+
+        Thank you for using Sawari Sewa.";
+
+            // Send email (assumes email service is injected)
+            await _emailService.SendEmailAsync(booking.User.Email, subject, message);
+
+            return Ok("Refund processed and confirmation email sent.");
         }
 
     }

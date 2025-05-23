@@ -983,7 +983,7 @@ import { fetchPassengerStats } from '../../../services/DriverDashboardService';
 import BusDriverDashboardFeatures from './BusDriverDashboardFeatuers';
 import ManualSeatBookingBus from './ManualSeatBookingBus';
 import { fetchAverageRating } from '../../../services/DriverDashboardService';
-
+import ManualCancellationBookings from '../ManualCancellationBookings';
 const BusDriverDashboard = () => {
   const navigate = useNavigate();
   
@@ -1273,7 +1273,7 @@ const BusDriverDashboard = () => {
       <header className="bg-blue-600 text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Bus Driver Dashboard</h1>
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <div className="flex items-center">
               <span className={`h-3 w-3 rounded-full mr-2 ${riderStats.available ? 'bg-green-400' : 'bg-red-400'}`}></span>
               <span>{riderStats.available ? 'Available' : 'Offline'}</span>
@@ -1284,7 +1284,7 @@ const BusDriverDashboard = () => {
             >
               {riderStats.available ? 'Go Offline' : 'Go Online'}
             </button>
-          </div>
+          </div> */}
         </div>
       </header>
 
@@ -1375,6 +1375,7 @@ const BusDriverDashboard = () => {
               </div>
             </div>
           )}
+          
         </div>
         
         {/* Current Rides */}
@@ -1543,6 +1544,7 @@ const BusDriverDashboard = () => {
             <p className="text-gray-500 py-4 text-center">No recent rides found.</p>
           )}
         </div>
+        <ManualCancellationBookings/>
       </main>
 
       {/* Footer */}

@@ -21,7 +21,8 @@ export const PATHS = {
     BOOKINGHISTORY : "booking-history",
     MYBOOKINGS : "my-bookings",
     ALLUSERS : "change-user-roles",
-    DRIVERREVIEWS: "/driver-reviews/:driverId"
+    DRIVERREVIEWS: "/driver-reviews/:driverId",
+    MANAGEREFUND : "/manage-refund"
 }
 
 export const DEFAULT_REDIRECT = PATHS.HOME;

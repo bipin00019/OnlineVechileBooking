@@ -25,6 +25,7 @@ import BookingHistory from "../Components/Pages/BookingHistory";
 import MyBookings from "../Components/Pages/MyBookings";
 import AllUsers from "../Components/Pages/AllUsers";
 import DriverReviews from "../Components/Pages/DriverReviews";
+import ManageRefundandCancellation from "../Components/DriverDashboards/ManageRefundandCancellaton";
 const AppRoutes = () => {
     return(
         <Routes>
@@ -51,6 +52,7 @@ const AppRoutes = () => {
             <Route path = {PATHS.MYBOOKINGS} element = {<MyBookings/>} />
             <Route path = {PATHS.ALLUSERS} element = {<AllUsers/>} />
             <Route path = {PATHS.DRIVERREVIEWS} element = {<DriverReviews/>} />
+            <Route path = {PATHS.MANAGEREFUND} element = {<ManageRefundandCancellation/>} />
         </Routes> 
     )
 }

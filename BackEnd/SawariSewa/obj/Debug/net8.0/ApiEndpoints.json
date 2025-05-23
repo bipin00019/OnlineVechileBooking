@@ -80,6 +80,16 @@
   },
   {
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "GetCancelledBookingsWithUserDetails",
+    "RelativePath": "api/AdminDashboard/cancelled-bookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
     "Method": "ChangeUserRole",
     "RelativePath": "api/AdminDashboard/change-user-role",
     "HttpMethod": "POST",
@@ -118,6 +128,32 @@
     "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
     "Method": "GetAllUsersWithRoles",
     "RelativePath": "api/AdminDashboard/GetAllUsersWithRoles",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "ProcessRefund",
+    "RelativePath": "api/AdminDashboard/process-refund",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Admin.Controllers.AdminDashboardController",
+    "Method": "GetTotalCancelledBookingCount",
+    "RelativePath": "api/AdminDashboard/total-cancelledBooking-count",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -165,6 +201,38 @@
     "Parameters": [
       {
         "Name": "vehicleAvailabilityId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "CancelBooking",
+    "RelativePath": "api/Booking/cancel",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "SawariSewa.Areas.Vehicle.DTO.CancelBookingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SawariSewa.Areas.Vehicle.Controller.BookingController",
+    "Method": "GetCancelledBookings",
+    "RelativePath": "api/Booking/cancelled-bookings",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "page",
         "Type": "System.Int32",
         "IsRequired": false
       }

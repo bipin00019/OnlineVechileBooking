@@ -27,7 +27,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<DriverTripHistory> DriverTripHistory { get; set; }
 
-
+    public DbSet<CancelledBookings> CancelledBookings { get; set; }
     protected override void OnModelCreating(ModelBuilder modelbuilder)
     {
         base.OnModelCreating(modelbuilder);

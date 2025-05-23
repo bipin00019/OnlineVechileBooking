@@ -106,10 +106,12 @@ namespace SawariSewa.Areas.Passenger.Controllers
                     return new
                     {
                         VehicleAvailabilityId = g.Key,
+                        BookingIds = g.Select(x => x.BookingId).ToList(),
                         BookingDate = first.BookingDate,
                         BookingStatus = first.BookingStatus,
                         PickupPoint = first.PickupPoint,
                         DropOffPoint = first.DropOffPoint,
+                        
                         TotalSeatsBooked = g.Count(),
                         SeatNumbers = g.Select(x => x.SeatNumber).ToList(),
 

@@ -10,7 +10,7 @@ import { fetchPassengerStats } from '../../../services/DriverDashboardService';
 import VanDriverDashboardFeatures from './VanDriverDashboardFeatures';
 import ManualSeatBookingVan from './ManualSeatBookingVan';
 import { fetchAverageRating } from '../../../services/DriverDashboardService';
-
+import ManualCancellationBookings from '../ManualCancellationBookings';
 const VanDriverDashboard = () => {
   const navigate = useNavigate();
   
@@ -300,7 +300,7 @@ const VanDriverDashboard = () => {
       <header className="bg-blue-600 text-white p-4 shadow-md">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Van Driver Dashboard</h1>
-          <div className="flex items-center space-x-4">
+          {/* <div className="flex items-center space-x-4">
             <div className="flex items-center">
               <span className={`h-3 w-3 rounded-full mr-2 ${riderStats.available ? 'bg-green-400' : 'bg-red-400'}`}></span>
               <span>{riderStats.available ? 'Available' : 'Offline'}</span>
@@ -311,7 +311,7 @@ const VanDriverDashboard = () => {
             >
               {riderStats.available ? 'Go Offline' : 'Go Online'}
             </button>
-          </div>
+          </div> */}
         </div>
       </header>
 
@@ -570,6 +570,7 @@ const VanDriverDashboard = () => {
             <p className="text-gray-500 py-4 text-center">No recent rides found.</p>
           )}
         </div>
+        <ManualCancellationBookings/>
       </main>
 
       {/* Footer */}

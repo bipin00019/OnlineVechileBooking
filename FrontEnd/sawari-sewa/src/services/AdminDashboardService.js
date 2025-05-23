@@ -29,6 +29,17 @@ export async function fetchBookingStats() {
     }
   };
 
+  export const fetchTotalCancelledBookingCount = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/AdminDashboard/total-cancelledBooking-count`);
+      console.log('Total Seat Bookings:', response.data.totalCancelledBookings);
+      return response.data.totalCancelledBookings;
+    } catch (error) {
+      console.error('Error fetching total seat booking count:', error);
+      return 0;
+    }
+  };
+
   export const fetchAllUsersWithRoles = async () => {
   try {
     const response = await axios.get(`${API_URL}/AdminDashboard/GetAllUsersWithRoles`);
@@ -50,6 +61,47 @@ export const changeUserRole = async (targetUserId, newRole) => {
     return response.data;
   } catch (error) {
     console.error('Error changing user role:', error);
+    throw error;
+  }
+};
+
+
+
+export const fetchCancelledBookings = async (page = 1) => {
+  try {
+    const response = await axios.get(`${API_URL}/Booking/cancelled-bookings`, {
+      params: { page }
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching cancelled bookings:', error);
+    throw error;
+  }
+};
+
+export const fetchCancelledBookingsAdmin = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/AdminDashboard/cancelled-bookings`);
+    console.log(response.data); // Use the data as needed
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching cancelled bookings:', error);
+    throw error;
+  }
+};
+
+
+
+export const processRefund = async (bookingId) => {
+  try {
+    const response = await axios.post(`${API_URL}/AdminDashboard/process-refund`, null, {
+      params: { bookingId }
+    });
+    console.log('Refund processed:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error processing refund:', error);
     throw error;
   }
 };

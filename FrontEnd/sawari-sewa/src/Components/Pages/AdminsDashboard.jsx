@@ -160,7 +160,7 @@ import { useNavigate } from 'react-router-dom';
 import { PATHS } from '../../constants/paths';
 import { totalApplicationCount, totalApprovedDriversCount } from '../../services/DriverService';
 import BookingsPerDayChart from './BookingsPerDayChart';
-import { fetchTotalSeatBookingCount } from '../../services/AdminDashboardService';
+import { fetchTotalSeatBookingCount, fetchTotalCancelledBookingCount } from '../../services/AdminDashboardService';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -168,6 +168,7 @@ const AdminDashboard = () => {
   const [totalApplications, setTotalApplications] = useState(0);
   const [totalApprovedDrivers, setTotalApprovedDrivers] = useState(0);
   const [totalBookingCount, setTotalBookingCount] = useState(0);
+  const [totalCancelledBookingCount, setTotalCancelledBookingCount] = useState(0);
   const [userRoles, setUserRoles] = useState([]);
   useEffect(() => {
       const roleString = localStorage.getItem('user');
@@ -203,8 +204,17 @@ const AdminDashboard = () => {
 
     const fetchTotalBooking = async () => {
       try {
-        const totalBooking = await fetchTotalSeatBookingCount();
-        setTotalBookingCount(totalBooking);
+        const totalCancelledBooking = await fetchTotalSeatBookingCount();
+        setTotalBookingCount(totalCancelledBooking);
+      } catch (error) {
+        console.error("Error fetching the total booking count:", error);
+      }
+    };
+
+    const fetchTotalCancelledBookings = async () => {
+      try {
+        const totalBooking = await fetchTotalCancelledBookingCount();
+        setTotalCancelledBookingCount(totalBooking);
       } catch (error) {
         console.error("Error fetching the total booking count:", error);
       }
@@ -213,6 +223,7 @@ const AdminDashboard = () => {
     fetchTotalApplications();
     fetchTotalApprovedDriverCount();
     fetchTotalBooking();
+    fetchTotalCancelledBookings();
   }, []);
 
   return (
@@ -254,6 +265,16 @@ const AdminDashboard = () => {
               <Calendar className="h-4 w-4 text-gray-500" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{totalBookingCount}</p>
+          </div>
+          <div
+            className="bg-white p-6 rounded-lg shadow cursor-pointer hover:text-blue-200 hover:bg-gray-100 transition-colors"
+            onClick={() => navigate(PATHS.MANAGEREFUND)}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium text-gray-600">Manage Refund and Cancellations</h3>
+              <Calendar className="h-4 w-4 text-gray-500" />
+            </div>
+            <p className="text-2xl font-bold text-gray-900">{totalCancelledBookingCount}</p>
           </div>
         </div>
 
