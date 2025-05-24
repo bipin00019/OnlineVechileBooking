@@ -10,7 +10,6 @@ import { fetchPassengerStats } from '../../../services/DriverDashboardService';
 import JeepDriverDashboardFeatures from './JeepDriverDashboardFeatures';
 import ManualSeatBookingJeep from './ManualSeatBookingJeep';
 import { fetchAverageRating } from '../../../services/DriverDashboardService';
-import ManualCancellationBookings from '../ManualCancellationBookings';
 const JeepDriverDashboard = () => {
   const navigate = useNavigate();
   
@@ -570,7 +569,7 @@ const JeepDriverDashboard = () => {
             <p className="text-gray-500 py-4 text-center">No recent rides found.</p>
           )}
         </div>
-        <ManualCancellationBookings/>
+        
       </main>
 
       {/* Footer */}

@@ -893,10 +893,10 @@ const Register = () => {
           window.location.reload();
         }, 100);
       } else {
-        setError(result.message || "Registration failed.");
+        setError(result.message?.data || "Registration failed. Password must include an uppercase letter, a number, and a special character.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to register. Please try again.');
+      setError(err.response?.data || 'Failed to register. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { setFareAndSchedule, fetchPassengerStats, fetchMySchedule, deleteMySchedule } from '../../../services/DriverDashboardService';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
-
+import ManualCancellationBookings from '../ManualCancellationBookings';
 const JeepDriverDashboardFeatures = () => {
   // State for set fare form
   const [fare, setFare] = useState('');
@@ -318,6 +318,9 @@ const JeepDriverDashboardFeatures = () => {
             </div>
           </div>
         )}
+        <div className="relative pt-7">
+      <ManualCancellationBookings/>
+    </div>
       </div>
 
       {/* Current Schedule Card */}

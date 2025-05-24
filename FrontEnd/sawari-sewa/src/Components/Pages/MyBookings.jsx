@@ -433,8 +433,8 @@ const MyBookings = () => {
             <div className="absolute right-0 mt-2 w-96 bg-white border border-gray-200 p-4 rounded shadow z-10 text-sm text-gray-700">
               <p className="mb-2 font-semibold">Cancellation Policy:</p>
               <p>
-                We understand that plans can change. If you cancel <strong>more than 24 hours in advance</strong>, you will receive a <strong>90% refund</strong>. For cancellations made <strong>between 3 to 24 hours before departure</strong>, a <strong>30% fee</strong> will be applied. If you cancel <strong>less than 3 hours before the trip</strong>, a <strong>50% fee</strong> will be charged.
-              </p>
+                At Sawari Sewa, bookings cannot be cancelled on the same day of departure or after the departure date. Cancellations made 3 or more days in advance are eligible for a 90% refund, 2 days before get 50%, and 1 day before receive only 10%. Refunds are processed to your Khalti wallet, and a confirmation email will be sent after successful cancellation.
+              </p>            
             </div>
           )}
         </div>

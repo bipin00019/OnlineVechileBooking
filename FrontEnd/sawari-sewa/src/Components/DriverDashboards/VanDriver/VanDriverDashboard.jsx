@@ -10,7 +10,6 @@ import { fetchPassengerStats } from '../../../services/DriverDashboardService';
 import VanDriverDashboardFeatures from './VanDriverDashboardFeatures';
 import ManualSeatBookingVan from './ManualSeatBookingVan';
 import { fetchAverageRating } from '../../../services/DriverDashboardService';
-import ManualCancellationBookings from '../ManualCancellationBookings';
 const VanDriverDashboard = () => {
   const navigate = useNavigate();
   
@@ -570,7 +569,7 @@ const VanDriverDashboard = () => {
             <p className="text-gray-500 py-4 text-center">No recent rides found.</p>
           )}
         </div>
-        <ManualCancellationBookings/>
+
       </main>
 
       {/* Footer */}

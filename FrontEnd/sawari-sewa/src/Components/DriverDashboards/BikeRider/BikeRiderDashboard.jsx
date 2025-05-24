@@ -10,7 +10,6 @@ import { fetchPassengerStats } from '../../../services/DriverDashboardService';
 import BikeRiderDashboardFeatures from './BikeRiderDashboardFeatures';
 import ManualSeatBookingBike from './ManualSeatBookingBike';
 import { fetchAverageRating } from '../../../services/DriverDashboardService';
-import ManualCancellationBookings from '../ManualCancellationBookings';
 const BikeRiderDashboard = () => {
   const navigate = useNavigate();
   
@@ -572,7 +571,7 @@ const BikeRiderDashboard = () => {
           )}
         </div>
 
-        <ManualCancellationBookings/>
+
       </main>
 
       {/* Footer */}

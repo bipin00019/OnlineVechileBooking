@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../config';
+import { toast } from 'react-toastify';
 
 export const fetchPassengerBookingHistory = async () => {
   try {
@@ -82,5 +83,23 @@ export const cancelBooking = async (bookingId, khaltiWalletNumber, token) => {
   } catch (error) {
     console.error('Error cancelling booking:', error.response?.data || error.message);
     throw error;
+  }
+};
+
+
+export const updateUserProfile = async (profileData) => {
+  try {
+    const response = await axios.post('https://localhost:7291/Edit-Profile', {
+      firstName: profileData.firstName,
+      lastName: profileData.lastName,
+      phoneNumber: profileData.phoneNumber,
+    });
+
+    toast.success(response.data.message || 'Profile updated successfully');
+  } catch (error) {
+    const errorMessage = error.response?.data?.message ||
+                         error.response?.data?.error ||
+                         'Failed to update profile.';
+    toast.error(errorMessage);
   }
 };

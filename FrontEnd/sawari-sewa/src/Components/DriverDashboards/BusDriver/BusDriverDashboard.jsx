@@ -1544,7 +1544,7 @@ const BusDriverDashboard = () => {
             <p className="text-gray-500 py-4 text-center">No recent rides found.</p>
           )}
         </div>
-        <ManualCancellationBookings/>
+        
       </main>
 
       {/* Footer */}

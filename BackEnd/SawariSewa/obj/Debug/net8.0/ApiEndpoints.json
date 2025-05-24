@@ -1189,19 +1189,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "FirstName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "LastName",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "PhoneNumber",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "profileDto",
+        "Type": "SawariSewa.Areas.Passenger.DTO.UpdateProfileDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

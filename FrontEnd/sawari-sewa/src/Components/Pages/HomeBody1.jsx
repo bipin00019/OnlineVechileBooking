@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle } from 'lucide-react';
-
+import bgg from '../../Static/Image/bgg.jpeg';
+import homevideo from '../../Static/Videos/homevideo.mp4';
 const HomeBody1 = () => {
   return (
     <div className="relative w-full min-h-screen overflow-hidden">
@@ -11,8 +12,8 @@ const HomeBody1 = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center z-[-1]" 
         style={{ 
-          backgroundImage: 'url(/placeholder.svg?height=800&width=1600)', 
-          filter: 'brightness(0.7)'
+          backgroundImage: `url(${bgg})`, 
+          //filter: 'brightness(1)'
         }}
       />
 
@@ -28,7 +29,7 @@ const HomeBody1 = () => {
               <div 
                 className="absolute inset-[8px] rounded-[32px] overflow-hidden bg-white"
                 style={{ 
-                  backgroundImage: 'url(/placeholder.svg?height=600&width=300)', 
+                  backgroundImage: `url(${bgg})`, 
                   backgroundSize: 'cover',
                   backgroundPosition: 'center top'
                 }}

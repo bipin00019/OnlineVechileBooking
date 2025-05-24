@@ -829,7 +829,7 @@ import React, { useState, useEffect } from 'react';
 import { setFareAndSchedule, fetchPassengerStats, fetchMySchedule, deleteMySchedule } from '../../../services/DriverDashboardService';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
-
+import ManualCancellationBookings from '../ManualCancellationBookings';
 const BusDriverDashboardFeatures = () => {
   // State for set fare form
   const [fare, setFare] = useState('');
@@ -1143,8 +1143,11 @@ const BusDriverDashboardFeatures = () => {
             </div>
           </div>
         )}
+        <div className="relative pt-7">
+      <ManualCancellationBookings/>
+    </div>
       </div>
-
+      
       {/* Current Schedule Card */}
       <div className="relative">
         <div className="bg-gradient-to-r from-white to-green-400 p-4 rounded-lg shadow hover:shadow-lg hover:from-green-50 hover:to-green-500 hover:shadow-green-200 transition-all duration-300">
